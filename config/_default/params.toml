@@ -1,0 +1,74 @@
+# Meta Data for SEO
+
+## Homepage
+title = "Coraza WAF"
+titleSeparator = "-"
+titleAddition = "Enterprise-grade open source web application firewall"
+description = "Coraza is an enterprise-grade, open source and high performance Web Application Firewall ready to easily protect your beloved applications."
+
+## Open Graph
+images = ["doks.png"]
+ogLocale = "en_US"
+domainTLD = "coraza.io"
+titleHome = "Coraza Web Application Firewall"
+
+## Twitter Cards
+twitterSite = "@corazatech"
+twitterCreator = "@jptosso"
+
+## JSON-LD
+# schemaType = "Organization"
+schemaType = "Person"
+schemaName = "Coraza WAF"
+schemaAuthor = "Juan Pablo Tosso"
+schemaAuthorTwitter = "https://twitter.com/jptosso"
+schemaAuthorLinkedIn = "https://www.linkedin.com/in/jptosso/"
+schemaAuthorGitHub = "https://github.com/jptosso"
+schemaLocale = "en-US"
+schemaLogo = "logo-doks.png"
+schemaLogoWidth = 512
+schemaLogoHeight = 512
+schemaImage = "doks.png"
+schemaImageWidth = 1280
+schemaImageHeight = 640
+schemaTwitter = "https://twitter.com/corazatech"
+schemaLinkedIn = ""
+schemaGitHub = "https://github.com/jptosso/coraza-waf"
+schemaSection = "blog"
+
+## Sitelinks Search Box
+siteLinksSearchBox = false
+
+## Chrome Browser
+themeColor = "#fff"
+
+# Images
+quality = 85
+bgColor = "#fff"
+landscapePhotoWidths = [900, 800, 700, 600, 500]
+portraitPhotoWidths = [800, 700, 600, 500]
+lqipWidth = "20x"
+
+# Footer
+footer = "Powered by a lot of love ❤️ (and code) - By Juan Pablo Tosso"
+copyRight = "Copyright (c) 2020-2021 Juan Pablo Tosso"
+
+# Alert
+alert = false
+alertText = "Like Coraza? <a class=\"alert-link\" href=\"https://github.com/jptosso/coraza-waf/stargazers\">Star on GitHub</a>. Thanks!</a>"
+
+# Edit Page
+docsRepo = "https://github.com/jptosso/coraza.io"
+editPage = true
+
+[options]
+  lazySizes = true
+  clipBoard = true
+  instantPage = true
+  flexSearch = true
+  darkMode = true
+  bootStrapJs = true
+  breadCrumb = true
+  highLight = true
+  kaTex = false
+  collapsibleSidebar = false
