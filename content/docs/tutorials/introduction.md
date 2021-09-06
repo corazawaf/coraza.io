@@ -21,7 +21,7 @@ toc: true
 [![Project Status: Active – The project has reached a stable, usable state and is being actively developed.](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active)
 
 <div align="center">
-	<img src="https://jptosso.github.io/coraza-waf/images/company_logo.png" width="50%">
+	<img src="https://coraza.io/images/logo.png" width="50%">
 </div>
 
 ## Prerequisites
