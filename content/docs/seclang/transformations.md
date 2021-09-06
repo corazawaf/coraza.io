@@ -1,7 +1,7 @@
 ---
 title: "Transformations"
-description: "..."
-lead: "..."
+description: "Transformation functions are used to alter input data before it is used in matching."
+lead: "Transformation functions are used to alter input data before it is used in matching (i.e., operator execution). The input data is never modified, actually—whenever you request a transformation function to be used, Coraza will create a copy of the data, transform it, and then run the operator against the result."
 date: 2020-10-06T08:48:57+00:00
 lastmod: 2020-10-06T08:48:57+00:00
 draft: false
@@ -12,8 +12,6 @@ menu:
 weight: 100
 toc: true
 ---
-
-Transformation functions are used to alter input data before it is used in matching (i.e., operator execution). The input data is never modified, actually—whenever you request a transformation function to be used, Coraza will create a copy of the data, transform it, and then run the operator against the result.
 
 In the following example, the request parameter values are converted to lowercase before matching:
 
