@@ -166,9 +166,9 @@ Note : SecDataDir is not currently supported. Collections are kept in memory (in
 ## SecDebugLog
 **Description:** Path to the Coraza debug log file.
 
-**Syntax:** SecDebugLog /path/to/modsec-debug.log
+**Syntax:** SecDebugLog /path/to/coraza-debug.log
 
-**Example Usage:** SecDebugLog /usr/local/apache/logs/modsec-debug.log
+**Example Usage:** SecDebugLog /usr/local/apache/logs/coraza-debug.log
 
 **Supported:** Yes
 
@@ -387,7 +387,7 @@ Along with the key, supplied by the users, Coraza will also send its Unique ID a
 
  - Coraza-status
  - Coraza-unique-id
- - ModSec-key
+ - Coraza-key
 
 The utilization of SecRemoteRules is only allowed over TLS.
 
