@@ -13,20 +13,15 @@ weight: 110
 toc: true
 ---
 
-If you are not looking to use Coraza WAF as a library and you want a working WAF implementation or integration, check ...
+If you are not looking to use Coraza WAF as a library and you want a working WAF implementation or integration, check the integrations page.
 ## Requirements
 
-
-- Download and install [Libinjection](https://github.com/libinjection/libinjection)
-- Install libpcre (```apt install libpcre++-dev``` for ubuntu)
 - Golang 1.16+
-
-You can use the [coraza-waf](#) Docker image to develop and build you projects.
 
 ## Add Coraza to your go project
 
 ```sh
-go get github.com/jptosso/coraza-waf@latest
+go get github.com/jptosso/coraza-waf/v2@latest
 ```
 
 ### Create a WAF instance
@@ -36,7 +31,7 @@ WAF instances are the main container for settings and rules which are inherited 
 ```go
 package main
 import (
-  coraza"github.com/jptosso/coraza-waf"
+  "github.com/jptosso/coraza-waf/v2"
 )
 func initCoraza(){
   coraza.NewWaf()
@@ -53,12 +48,14 @@ Rules are unmarshaled using the seclang package which provides functionalities t
 ```go
 package main
 import (
-  coraza"github.com/jptosso/coraza-waf"
-  "github.com/jptosso/coraza-waf/seclang"
+  "github.com/jptosso/coraza-waf/v2"
+  "github.com/jptosso/coraza-waf/v2/seclang"
 )
 func parseRules(waf *coraza.Waf){
   parser, _ := seclang.NewParser(waf)
-  parser.FromString(`SecAction "id:1,phase:1,deny:403,log"`)
+  if err := parser.FromString(`SecAction "id:1,phase:1,deny:403,log"`); err != nil {
+    panic(err)
+  }
 }
 ```
 
@@ -68,13 +65,13 @@ Transactions are created for each http request, they are concurrent-safe and the
 
 #### Handling an interruption
 
-Interruptions are created by Transactions to tell the web server or application what action is required, based on the rules actions. Interruptions can be retrieved using ```tx.Interruption()```, a nil Interruption means there is no action needed (pass) and a non-nil interruption means the web server must do something like denying the request. For example:
+Interruptions are created by Transactions to tell the web server or application what action is required, based on the rules actions. Interruptions can be retrieved using ```tx.Interruption```, a nil Interruption means there is no action needed (pass) and a non-nil interruption means the web server must do something like denying the request. For example:
 
 ```go
 //...
 tx := waf.NewTransaction()
 // Add some variables and process some phases
-if it := tx.Interruption();it != nil {
+if it := tx.Interruption;it != nil {
   switch it.Action {
     case "deny":
       rw.WriteStatus(it.Status)
@@ -104,7 +101,7 @@ tx := waf.NewTransaction()
 // 127.0.0.1:55555 -> 127.0.0.1:80
 tx.ProcessConnection("127.0.0.1", 55555, "127.0.0.1", 80)
 // Request URI was /some-url?with=args
-tx.ProcessUri("/some-url?with=args")
+tx.ProcessURI("/some-url?with=args")
 // We add some headers
 tx.AddRequestHeader("Host", "somehost.com")
 tx.AddRequestHeader("Cookie", "some-cookie=with-value")

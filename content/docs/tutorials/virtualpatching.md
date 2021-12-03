@@ -12,12 +12,4 @@ menu:
 weight: 110
 toc: true
 ---
-Comming soon
-<!--
-### 1. Defining HTTP scope
-
-- HTTP Method
-- URL
-- Content-Type
-- Additional requirements
--->
+Coming soon

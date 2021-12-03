@@ -21,8 +21,6 @@ Caddy with Coraza supports autotls (with let´s encrypt), FastCGI, content rende
 
 Install golang 1.16 or 1.17.
 
-Caddy with Coraza can be compiled with CGO enabled or disable, if you use ```CGO_ENABLED=0``` you will lose some features and Core Ruleset compatibility, if you enable CGO you will have to install ```libinjection``` and ```libpcre```.
-
 ### Using go install
 
 ```sh
@@ -49,7 +47,7 @@ Go to [https://caddyserver.com/download](https://caddyserver.com/download), sele
 git clone https://github.com/jptosso/coraza-caddy
 cd coraza-caddy
 go get ./...
-go build -o caddy caddy/*.go
+go build -o caddy caddy/main.go
 ```
 
 ### Building with XCaddy
@@ -75,8 +73,8 @@ xcaddy build --with github.com/jptosso/coraza-caddy@latest
 			SecRule REQUEST_URI "/test5" "id:2, deny, log, phase:1"
 			SecRule REQUEST_URI "/test6" "id:4, deny, log, phase:3"
 		`
-    # or include some files with wildcards
-    include /coraza/crs/*.conf
+		# or include some files with wildcards
+		include /coraza/crs/*.conf
 	}
 	respond "test123"
 }
