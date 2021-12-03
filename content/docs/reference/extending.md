@@ -19,15 +19,15 @@ toc: true
 
 The plugin interface provides three functions to extend rule operators, transformations and actions. Each one of them must match it's proper type or interface and be registered using the ```plugins``` package. 
 
-* **Operators**: ```type PluginOperatorWrapper() coraza.Operator```
-* **Actions**: ```type PluginOperatorWrapper() coraza.RuleAction```
+* **Operators**: ```type PluginOperatorWrapper() types.RuleOperator```
+* **Actions**: ```type PluginOperatorWrapper() types.RuleAction```
 * **Transformations**: ```type Transformation = func(input string, tools *transformations.Tools) string```
 
 After defining the plugins, we must register them using the ```plugins.Register...``` function inside the init function ```func init(){}```.
 
-* **Operators**: ```plugins.RegisterOperator(operator PluginOperatorWrapper)```
-* **Actions**: ```plugins.RegisterAction(action PluginActionWrapper)```
-* **Transformations**: ```plugins.RegisterTransformation(transformation transformations.Transformation)```
+* **Operators**: ```operators.RegisterPlugin(operator PluginOperatorWrapper)```
+* **Actions**: ```actions.RegisterPlugin(action PluginActionWrapper)```
+* **Transformations**: ```transformations.RegisterPlugin(transformation transformations.Transformation)```
 
 **Important:** Some integrations like Traefik does not support plugins, because we cannot control how the integration is compiled by Pilot.
 
@@ -37,7 +37,7 @@ Plugin model is based on Caddy plugins system, they must be compiled within the 
 
 ```go
 import(
-    "github.com/jptosso/coraza-waf"
+    "github.com/jptosso/coraza-waf/v2"
     _ "github.com/someone/somecorazaplugin"
 )
 ```
@@ -93,16 +93,16 @@ var _ coraza.RuleAction = &id15{}
 
 ### Transforming the action to plugin
 
-Once the action is created, it must be wrapper inside a ```type PluginActionWrapper = func() coraza.RuleAction``` in order to be registered.
+Once the action is created, it must be wrapper inside a ```type PluginActionWrapper = func() types.RuleAction``` in order to be registered.
 
 ```go
 import(
-    "github.com/jptosso/coraza-waf"
-    "github.com/jptosso/coraza-waf/plugins"
+    "github.com/jptosso/coraza-waf/v2/actions"
+    "github.com/jptosso/coraza-waf/v2/types"
 )
 
 func init() {
-	plugins.RegisterAction("id15", func() coraza.RuleAction {
+	actions.RegisterPlugin("id15", func() types.RuleAction {
 		return &id15{}
 	})
 }
@@ -116,7 +116,7 @@ SecAction "id15, nolog, pass"
 
 ## Creating Rule Transformations
 
-Transformations are the easiest components to extend, each transformation implements the ```transformations.Transformation``` type and can be registered directly using ```plugins.RegisterTransformation(transformation transformations.Transformation)```. 
+Transformations are the easiest components to extend, each transformation implements the ```transformations.Transformation``` type and can be registered directly using ```plugins.RegisterPlugin(transformation transformations.Transformation)```. 
 
 The *Tools struct is designed to add additional functionalities like logging and unicode mapping.
 
@@ -130,17 +130,16 @@ type Transformation = func(input string, tools *Tools) string
 
 ```go
 import (
-  "github.com/jptosso/coraza-waf/transformations"
-  "github.com/jptosso/coraza-waf/plugins"
+  "github.com/jptosso/coraza-waf/v2/transformations"
   "strings"
 )
 
-func transformationToLowercase(input string, _ *transformations.Tools) string {
+func transformationToLowercase(input string) (string, error) {
 	return strings.ToLower(input)
 }
 
 func init() {
-  plugins.RegisterTransformation("tolower2", transformationToLowercase)
+  transformations.RegisterPlugin("tolower2", transformationToLowercase)
 }
 ```
 
@@ -185,12 +184,12 @@ Once the operator is created, it must be wrapper inside a ```type PluginOperator
 
 ```go
 import(
-    "github.com/jptosso/coraza-waf"
-    "github.com/jptosso/coraza-waf/plugins"
+    "github.com/jptosso/coraza-waf/v2/operators"
+    "github.com/jptosso/coraza-waf/v2/types"
 )
 
 func init() {
-	plugins.RegisterOperator("even", func() coraza.Operator {
+	operators.RegisterPlugin("even", func() types.Operator {
 		return &opEven{}
 	})
 }
@@ -208,15 +207,16 @@ There are no special helpers to test plugins but you may use the seclang compile
 
 ```go
 import(
-  "github.com/jptosso/coraza-waf/seclang"
-  "github.com/jptosso/coraza-waf"
-  "strings"
-  "testing"
+    "github.com/jptosso/coraza-waf/v2/seclang"
+    "github.com/jptosso/coraza-waf/v2/types"
+    "github.com/jptosso/coraza-waf/v2/transformations"
+    "strings"
+    "testing"
 )
 
 func TestToLower2(t *testing.T){
   waf := coraza.NewWaf()
-  parser := seclang.NewParser(waf)
+  parser, _ := seclang.NewParser(waf)
   if err := parser.FromString(`SecRule ARGS:id "lowercase" "id:1, t:tolower2"`); err != nil{
     t.Error(err)
   }
@@ -267,7 +267,7 @@ version:
 tags:
   - Add some tags
   - For filtering
-declarations:
+defs:
   - name: even
     type: operator|operator|transformation
     description: Will match if the number is even

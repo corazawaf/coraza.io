@@ -26,7 +26,7 @@ Transactions are an instance of an url call for a Waf instance, transactions are
 Macro expansions are a function available for ``transactions``, a macro expansion will compile a string and provide variables data to the current context. Macro expansion is performed by running a regular expresion that will find ``%{request_headers.test}`` and replace it with it's value using:
 
 ```go
-v1 := tx.GetCollection(NameToVariable("request_headers")).GetFirstString("test")
+v1 := tx.GetCollection(variables.RequestHeaders).GetFirstString("test")
 v2 := tx.MacroExpansion("%{request_headers.test}")
 v1 == v2
 // true
@@ -60,13 +60,13 @@ The return of this function contains each ``MatchData``, which will tell the tra
 
 ### Operators
 
-Operators are stored in ``github.com/jptosso/coraza-waf/operators`` and contains an initializer and an evaluation function. Initializers are used to apply arguments during compilation, for example, ``"@rx /\d+/"`` will run ``op.Init("/\\d+")``. ``op.Evaluate(tx, "args")`` is applied for each compiled variable and will return if the condition matches. Operators uses ``Transaction`` to create logs, capture fields and access additional variables from the transaction.
+Operators are stored in ``github.com/jptosso/coraza-waf/v2/operators`` and contains an initializer and an evaluation function. Initializers are used to apply arguments during compilation, for example, ``"@rx /\d+/"`` will run ``op.Init("/\\d+")``. ``op.Evaluate(tx, "args")`` is applied for each compiled variable and will return if the condition matches. Operators uses ``Transaction`` to create logs, capture fields and access additional variables from the transaction.
 
 **Note:** Operators must be concurrent-friendly
 
 ### Actions
 
-Actions are stored in ``github.com/jptosso/coraza-waf/actions`` and contains an initializer and an evaluation function, the initializers are evaluated during compilation, for example, ``id:4`` will run ``act.Init("4")``. Depending on the ``Type()`` of each action, it will run on different phases.
+Actions are stored in ``github.com/jptosso/coraza-waf/v2/actions`` and contains an initializer and an evaluation function, the initializers are evaluated during compilation, for example, ``id:4`` will run ``act.Init("4")``. Depending on the ``Type()`` of each action, it will run on different phases.
 
 * **Non-Disruptive:** Do something, but that something does not and cannot affect the rule processing flow. Setting a variable, or changing its value is an example of a non-disruptive action. Non-disruptive action can appear in any rule, including each rule belonging to a chain. **Non-disruptive rules are evaluated after the rule matches some data**.
 * **Flow actions:** These actions affect the rule flow (for example skip or skipAfter). Flow actions are evaluated after the rule successfully matched and will only run for the parent rule of a chain.
@@ -87,14 +87,14 @@ Rule Groups are like Modsecurity ``Rules``, it's just a container for rules that
 
 Collections are used by Coraza to store ``Variables``, all Variables are treated as the same type, even if they map values, they are single values or arrays.
 
-Collections are stored as a slice ``[]*Collection``, each index is assigned based on it's constant name provided by ``variables.go``. For example, if you want to get a collection you might use ``tx.GetCollection(VARIABLE_FILES)``. If you want to transform a named variable to it's constant you may use: 
+Collections are stored as a slice ``[]*Collection``, each index is assigned based on it's constant name provided by ``variables.go``. For example, if you want to get a collection you might use ``tx.GetCollection(variables.Files)``. If you want to transform a named variable to it's constant you may use: 
 
 ```go
-b, _ := NameToVariable("FILES")
+b, _ := variables.ParseVariable("FILES")
 tx.GetCollection(b)
 ```
 
-In the following example we are showing the output for ``tx.GetCollection(VARIABLE_REQUEST_HEADERS).Data()``.
+In the following example we are showing the output for ``tx.GetCollection(variables.RequestHeaders).Data()``.
 
 ```json
 {
@@ -104,9 +104,9 @@ In the following example we are showing the output for ``tx.GetCollection(VARIAB
 }
 ```
 
-Some helpers may be used for this cases, like ``tx.GetCollection(VARIABLE_REQUEST_HEADERS).GetFirstString("")``.
+Some helpers may be used for this cases, like ``tx.GetCollection(variables.RequestHeaders).GetFirstString("")``.
 
-Variables are compiled in runtime in order to support Regex(precompiled) and XML, the function ``tx.GetField(variable, exceptions)``. Using RuleVariable.Exceptions and []exceptions might seem redundant but both are different, the list of exception is complemented from the rule. In case of Regex, ``GetField`` will use ``RuleVariable.Regex`` to match data instead of ``RuleVariable.Key``.
+Variables are compiled in runtime in order to support Regex(precompiled) and XML, the function ``tx.GetField(variable)``. Using RuleVariable.Exceptions and []exceptions might seem redundant but both are different, the list of exception is complemented from the rule. In case of Regex, ``GetField`` will use ``RuleVariable.Regex`` to match data instead of ``RuleVariable.Key``.
 
 **Note:** Collections are not concurrent-safe, don't share transactions between routines.
 
@@ -119,7 +119,7 @@ Phases are used by ``RuleGroup`` to filter between execution phases on HTTP/1.1 
 This phase process theorically consists in three phases:
 
 * Connection (```tx.ProcessConnection()```): Request address and port
-* Request line (```tx.ProcessUri()```): Request URL, does not include GET arguments
+* Request line (```tx.ProcessURI()```): Request URL, does not include GET arguments
 * Request headers (```tx.ProcessRequestHeaders()```) Will evaluate phase 1
 
 **Phase 2: Request Body**

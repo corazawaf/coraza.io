@@ -13,6 +13,8 @@ weight: 100
 toc: true
 ---
 
+# Coraza Web Application Firewall v2
+
 ![Build Status](https://github.com/jptosso/coraza-waf/actions/workflows/regression.yml/badge.svg)
 ![CodeQL](https://github.com/jptosso/coraza-waf/workflows/CodeQL/badge.svg)
 [![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=jptosso_coraza-waf&metric=sqale_rating)](https://sonarcloud.io/dashboard?id=jptosso_coraza-waf)
@@ -23,35 +25,24 @@ toc: true
 <div align="center">
 	<img src="https://coraza.io/images/logo.png" width="50%">
 </div>
+Welcome to Coraza Web Application Firewall, this project is an enterprise grade, Golang port of ModSecurity, flexible and powerful enough to serve as the baseline for many projects.
 
 ## Prerequisites
 
 * Linux distribution (Debian and Centos are recommended, Windows is not supported yet)
-* Golang compiler v1.16 or v1.17
+* Golang compiler v1.16+
 
-### Optional requirements
 
-In this Coraza version, you can set CGO_ENABLED to 1 or 0, if you set it to 1, you will be required to link libinjection and libpcre to enable PCRE expressions, @detectSQLi and @detectXSS, if you set it to 0 you won't need any dynamic library but your implementation won't support @detectSQLi, @detectXSS nor PCRE expressions, **which means OWASP CRS won't work**.
+## Migrate from v1
 
-Future versions of Coraza will fully remove CGO.
+* Rollback SecAuditLog to the legacy syntax (serial/concurrent)
+* Attach an error log handler using ```waf.SetErrorLogCb(cb)``` (optional)
+* If you are using @detectXSS and @detectSQLi (CRS) install the plugin [github.com/jptosso/coraza-libinjection](https://github.com/jptosso/coraza-libinjection)
+* If you are using @rx with libpcre (CRS) install the plugin [github.com/jptosso/coraza-pcre](https://github.com/jptosso/coraza-pcre)
+* If you are using low level APIs check the complete changelog as most of them were removed
 
-|             | CGO Enabled | CGO Disabled |
-|-------------|-------------|--------------|
-| @detectSQLi | Yes         | No           |
-| @detectXSS  | Yes         | No           |
-| PCRE regex  | Yes         | No           |
-| RE2 regex   | Yes         | Yes          |
-| OWASP CRS   | Yes         | No           |
 
-In case you have to use CGO, the requirements are the following:
-
-* libpcre-dev (``apt install libpcre++-dev`` for Ubuntu)
-* **CGO_ENABLED** environmental variable must be set to 1
-* libinjection must be installed and linked
-
-For instructions to install libinjection see this tutorial.
-
-## Running the test suite
+## Running the tests
 
 Run the go tests:
 
@@ -60,14 +51,24 @@ go test ./...
 go test -race ./...
 ```
 
+## Coraza v2 differences with v1
+
+* Full internal API refactor, public API has not changed
+* Full audit engine refactor with plugins support
+* New enhanced plugins interface for transformations, actions, body processors and operators
+* Now we are fully compliant with Seclang from modsecurity v2
+* Many features removed and transformed into plugins: XML processing, PCRE regex, Libinjection (@detectXSS and @detectSQLi)
+* Better debug logging
+* New error logging (like modsecurity)
+
 ## Your first Coraza WAF project
 
 ```go
 package main
 import(
 	"fmt"
-	coraza"github.com/jptosso/coraza-waf"
-	"github.com/jptosso/coraza-waf/seclang"
+	"github.com/jptosso/coraza-waf/v2"
+	"github.com/jptosso/coraza-waf/v2/seclang"
 )
 
 func main() {
@@ -76,80 +77,20 @@ func main() {
 	parser, _ := seclang.NewParser(waf)
 
 	// Now we parse our rules
-	parser.FromString(`SecRule REMOTE_ADDR "@rx .*" "id:1,phase:1,drop"`)
+	if err := parser.FromString(`SecRule REMOTE_ADDR "@rx .*" "id:1,phase:1,deny,status:403"`); err != nil {
+		fmt.Println(err)
+	}
 
 	// Then we create a transaction and assign some variables
 	tx := waf.NewTransaction()
 	tx.ProcessConnection("127.0.0.1", 8080, "127.0.0.1", 12345)
 
-	tx.ProcessRequestHeaders()
-
-	// Finally we check the transaction status
-	if tx.Interrupted() {
-		fmt.Println("Transaction was interrupted")
+	// Finally we process the request headers phase, which may return an interruption
+	if it := tx.ProcessRequestHeaders(); it != nil {
+		fmt.Printf("Transaction was interrupted with status %d\n", it.Status)
 	}
 }
 ```
-
-### Integrate with any framework
-
-Using the standard net/http library:
-
-```go
-package main
-import(
-	engine"github.com/jptosso/coraza-waf"
-	"github.com/jptosso/coraza-waf/seclang"
-	"net/http"
-)
-
-func SomeErrorPage(w http.ResponseWriter) {
-	w.WriteHeader(403)
-	w.Write([]byte("WAF ERROR")
-}
-
-func someHandler(waf *engine.Waf) http.Handler {
-  return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-    tx := waf.NewTransaction()
-	tx.ProcessRequest(r)
-	if tx.Interruption != nil {
-		SomeErrorPage(w)
-	}
-  })
-}
-```
-
-Responses are harder to handle, because we must intercept the response writers and integrate them with the Coraza BodyReader.
-
-### Handling HTTP responses with Coraza
-
-Responses are usually long buffers, so duplicating the response or buffering it in memory is hard. 
-In order to avoid issues while handling long buffers Coraza provides the engine.BodyReader struct, it will handle long buffers storing them to temporary files if needed.
-
-```go
-func someHandler(waf *engine.Waf) http.Handler {
-	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		tx := waf.NewTransaction()
-		tx.ProcessRequest(r)
-		if tx.Interruption != nil {
-			SomeErrorPage(w)
-		}
-		// We will use the Coraza response reader:
-		tx.ProcessResponseHeaders()
-		tx.ResponseBuffer.Write([]byte("Some of the response body"))
-		tx.ProcessResponseBody()
-		// We will dump the buffered response into the response writer:
-		io.Copy(w, tx.ResponseBuffer)
-	})
-}
-
-```
-
-## Compatibility status
-
-Coraza is compatible with most Modsecurity features but we have removed Lua support and persistent collections. Both are going to be replaced with better functionalities. 
-
-OWASP Core Ruleset is fully compatible, except for DDOS protection.
 
 ## Why Coraza WAF?
 
@@ -160,23 +101,38 @@ OWASP Core Ruleset is fully compatible, except for DDOS protection.
 * **Innovation:** Coraza WAF isn't just a ModSecurity port, it must include awesome new functions (in the meantime it's just a port :sweat_smile:)
 * **Community:** Coraza WAF is a community project and everyone's idea will be heard
 
+### Plugins roadmap
+
+* WASM scripts support
+* Lua script support
+* Integrated DDOS protection and directives with iptables(Or others) integration
+* Integrated bot detection with captcha
+* Open Policy Agent package (OPA)
+* Enhanced data signing features (cookies, forms, etc)
+* OpenAPI enforcement
+* JWT enforcement
+* XML request body processor
+* Libinjection integration (done)
+* Lib PCRE integration (done)
+* Bluemonday policies (maybe)
+
 ## Coraza WAF implementations
 
 * [Caddy Plugin (Reverse Proxy and Web Server)](https://github.com/jptosso/coraza-caddy) (Stable)
-* [Traefik Plugin (Reverse Proxy and Web Server)](#) (soon)
-* [Gin Middleware (Web Framework)](#) (soon)
+* [Traefik Plugin (Reverse Proxy and Web Server)](https://github.com/jptosso/coraza-traefik) (preview)
+* [Gin Middleware (Web Framework)](https://github.com/jptosso/coraza-gin) (Preview)
 * [Buffalo Plugin (Web Framework)](#) (soon)
+* [Coraza Server (HAPROXY, REST and GRPC)](https://github.com/jptosso/coraza-server) (experimental)
+* [Apache httpd](https://github.com/jptosso/coraza-server) (experimental)
+* [Nginx](https://github.com/jptosso/coraza-server) (soon)
+* [Coraza C Exports](https://github.com/jptosso/coraza-cexport) (experimental)
 
 ## Some useful tools
 
-* [Go FTW](#): rule testing engine
-* [Coraza Sandbox](#): rule testing sandbox with web interface
-* [Coraza Benchmark](#): benchmark Coraza and Modsecurity against multiple use-cases
-
+* [Go FTW](https://github.com/fzipi/go-ftw): rule testing engine
+* [Coraza Playground](https://playground.coraza.io/): rule testing sandbox with web interface
 
 ## Troubleshooting
-
-Create an issue or a discussion thread.
 
 ## How to contribute
 
@@ -191,11 +147,21 @@ egrep -Rin "TODO|FIXME" -R --exclude-dir=vendor *
 
 ## Special thanks
 
-* Modsecurity team for creating SecLang
-* OWASP Coreruleset team for the CRS and their feedback
+* Modsecurity team for creating ModSecurity
+* OWASP Coreruleset team for the CRS and their help
+* @fzipi for his support and help
+* @dune73 for the Modsecurity Handbook (The bible for this project) and all of his support
+
+### Companies using Coraza
+
+* [Babiel](https://babiel.com) (supporter)
 
 ## About
 
 The name **Coraza** is trademarked, **Coraza** is a registered trademark of Juan Pablo Tosso.
 
 * Author on Twitter [@jptosso](https://twitter.com/jptosso)
+
+## Donations
+
+For donations, see [Donations site](https://www.tosso.io/donate)

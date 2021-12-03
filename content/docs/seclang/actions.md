@@ -77,8 +77,6 @@ SecAction phase:3,allow,id:98
 
 **Processing Phases:** 3 and 4.
 
-**Supported:** TBI
-
 **Example:**
 
 ```
@@ -470,8 +468,6 @@ Warning : Keep in mind that if you specify the incorrect phase, the variable use
 ## prepend
 **Description**: Prepends the text given as parameter to response body. Content injection must be enabled (using the SecContentInjection directive). No content type checks are made, which means that before using any of the content injection actions, you must check whether the content type of the response is adequate for injection.
 
-**Supported on Coraza:** TBI
-
 **Action Group:** Non-disruptive
 
 **Processing Phases:** 3 and 4.
@@ -684,8 +680,6 @@ Setsid takes an individual variable, not a collection. Variables within an actio
 **Description**: Creates, removes, and updates environment variables that can be accessed by the implementation.
 
 **Action Group:** Non-disruptive
-
-**Supported on Coraza:** TBI
 
 Examples:
 

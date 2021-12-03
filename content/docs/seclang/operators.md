@@ -51,30 +51,6 @@ Would match on -
 But not on -
 Your site has a wide selection of computers.
 
-## detectSQLi
-**Description:** Returns true if SQL injection payload is found. This operator uses LibInjection to detect SQLi attacks.
-
-**Example:**
-
-```
-# Detect SQL Injection inside request uri data" 
-SecRule REQUEST_URI "@detectSQLi" "id:152"
-```
-
-**Note:** This operator supports the "capture" action.
-
-## detectXSS
-**Description:** Returns true if XSS injection is found. This operator uses LibInjection to detect XSS attacks.
-
-**Example:**
-
-```
-# Detect XSS Injection inside request body 
-SecRule REQUEST_BODY "@detectXSS" "id:12345,log,deny"
-```
-
-**Note:** This operator supports the "capture" action.
-
 ## endsWith
 **Description:** Returns true if the parameter string is found at the end of the input. Macro expansion is performed on the parameter string before comparison.
 
@@ -408,16 +384,14 @@ SecRule REQUEST_HEADERS:User-Agent "@rx (?i)nikto" phase:1,id:174,t:none
 SecRule REQUEST_HEADERS:User-Agent "(?i)nikto" "id:175"
 ```
 
-Regular expressions are handled by the PCRE library http://www.pcre.org. Coraza compiles its regular expressions with the following settings:
+Regular expressions are handled by the RE2. Coraza compiles its regular expressions with the following settings:
 
 The entire input is treated as a single line, even when there are newline characters present.
 All matches are case-sensitive. If you wish to perform case-insensitive matching, you can either use the lowercase transformation function or force case-insensitive matching by prefixing the regular expression pattern with the (?i) modifier (a PCRE feature; you will find many similar features in the PCRE documentation).
-The PCRE_DOTALL and PCRE_DOLLAR_ENDONLY flags are set during compilation, meaning that a single dot will match any character, including the newlines, and a $ end anchor will not match a trailing newline character.
+A single dot will match any character, including the newlines, and a $ end anchor will not match a trailing newline character.
 Regular expressions are a very powerful tool. You are strongly advised to read the PCRE documentation to get acquainted with its features.
 
 **Note:** This operator supports the "capture" action.
-
-**Note 2:** If you are using a non-CGO compilation of Coraza, @rx will only support RE2 expressions.
 
 ## streq
 **Description:** Performs a string comparison and returns true if the parameter string is identical to the input string. Macro expansion is performed on the parameter string before comparison.

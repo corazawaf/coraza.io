@@ -708,7 +708,8 @@ This variable holds the current weekday value (0–6). The following rule trigge
 SecRule TIME_WDAY "^(0|6)$" "id:80"
 ```
 
-## TIME_YEAR
+## TIME_YEAR
+
 This variable holds the current four-digit year value.
 
 **Supported:** TBI

@@ -2,6 +2,7 @@ bin
 node_modules
 public
 resources
+.DS_Store
 # Local Netlify folder
 .netlify
 TODO

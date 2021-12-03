@@ -1,16 +1,27 @@
 ---
 title: "Using Plugins"
-description: ""
-lead: ""
+description: "Plugins can extend most Coraza functionalities like, audit logging, geo ip, operators, actions, transformations and body processors."
+lead: "Plugins can extend most Coraza functionalities like, audit logging, geo ip, operators, actions, transformations and body processors."
 date: 2021-09-05T14:03:58-03:00
 lastmod: 2021-09-05T14:03:58-03:00
-draft: true
+draft: false
 images: []
 menu: 
   docs:
-    parent: ""
+    parent: "tutorials"
 weight: 999
 toc: true
 ---
 
-{{< img src="using-plugins.jpg" alt="Using Plugins" caption="Using Plugins" >}}
+Plugins must be included in your project's main package, for example:
+
+```go
+package main
+
+include(
+  "github.com/jptosso/coraza-waf/v2"
+  _ "github.com/jptosso/coraza-libinjection"
+)
+```
+
+The previous code will automatically add the @detectXSS and @detectSQLi operators. (Please note this plugin requires libinjection)
