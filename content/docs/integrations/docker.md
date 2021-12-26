@@ -18,13 +18,13 @@ By default each image is powered by Caddy, future versions may use different imp
 ## Hosting some simple static server
 
 ```
-$ docker run --name my-waf -p 8080:8080 -v /path/to/config:/coraza:ro -d jptosso/coraza-waf
+$ docker run --name my-waf -p 8080:8080 -v /path/to/config:/coraza:ro -d jptosso/coraza-caddy
 ```
 
 Alternatively, a simple Dockerfile can be used to generate a new image that includes the necessary content (which is a much cleaner solution than the bind mount above):
 
 ```
-FROM jptosso/coraza-waf
+FROM jptosso/coraza-caddy
 COPY static-settings-directory /coraza
 ```
 
@@ -43,10 +43,3 @@ $ docker run --name my-waf -d -p 9090:9090 some-waf-server
 ```
 
 Then you can hit http://localhost:9090 or http://host-ip:9090 in your browser.
-
-## Environmental variables
-
-### Core Ruleset support
-
-**CRS_USE:** if set to true, the image will import CRS from **CRS_VERSION** or latest.
-**CRS_VERSION:** which CRS version to use, default is latest.
