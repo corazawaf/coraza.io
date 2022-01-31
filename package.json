@@ -46,18 +46,18 @@
     "exec-bin": "^1.0.0",
     "hugo-installer": "^3.1",
     "flexsearch": "^0.7.21",
-    "highlight.js": "^11.3",
+    "highlight.js": "^11.4",
     "instant.page": "^5.1",
     "katex": "^0.15",
     "lazysizes": "^5.3",
-    "markdownlint-cli": "^0.29",
+    "markdownlint-cli": "^0.30",
     "mermaid": "^8.13",
     "postcss": "^8.3",
     "postcss-cli": "^9.0",
     "purgecss-whitelister": "^2.4",
-    "shx": "^0.3.3",
+    "shx": "^0.3.4",
     "stylelint": "^14.0",
-    "stylelint-config-standard": "^23.0"
+    "stylelint-config-standard": "^24.0"
   },
   "otherDependencies": {
     "hugo": "0.87.0"
