@@ -1,0 +1,37 @@
+{{ define "main" }}
+<div class="row justify-content-center mb-1">
+    <div class="col-md-12 col-lg-10 col-xl-8">
+        <article>
+            <h1 class="text-center">{{ .Title }}</h1>
+            <div class="text-center">{{ .Content }}</div>
+            <div class="card-list">
+                {{ range .Data.Pages -}}
+                <div class="card">
+                    <div class="card-body">
+                        <h2 class="h3"><a class="stretched-link text-body" href="{{ .RelPermalink }}">{{ .Params.title
+                                }}</a> 
+                                {{ if .Params.official }}
+                                ✅
+                                {{ end }}
+                        </h2>
+                        <p>
+                            <strong>Author:</strong> {{ .Params.author }} - 
+                            <strong>Repo:</strong> <a href="{{ .Params.repo }}">{{ .Params.repo }}</a> - 
+                            <strong>Compatibility:</strong> {{ delimit .Params.compatibility ", " }}
+                        </p>
+                        <p>{{ .Params.lead | safeHTML }}</p>
+                    </div>
+                </div>
+                {{ end -}}
+            </div>
+        </article>
+    </div>
+</div>
+<p class="edit-page"><a href="{{ .Site.Params.docsRepo }}/tree/master/layouts/plugins/"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+    stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-plus">
+    <line x1="12" y1="5" x2="12" y2="19"></line>
+    <line x1="5" y1="12" x2="19" y2="12"></line>
+</svg>Add plugin on GitHub</a></p>
+
+{{ end }}
+

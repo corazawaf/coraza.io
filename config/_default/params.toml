@@ -1,16 +1,16 @@
 # Meta Data for SEO
 
 ## Homepage
-title = "Coraza WAF"
+title = "OWASP Coraza WAF"
 titleSeparator = "-"
-titleAddition = "Enterprise-grade open source web application firewall"
-description = "Coraza is an enterprise-grade, open source and high performance Web Application Firewall ready to easily protect your beloved applications."
+titleAddition = "Enterprise-grade open source web application firewall library"
+description = "OWASP Coraza is an enterprise-grade, open-source, and high-performance Web Application Firewall library ready to protect your beloved applications."
 
 ## Open Graph
 images = ["doks.png"]
 ogLocale = "en_US"
 domainTLD = "coraza.io"
-titleHome = "Coraza Web Application Firewall"
+titleHome = "OWASP Coraza"
 
 ## Twitter Cards
 twitterSite = "@corazatech"
@@ -19,11 +19,11 @@ twitterCreator = "@jptosso"
 ## JSON-LD
 # schemaType = "Organization"
 schemaType = "Person"
-schemaName = "Coraza WAF"
+schemaName = "OWASP oraza WAF"
 schemaAuthor = "Juan Pablo Tosso"
 schemaAuthorTwitter = "https://twitter.com/jptosso"
 schemaAuthorLinkedIn = "https://www.linkedin.com/in/jptosso/"
-schemaAuthorGitHub = "https://github.com/jptosso"
+schemaAuthorGitHub = "https://github.com/corazawaf"
 schemaLocale = "en-US"
 schemaLogo = "logo-doks.png"
 schemaLogoWidth = 512
@@ -31,9 +31,9 @@ schemaLogoHeight = 512
 schemaImage = "doks.png"
 schemaImageWidth = 1280
 schemaImageHeight = 640
-schemaTwitter = "https://twitter.com/corazatech"
+schemaTwitter = "https://twitter.com/jptosso"
 schemaLinkedIn = ""
-schemaGitHub = "https://github.com/jptosso/coraza-waf"
+schemaGitHub = "https://github.com/corazawaf/coraza"
 schemaSection = "blog"
 
 ## Sitelinks Search Box
