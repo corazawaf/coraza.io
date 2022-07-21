@@ -20,7 +20,7 @@ toc: true
 Core Ruleset can be normally installed by importing each required file in the following order:
 
 ```sh
-wget https://raw.githubusercontent.com/jptosso/coraza-waf/v2/master/coraza.conf-recommended -o coraza.conf
+wget https://raw.githubusercontent.com/jptosso/coraza-waf/v2/master/coraza.conf-recommended -O coraza.conf
 git clone https://github.com/coreruleset/coreruleset
 ```
 
