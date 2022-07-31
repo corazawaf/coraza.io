@@ -15,11 +15,11 @@ toc: true
 
 # Coraza Web Application Firewall v2
 
-![Build Status](https://github.com/jptosso/coraza-waf/actions/workflows/regression.yml/badge.svg)
-![CodeQL](https://github.com/jptosso/coraza-waf/workflows/CodeQL/badge.svg)
+![Build Status](https://github.com/corazawaf/coraza/actions/workflows/regression.yml/badge.svg)
+![CodeQL](https://github.com/corazawaf/coraza/workflows/CodeQL/badge.svg)
 [![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=jptosso_coraza-waf&metric=sqale_rating)](https://sonarcloud.io/dashboard?id=jptosso_coraza-waf)
 [![Coverage](https://sonarcloud.io/api/project_badges/measure?project=jptosso_coraza-waf&metric=coverage)](https://sonarcloud.io/dashboard?id=jptosso_coraza-waf)
-[![GoDoc](https://godoc.org/github.com/jptosso/coraza-waf?status.svg)](https://godoc.org/github.com/jptosso/coraza-waf)
+[![GoDoc](https://godoc.org/github.com/corazawaf/coraza?status.svg)](https://godoc.org/github.com/corazawaf/coraza)
 [![Project Status: Active – The project has reached a stable, usable state and is being actively developed.](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active)
 
 <div align="center">
@@ -67,8 +67,8 @@ go test -race ./...
 package main
 import(
 	"fmt"
-	"github.com/jptosso/coraza-waf/v2"
-	"github.com/jptosso/coraza-waf/v2/seclang"
+	"github.com/corazawaf/coraza/v2"
+	"github.com/corazawaf/coraza/v2/seclang"
 )
 
 func main() {

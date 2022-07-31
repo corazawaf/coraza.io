@@ -9,7 +9,7 @@ images: []
 
 <p align="center">
   <samp>
-    Hi, I'm Juan Pablo Tosso, Chief Cybersecurity Officer at <a href="https://makros.cl/">Makros</a> and founder of Coraza.
+    Hi, I'm Juan Pablo Tosso, OWASP #Coraza project leader - Research Engineer at @traceableai, Proud Father and Open-Source Developer.
   </samp>
   <br><br>
 </p>

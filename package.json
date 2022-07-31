@@ -1,11 +1,11 @@
 {
-  "name": "@jptosso/coraza.io",
+  "name": "@corazawaf/coraza.io",
   "description": "Coraza.io website",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "browserslist": [
     "defaults"
   ],
-  "repository": "https://github.com/jptosso/coraza.io",
+  "repository": "https://github.com/corazawaf/coraza.io",
   "license": "Apache2",
   "publishConfig": {
     "access": "public"
@@ -60,6 +60,6 @@
     "stylelint-config-standard": "^26.0"
   },
   "otherDependencies": {
-    "hugo": "0.87.0"
+    "hugo": "0.101.0"
   }
 }
