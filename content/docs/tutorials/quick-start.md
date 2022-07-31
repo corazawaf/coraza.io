@@ -21,7 +21,7 @@ If you are not looking to use Coraza WAF as a library and you want a working WAF
 ## Add Coraza to your go project
 
 ```sh
-go get github.com/jptosso/coraza-waf/v2@latest
+go get github.com/corazawaf/coraza/v2@latest
 ```
 
 ### Create a WAF instance
@@ -31,7 +31,7 @@ WAF instances are the main container for settings and rules which are inherited 
 ```go
 package main
 import (
-  "github.com/jptosso/coraza-waf/v2"
+  "github.com/corazawaf/coraza/v2"
 )
 func initCoraza(){
   coraza.NewWaf()
@@ -48,8 +48,8 @@ Rules are unmarshaled using the seclang package which provides functionalities t
 ```go
 package main
 import (
-  "github.com/jptosso/coraza-waf/v2"
-  "github.com/jptosso/coraza-waf/v2/seclang"
+  "github.com/corazawaf/coraza/v2"
+  "github.com/corazawaf/coraza/v2/seclang"
 )
 func parseRules(waf *coraza.Waf){
   parser, _ := seclang.NewParser(waf)

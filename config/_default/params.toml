@@ -55,7 +55,7 @@ copyRight = "Copyright (c) 2020-2021 Juan Pablo Tosso"
 
 # Alert
 alert = false
-alertText = "Like Coraza? <a class=\"alert-link\" href=\"https://github.com/jptosso/coraza-waf/stargazers\">Star on GitHub</a>. Thanks!</a>"
+alertText = "Like Coraza? <a class=\"alert-link\" href=\"https://github.com/corazawaf/coraza/stargazers\">Star on GitHub</a>. Thanks!</a>"
 
 # Edit Page
 docsRepo = "https://github.com/jptosso/coraza.io"

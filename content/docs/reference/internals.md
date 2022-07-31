@@ -60,13 +60,13 @@ The return of this function contains each ``MatchData``, which will tell the tra
 
 ### Operators
 
-Operators are stored in ``github.com/jptosso/coraza-waf/v2/operators`` and contains an initializer and an evaluation function. Initializers are used to apply arguments during compilation, for example, ``"@rx /\d+/"`` will run ``op.Init("/\\d+")``. ``op.Evaluate(tx, "args")`` is applied for each compiled variable and will return if the condition matches. Operators uses ``Transaction`` to create logs, capture fields and access additional variables from the transaction.
+Operators are stored in ``github.com/corazawaf/coraza/v2/operators`` and contains an initializer and an evaluation function. Initializers are used to apply arguments during compilation, for example, ``"@rx /\d+/"`` will run ``op.Init("/\\d+")``. ``op.Evaluate(tx, "args")`` is applied for each compiled variable and will return if the condition matches. Operators uses ``Transaction`` to create logs, capture fields and access additional variables from the transaction.
 
 **Note:** Operators must be concurrent-friendly
 
 ### Actions
 
-Actions are stored in ``github.com/jptosso/coraza-waf/v2/actions`` and contains an initializer and an evaluation function, the initializers are evaluated during compilation, for example, ``id:4`` will run ``act.Init("4")``. Depending on the ``Type()`` of each action, it will run on different phases.
+Actions are stored in ``github.com/corazawaf/coraza/v2/actions`` and contains an initializer and an evaluation function, the initializers are evaluated during compilation, for example, ``id:4`` will run ``act.Init("4")``. Depending on the ``Type()`` of each action, it will run on different phases.
 
 * **Non-Disruptive:** Do something, but that something does not and cannot affect the rule processing flow. Setting a variable, or changing its value is an example of a non-disruptive action. Non-disruptive action can appear in any rule, including each rule belonging to a chain. **Non-disruptive rules are evaluated after the rule matches some data**.
 * **Flow actions:** These actions affect the rule flow (for example skip or skipAfter). Flow actions are evaluated after the rule successfully matched and will only run for the parent rule of a chain.

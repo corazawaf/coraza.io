@@ -37,7 +37,7 @@ Plugin model is based on Caddy plugins system, they must be compiled within the 
 
 ```go
 import(
-    "github.com/jptosso/coraza-waf/v2"
+    "github.com/corazawaf/coraza/v2"
     _ "github.com/someone/somecorazaplugin"
 )
 ```
@@ -97,8 +97,8 @@ Once the action is created, it must be wrapper inside a ```type PluginActionWrap
 
 ```go
 import(
-    "github.com/jptosso/coraza-waf/v2/actions"
-    "github.com/jptosso/coraza-waf/v2/types"
+    "github.com/corazawaf/coraza/v2/actions"
+    "github.com/corazawaf/coraza/v2/types"
 )
 
 func init() {
@@ -130,7 +130,7 @@ type Transformation = func(input string, tools *Tools) string
 
 ```go
 import (
-  "github.com/jptosso/coraza-waf/v2/transformations"
+  "github.com/corazawaf/coraza/v2/transformations"
   "strings"
 )
 
@@ -184,8 +184,8 @@ Once the operator is created, it must be wrapper inside a ```type PluginOperator
 
 ```go
 import(
-    "github.com/jptosso/coraza-waf/v2/operators"
-    "github.com/jptosso/coraza-waf/v2/types"
+    "github.com/corazawaf/coraza/v2/operators"
+    "github.com/corazawaf/coraza/v2/types"
 )
 
 func init() {
@@ -207,9 +207,9 @@ There are no special helpers to test plugins but you may use the seclang compile
 
 ```go
 import(
-    "github.com/jptosso/coraza-waf/v2/seclang"
-    "github.com/jptosso/coraza-waf/v2/types"
-    "github.com/jptosso/coraza-waf/v2/transformations"
+    "github.com/corazawaf/coraza/v2/seclang"
+    "github.com/corazawaf/coraza/v2/types"
+    "github.com/corazawaf/coraza/v2/transformations"
     "strings"
     "testing"
 )
