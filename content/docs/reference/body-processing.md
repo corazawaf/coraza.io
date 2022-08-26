@@ -13,10 +13,10 @@ weight: 0
 toc: true
 ---
 
-## BodyBuffer struct
+## BodyBuffer
 
-## Handling http.Request bodies
+## Handling http.Request body
 
-## Handling http.Response bodies
+## Handling http.Response body
 
-## Handling other bodies
+## Body Processors

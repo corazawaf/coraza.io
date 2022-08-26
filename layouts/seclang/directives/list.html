@@ -1,0 +1,71 @@
+{{ define "main" }}
+<div class="row flex-xl-nowrap">
+    <div
+        class="col-lg-5 col-xl-4 docs-sidebar{{ if ne .Site.Params.options.navbarSticky true }} docs-sidebar-top{{ end }} d-none d-lg-block">
+        <nav {{ if eq .Site.Params.menu.section.collapsibleSidebar false }}id="sidebar-default" {{ end
+            }}class="docs-links" aria-label="Main navigation">
+            {{ partial "sidebar/docs-menu.html" . }}
+        </nav>
+    </div>
+    <nav class="docs-toc{{ if ne .Site.Params.options.navbarSticky true }} docs-toc-top{{ end }} d-none d-xl-block col-xl-3"
+        aria-label="Secondary navigation">
+        {{ partial "sidebar/docs-toc.html" . }}
+    </nav>
+    <main class="docs-content col-lg-11 col-xl{{ if eq .Site.Params.options.fullWidth false }}-9{{ end }}">
+            {{ if .Site.Params.options.breadCrumb -}}
+            <!-- https://discourse.gohugo.io/t/breadcrumb-navigation-for-highly-nested-content/27359/6 -->
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    {{ partial "main/breadcrumb" . -}}
+                    <li class="breadcrumb-item active" aria-current="page">{{ .Title }}</li>
+                </ol>
+            </nav>
+            {{ end }}
+            <h1>{{ .Title }}</h1>
+            <nav class="d-xl-none" aria-label="Quaternary navigation">
+                TOC
+                {{ partial "sidebar/docs-toc.html" . }}
+            </nav>
+            <!-- BEGIN CONTENT -->
+                {{ range .Data.Pages -}}
+                <h2 id="{{ .Params.title }}">
+                    <a href="{{ .RelPermalink }}">{{ .Params.title }}</a>
+                    <a href="#{{ .Params.title }}" class="anchor" aria-hidden="true">#</a>
+                </a>
+                </h2>
+                <p style="text-align: justify;"><strong>Description:</strong> {{.Params.description}}</p>
+                {{if ne .Params.default nil }}<p><strong>Default:</strong> {{.Params.default}}</p>{{end}}
+                {{if ne .Params.versions nil }}<p><strong>Version Compatibility:</strong> {{.Params.versions }}</p>{{end}}
+                <p><strong>Tinygo Compatibility:</strong> {{.Params.tinygo }}</p>
+                {{if ne .Params.syntax nil }}<p><strong>Syntax:</strong> <code>{{.Params.syntax}}</code></p>{{end}}
+                <p>
+                    {{if eq .Params.versions nil }}
+                        <div class="alert alert-info d-flex" role="alert">
+                            <div class="flex-shrink-1 alert-icon">👉</div>
+                            <div class="w-100">This feature has not been implemented yet, but it might be implemented soon.</div>
+                        </div>
+                    {{end}}
+                    <p style="text-align: justify;">{{ .Content }}</p>
+                </p>
+                <p>{{ .Params.lead | safeHTML }}</p>
+                {{ end -}}
+            <!-- END CONTENT -->
+            <div class="page-footer-meta d-flex flex-column flex-md-row justify-content-between">
+                {{ if .Site.Params.lastMod -}}
+                {{ partial "main/last-modified.html" . }}
+                {{ end -}}
+                {{ if .Site.Params.editPage -}}
+                {{ partial "main/edit-page.html" . }}
+                {{ end -}}
+            </div>
+            {{ partial "main/docs-navigation.html" . }}
+            <!--
+			{{ if not .Site.Params.options.collapsibleSidebar -}}
+				{{ partial "main/docs-navigation.html" . }}
+			{{ else -}}
+				<div class="my-n3"></div>
+			{{ end -}}
+			-->
+        </main>
+</div>
+{{ end }}
