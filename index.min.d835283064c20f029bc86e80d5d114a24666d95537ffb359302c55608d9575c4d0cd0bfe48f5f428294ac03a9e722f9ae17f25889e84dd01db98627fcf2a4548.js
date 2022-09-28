@@ -1382,8 +1382,8 @@ See the GEO variable for an example and more information on various fields avail
 \u003cpre\u003e\u003ccode\u003e# Detect more than 15 headers in a request 
 SecRule \u0026amp;REQUEST_HEADERS_NAMES \u0026quot;@gt 15\u0026quot; \u0026quot;id:158\u0026quot;
 \u003c/code\u003e\u003c/pre\u003e
-\u003cp\u003e\u003cstrong\u003eNote:\u003c/strong\u003e If a value is provided that cannot be converted to an integer (i.e a string) this operator will treat that value as 0.
-inspectFile\u003c/p\u003e
+\u003cp\u003e\u003cstrong\u003eNote:\u003c/strong\u003e If a value is provided that cannot be converted to an integer (i.e a string) this operator will treat that value as 0.\u003c/p\u003e
+\u003ch2 id="inspectfile"\u003einspectFile\u003c/h2\u003e
 \u003cp\u003e\u003cstrong\u003eDescription:\u003c/strong\u003e Executes an external program for every variable in the target list. The contents of the variable is provided to the script as the first parameter on the command line. The program must be specified as the first parameter to the operator. As of version 2.5.0, if the supplied program filename is not absolute, it is treated as relative to the directory in which the configuration file resides. Also as of version 2.5.0, if the filename is determined to be a Lua script (based on its .lua extension), the script will be processed by the internal Lua engine. Internally processed scripts will often run faster (there is no process creation overhead) and have full access to the transaction context of Coraza.\u003c/p\u003e
 \u003cp\u003eThe @inspectFile operator was initially designed for file inspection (hence the name), but it can also be used in any situation that requires decision making using external logic.\u003c/p\u003e
 \u003cpre\u003e\u003ccode\u003e#!/usr/bin/perl
