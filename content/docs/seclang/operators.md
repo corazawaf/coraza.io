@@ -128,8 +128,8 @@ SecRule &REQUEST_HEADERS_NAMES "@gt 15" "id:158"
 ```
 
 **Note:** If a value is provided that cannot be converted to an integer (i.e a string) this operator will treat that value as 0.
-inspectFile
 
+## inspectFile
 **Description:** Executes an external program for every variable in the target list. The contents of the variable is provided to the script as the first parameter on the command line. The program must be specified as the first parameter to the operator. As of version 2.5.0, if the supplied program filename is not absolute, it is treated as relative to the directory in which the configuration file resides. Also as of version 2.5.0, if the filename is determined to be a Lua script (based on its .lua extension), the script will be processed by the internal Lua engine. Internally processed scripts will often run faster (there is no process creation overhead) and have full access to the transaction context of Coraza.
 
 The @inspectFile operator was initially designed for file inspection (hence the name), but it can also be used in any situation that requires decision making using external logic.
