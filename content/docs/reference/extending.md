@@ -221,7 +221,7 @@ func TestToLower2(t *testing.T){
     t.Error(err)
   }
   str := "TOLowEr"
-  if strings.ToLower(str) != transformationToLowercase(TOLowEr) {
+  if strings.ToLower(str) != transformationToLowercase(str) {
     t.Error("Transformation tolower2 failed")
   }
 }
@@ -269,6 +269,6 @@ tags:
   - For filtering
 defs:
   - name: even
-    type: operator|operator|transformation
+    type: action|operator|transformation
     description: Will match if the number is even
 ```
