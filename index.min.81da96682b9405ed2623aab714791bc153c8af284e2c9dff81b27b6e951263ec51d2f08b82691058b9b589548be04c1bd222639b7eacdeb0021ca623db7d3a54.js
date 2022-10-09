@@ -2668,7 +2668,7 @@ make all
 	Evaluate(*Rule, *Transaction)
 	// Type will return the rule type, it's used by Evaluate
 	// to choose when to evaluate each action
-	Type() int
+	Type() types.RuleActionType
 }
 \u003c/code\u003e\u003c/pre\u003e
 \u003ch3 id="action-types"\u003eAction types\u003c/h3\u003e
