@@ -2104,12 +2104,12 @@ SecAction \u0026quot;phase:5,id:95002,pass,log, msg:'File inspection took %{PERF
 \u003ch2 id="perf_swrite"\u003ePERF_SWRITE\u003c/h2\u003e
 \u003cp\u003eContains the time, in microseconds, spent writing to persistent storage.\u003c/p\u003e
 \u003cp\u003e\u003cstrong\u003eSupported on Coraza:\u003c/strong\u003e TBI\u003c/p\u003e
-\u003cp\u003e## QUERY_STRING
-Contains the query string part of a request URI. The value in QUERY_STRING is always provided raw, without URL decoding taking place.\u003c/p\u003e
+\u003ch2 id="query_string"\u003eQUERY_STRING\u003c/h2\u003e
+\u003cp\u003eContains the query string part of a request URI. The value in QUERY_STRING is always provided raw, without URL decoding taking place.\u003c/p\u003e
 \u003cpre\u003e\u003ccode\u003eSecRule QUERY_STRING \u0026quot;attack\u0026quot; \u0026quot;id:34\u0026quot;
 \u003c/code\u003e\u003c/pre\u003e
-\u003cp\u003e## REMOTE_ADDR
-This variable holds the IP address of the remote client.\u003c/p\u003e
+\u003ch2 id="remote_addr"\u003eREMOTE_ADDR\u003c/h2\u003e
+\u003cp\u003eThis variable holds the IP address of the remote client.\u003c/p\u003e
 \u003cpre\u003e\u003ccode\u003eSecRule REMOTE_ADDR \u0026quot;@ipMatch 192.168.1.101\u0026quot; \u0026quot;id:35\u0026quot;
 \u003c/code\u003e\u003c/pre\u003e
 \u003ch2 id="remote_host"\u003eREMOTE_HOST\u003c/h2\u003e
