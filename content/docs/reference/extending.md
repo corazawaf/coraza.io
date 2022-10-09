@@ -54,7 +54,7 @@ type RuleAction interface {
 	Evaluate(*Rule, *Transaction)
 	// Type will return the rule type, it's used by Evaluate
 	// to choose when to evaluate each action
-	Type() int
+	Type() types.RuleActionType
 }
 ```
 
