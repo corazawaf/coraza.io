@@ -2797,7 +2797,7 @@ func TestToLower2(t *testing.T){
     t.Error(err)
   }
   str := \u0026quot;TOLowEr\u0026quot;
-  if strings.ToLower(str) != transformationToLowercase(TOLowEr) {
+  if strings.ToLower(str) != transformationToLowercase(str) {
     t.Error(\u0026quot;Transformation tolower2 failed\u0026quot;)
   }
 }
@@ -2836,7 +2836,7 @@ tags:
   - For filtering
 defs:
   - name: even
-    type: operator|operator|transformation
+    type: action|operator|transformation
     description: Will match if the number is even
 \u003c/code\u003e\u003c/pre\u003e
 `}).add({id:16,href:"https://coraza.io/docs/reference/",title:"Reference",description:"Coraza WAF API References.",content:""}).add({id:17,href:"https://coraza.io/docs/tutorials/",title:"Tutorials",description:"Coraza WAF tutorials.",content:""}).add({id:18,href:"https://coraza.io/docs/",title:"Use Cases",description:"OWASP Coraza WAF use cases.",content:""}).add({id:19,href:"https://coraza.io/docs/seclang/",title:"Seclang",description:"Coraza WAF Docs.",content:""}),userinput.addEventListener("input",t,!0),suggestions.addEventListener("click",n,!0);function t(){const n=5;var s=this.value,o=e.search(s,{limit:n,enrich:!0});suggestions.classList.remove("d-none"),suggestions.innerHTML="";const t={};o.forEach(e=>{e.result.forEach(e=>{t[e.doc.href]=e.doc})});for(const s in t){const o=t[s],e=document.createElement("div");if(e.innerHTML="<a href><span></span><span></span></a>",e.querySelector("a").href=s,e.querySelector("span:first-child").textContent=o.title,e.querySelector("span:nth-child(2)").textContent=o.description,suggestions.appendChild(e),suggestions.childElementCount==n)break}}function n(){for(;suggestions.lastChild;)suggestions.removeChild(suggestions.lastChild);return!1}})()
