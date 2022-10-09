@@ -380,14 +380,14 @@ Contains the time, in microseconds, spent writing to persistent storage.
 
 **Supported on Coraza:** TBI
 
-## QUERY_STRING
+## QUERY_STRING
 Contains the query string part of a request URI. The value in QUERY_STRING is always provided raw, without URL decoding taking place.
 
 ```
 SecRule QUERY_STRING "attack" "id:34"
 ```
 
-## REMOTE_ADDR
+## REMOTE_ADDR
 This variable holds the IP address of the remote client.
 
 ```
