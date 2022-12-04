@@ -204,7 +204,7 @@ Note : SecDataDir is not currently supported. Collections are kept in memory (in
 
 SecRule \u0026amp;REQUEST_HEADERS:Host \u0026quot;@eq 0\u0026quot; \\
         \u0026quot;skipAfter:END_HOST_CHECK,phase:2,rev:'2.1.1',t:none,block,msg:'Request Missing a Host Header',id:'960008',tag:'PROTOCOL_VIOLATION/MISSING_HEADER_HOST',tag:'WASCTC/WASC-21',tag:'OWASP_TOP_10/A7',tag:'PCI/6.5.10',severity:'5',setvar:'tx.msg=%{rule.msg}',setvar:tx.anomaly_score=+%{tx.notice_anomaly_score},setvar:tx.protocol_violation_score=+%{tx.notice_anomaly_score},setvar:tx.%{rule.id}-PROTOCOL_VIOLATION/MISSING_HEADER-%{matched_var_name}=%{matched_var}\u0026quot;
-SecRule REQUEST_HEADERS:Host \u0026quot;^\$\u0026quot; \\
+SecRule REQUEST_HEADERS:Host \u0026quot;^$\u0026quot; \\
         \u0026quot;phase:2,rev:'2.1.1',t:none,block,msg:'Request Missing a Host Header',id:'960008',tag:'PROTOCOL_VIOLATION/MISSING_HEADER_HOST',tag:'WASCTC/WASC-21',tag:'OWASP_TOP_10/A7',tag:'PCI/6.5.10',severity:'5',setvar:'tx.msg=%{rule.msg}',setvar:tx.anomaly_score=+%{tx.notice_anomaly_score},setvar:tx.protocol_violation_score=+%{tx.notice_anomaly_score},setvar:tx.%{rule.id}-PROTOCOL_VIOLATION/MISSING_HEADER-%{matched_var_name}=%{matched_var}\u0026quot;
 SecMarker END_HOST_CHECK
 \u003c/code\u003e\u003c/pre\u003e
@@ -553,7 +553,7 @@ SecRuleUpdateTargetByTag \u0026quot;WASCTC/WASC-31\u0026quot; REQUEST_URI REQUES
 \u003cp\u003e\u003cstrong\u003eAction Group:\u003c/strong\u003e Disruptive\u003c/p\u003e
 \u003cp\u003e\u003cstrong\u003eExample:\u003c/strong\u003e\u003c/p\u003e
 \u003cpre\u003e\u003ccode\u003e# Allow unrestricted access from 192.168.1.100 
-SecRule REMOTE_ADDR \u0026quot;^192\\.168\\.1\\.100\$\u0026quot; phase:1,id:95,nolog,allow
+SecRule REMOTE_ADDR \u0026quot;^192\\.168\\.1\\.100$\u0026quot; phase:1,id:95,nolog,allow
 \u003c/code\u003e\u003c/pre\u003e
 \u003cp\u003ePrior to Coraza 2.5 the allow action would only affect the current phase. An allow in phase 1 would skip processing the remaining rules in phase 1 but the rules from phase 2 would execute. Starting with v2.5.0 allow was enhanced to allow for fine-grained control of what is done. The following rules now apply:\u003c/p\u003e
 \u003cp\u003eIf used one its own, like in the example above, allow will affect the entire transaction, stopping processing of the current phase but also skipping over all other phases apart from the logging phase. (The logging phase is special; it is designed to always execute.)
@@ -582,7 +582,7 @@ SecAction phase:3,allow,id:98
 \u003cp\u003e\u003cstrong\u003eDescription\u003c/strong\u003e: Marks the transaction for logging in the audit log.\u003c/p\u003e
 \u003cp\u003e\u003cstrong\u003eAction Group:\u003c/strong\u003e Non-disruptive\u003c/p\u003e
 \u003cp\u003e\u003cstrong\u003eExample:\u003c/strong\u003e\u003c/p\u003e
-\u003cp\u003eSecRule REMOTE_ADDR \u0026ldquo;^192.168.1.100\$\u0026rdquo; auditlog,phase:1,id:100,allow\u003c/p\u003e
+\u003cp\u003eSecRule REMOTE_ADDR \u0026ldquo;^192.168.1.100$\u0026rdquo; auditlog,phase:1,id:100,allow\u003c/p\u003e
 \u003cp\u003eNote : The auditlog action is now explicit if log is already specified.\u003c/p\u003e
 \u003ch2 id="block"\u003eblock\u003c/h2\u003e
 \u003cp\u003e\u003cstrong\u003eDescription\u003c/strong\u003e: Performs the disruptive action defined by the previous SecDefaultAction.\u003c/p\u003e
@@ -630,7 +630,7 @@ SecRuleUpdateActionById 1 block
 \u003cpre\u003e\u003ccode\u003e# Refuse to accept POST requests that do not contain Content-Length header. 
 # (Do note that this rule should be preceded by a rule 
 # that verifies only valid request methods are used.) 
-SecRule REQUEST_METHOD \u0026quot;^POST\$\u0026quot; phase:1,chain,t:none,id:105
+SecRule REQUEST_METHOD \u0026quot;^POST$\u0026quot; phase:1,chain,t:none,id:105
   SecRule \u0026amp;REQUEST_HEADERS:Content-Length \u0026quot;@eq 0\u0026quot; t:none
 \u003c/code\u003e\u003c/pre\u003e
 \u003cp\u003eNote : Rule chains allow you to simulate logical AND. The disruptive actions specified in the first portion of the chained rule will be triggered only if all of the variable checks return positive hits. If any one aspect of a chained rule comes back negative, then the entire rule chain will fail to match. Also note that disruptive actions, execution phases, metadata actions (id, rev, msg, tag, severity, logdata), skip, and skipAfter actions can be specified only by the chain starter rule.
@@ -690,7 +690,7 @@ ruleRemoveTargetByMsg - since this action is used to just remove targets, users 
 \u003cp\u003e\u003cstrong\u003eAction Group:\u003c/strong\u003e Disruptive\u003c/p\u003e
 \u003cp\u003e\u003cstrong\u003eExample:\u003c/strong\u003e The following example initiates an IP collection for tracking Basic Authentication attempts. If the client goes over the threshold of more than 25 attempts in 2 minutes, it will DROP subsequent connections.\u003c/p\u003e
 \u003cpre\u003e\u003ccode\u003eSecAction phase:1,id:109,initcol:ip=%{REMOTE_ADDR},nolog
-SecRule ARGS:login \u0026quot;!^\$\u0026quot; \u0026quot;nolog,phase:1,id:110,setvar:ip.auth_attempt=+1,deprecatevar:ip.auth_attempt=25/120\u0026quot;
+SecRule ARGS:login \u0026quot;!^$\u0026quot; \u0026quot;nolog,phase:1,id:110,setvar:ip.auth_attempt=+1,deprecatevar:ip.auth_attempt=25/120\u0026quot;
 SecRule IP:AUTH_ATTEMPT \u0026quot;@gt 25\u0026quot; \u0026quot;log,drop,phase:1,id:111,msg:'Possible Brute Force Attack'\u0026quot;
 \u003c/code\u003e\u003c/pre\u003e
 \u003cp\u003e\u003cstrong\u003eNote :\u003c/strong\u003e This action depends on each implementation, the server is instructed to drop the connection.\u003c/p\u003e
@@ -711,7 +711,7 @@ SecRule ARGS:p attack \u0026quot;phase:2,id:113,block,exec:/usr/local/apache/con
 \u003cp\u003e\u003cstrong\u003eSupported on Coraza:\u003c/strong\u003e TBI\u003c/p\u003e
 \u003cp\u003e\u003cstrong\u003eAction Group:\u003c/strong\u003e Non-disruptive\u003c/p\u003e
 \u003cp\u003e\u003cstrong\u003eExample:\u003c/strong\u003e\u003c/p\u003e
-\u003cpre\u003e\u003ccode\u003eSecRule REQUEST_COOKIES:JSESSIONID \u0026quot;!^\$\u0026quot; \u0026quot;nolog,phase:1,id:114,pass,setsid:%{REQUEST_COOKIES:JSESSIONID}\u0026quot;
+\u003cpre\u003e\u003ccode\u003eSecRule REQUEST_COOKIES:JSESSIONID \u0026quot;!^$\u0026quot; \u0026quot;nolog,phase:1,id:114,pass,setsid:%{REQUEST_COOKIES:JSESSIONID}\u0026quot;
 SecRule REQUEST_URI \u0026quot;^/cgi-bin/script\\.pl\u0026quot; \u0026quot;phase:2,id:115,t:none,t:lowercase,t:normalizePath,log,allow,setvar:session.suspicious=1,expirevar:session.suspicious=3600,phase:1\u0026quot;
 \u003c/code\u003e\u003c/pre\u003e
 \u003cp\u003eYou should use the expirevar actions at the same time that you use setvar actions in order to keep the intended expiration time. If they are used on their own (perhaps in a SecAction directive), the expire time will be reset.\u003c/p\u003e
@@ -832,7 +832,7 @@ SecAction phase:1,nolog,pass,id:126,initcol:IP=%{REMOTE_ADDR}
 \u003cp\u003e\u003cstrong\u003eAction Group:\u003c/strong\u003e Disruptive\u003c/p\u003e
 \u003cp\u003e\u003cstrong\u003eExample:\u003c/strong\u003e\u003c/p\u003e
 \u003cpre\u003e\u003ccode\u003eSecRule REQUEST_HEADERS:User-Agent \u0026quot;Test\u0026quot; log,id:129,proxy:http://honeypothost/
-SecRule REQUEST_URI \u0026quot;@streq /test.txt\u0026quot; \u0026quot;phase:1,proxy:'http://\$ENV{SERVER_NAME}:\$ENV{SERVER_PORT}/test.txt',id:500005\u0026quot;
+SecRule REQUEST_URI \u0026quot;@streq /test.txt\u0026quot; \u0026quot;phase:1,proxy:'http://$ENV{SERVER_NAME}:$ENV{SERVER_PORT}/test.txt',id:500005\u0026quot;
 \u003c/code\u003e\u003c/pre\u003e
 \u003cp\u003eFor this action to work, the implementation must handle the proxy connection after the interruption notification.\u003c/p\u003e
 \u003ch2 id="redirect"\u003eredirect\u003c/h2\u003e
@@ -846,7 +846,7 @@ SecRule REQUEST_URI \u0026quot;@streq /test.txt\u0026quot; \u0026quot;phase:1,pr
 \u003cp\u003e\u003cstrong\u003eDescription\u003c/strong\u003e: Specifies rule revision. It is useful in combination with the id action to provide an indication that a rule has been changed.\u003c/p\u003e
 \u003cp\u003e\u003cstrong\u003eAction Group:\u003c/strong\u003e Meta-data\u003c/p\u003e
 \u003cp\u003e\u003cstrong\u003eExample:\u003c/strong\u003e\u003c/p\u003e
-\u003cpre\u003e\u003ccode\u003eSecRule REQUEST_FILENAME|ARGS_NAMES|ARGS|XML:/* \u0026quot;(?:(?:[\\;\\|\\\`]\\W*?\\bcc|\\b(wget|curl))\\b|\\/cc(?:[\\'\\\u0026quot;\\|\\;\\\`\\-\\s]|\$))\u0026quot; \\
+\u003cpre\u003e\u003ccode\u003eSecRule REQUEST_FILENAME|ARGS_NAMES|ARGS|XML:/* \u0026quot;(?:(?:[\\;\\|\\\`]\\W*?\\bcc|\\b(wget|curl))\\b|\\/cc(?:[\\'\\\u0026quot;\\|\\;\\\`\\-\\s]|$))\u0026quot; \\
 	                \u0026quot;phase:2,rev:'2.1.3',capture,t:none,t:normalizePath,t:lowercase,ctl:auditLogParts=+E,block,msg:'System Command Injection',id:'950907',tag:'WEB_ATTACK/COMMAND_INJECTION',tag:'WASCTC/WASC-31',tag:'OWASP_TOP_10/A1',tag:'PCI/6.5.2',logdata:'%{TX.0}',severity:'2',setvar:'tx.msg=%{rule.msg}',setvar:tx.anomaly_score=+%{tx.critical_anomaly_score},setvar:tx.command_injection_score=+%{tx.critical_anomaly_score},setvar:tx.%{rule.id}-WEB_ATTACK/COMMAND_INJECTION-%{matched_var_name}=%{tx.0},skipAfter:END_COMMAND_INJECTION1\u0026quot;
 \u003c/code\u003e\u003c/pre\u003e
 \u003cp\u003eNote : This action is used in combination with the id action to allow the same rule ID to be used after changes take place but to still provide some indication the rule changed.\u003c/p\u003e
@@ -902,7 +902,7 @@ SecRule RESPONSE_BODY \u0026quot;@verifyCC \\d{13,16}\u0026quot; \u0026quot;phas
 \u003cp\u003e\u003cstrong\u003eDescription\u003c/strong\u003e: Assigns severity to the rule in which it is used.\u003c/p\u003e
 \u003cp\u003e\u003cstrong\u003eAction Group:\u003c/strong\u003e Meta-data\u003c/p\u003e
 \u003cp\u003e\u003cstrong\u003eExample:\u003c/strong\u003e\u003c/p\u003e
-\u003cpre\u003e\u003ccode\u003eSecRule REQUEST_METHOD \u0026quot;^PUT\$\u0026quot; \u0026quot;id:340002,rev:1,severity:CRITICAL,msg:'Restricted HTTP function'\u0026quot;
+\u003cpre\u003e\u003ccode\u003eSecRule REQUEST_METHOD \u0026quot;^PUT$\u0026quot; \u0026quot;id:340002,rev:1,severity:CRITICAL,msg:'Restricted HTTP function'\u0026quot;
 \u003c/code\u003e\u003c/pre\u003e
 \u003cp\u003eSeverity values in Coraza follows the numeric scale of syslog (where 0 is the most severe). The data below is used by the OWASP Core Rule Set (CRS):\u003c/p\u003e
 \u003cul\u003e
@@ -938,7 +938,7 @@ SecRule RESPONSE_BODY \u0026quot;@verifyCC \\d{13,16}\u0026quot; \u0026quot;phas
 \u003cp\u003e\u003cstrong\u003eSupported on Coraza:\u003c/strong\u003e TBI\u003c/p\u003e
 \u003cp\u003e\u003cstrong\u003eExample:\u003c/strong\u003e\u003c/p\u003e
 \u003cpre\u003e\u003ccode\u003e# Initialise session variables using the session cookie value 
-SecRule REQUEST_COOKIES:PHPSESSID !^\$ \u0026quot;nolog,pass,id:138,setsid:%{REQUEST_COOKIES.PHPSESSID}\u0026quot;
+SecRule REQUEST_COOKIES:PHPSESSID !^$ \u0026quot;nolog,pass,id:138,setsid:%{REQUEST_COOKIES.PHPSESSID}\u0026quot;
 \u003c/code\u003e\u003c/pre\u003e
 \u003cp\u003e\u003cstrong\u003eNote:\u003c/strong\u003e After the initialization takes place, the variable SESSION will be available for use in the subsequent rules. This action understands application namespaces (configured using SecWebAppId), and will use one if it is configured.\u003c/p\u003e
 \u003cp\u003eSetsid takes an individual variable, not a collection. Variables within an action, such as setsid, use the format [collection].[variable] .\u003c/p\u003e
@@ -981,7 +981,7 @@ setvar:tx.anomaly_score=+%{tx.critical_anomaly_score},setvar:tx.%{rule.id}-WEB_A
 \u003cp\u003e\u003cstrong\u003eAction Group:\u003c/strong\u003e Flow\u003c/p\u003e
 \u003cp\u003e\u003cstrong\u003eExample:\u003c/strong\u003e\u003c/p\u003e
 \u003cpre\u003e\u003ccode\u003e# Require Accept header, but not from access from the localhost 
-SecRule REMOTE_ADDR \u0026quot;^127\\.0\\.0\\.1\$\u0026quot; \u0026quot;phase:1,skip:1,id:141\u0026quot; 
+SecRule REMOTE_ADDR \u0026quot;^127\\.0\\.0\\.1$\u0026quot; \u0026quot;phase:1,skip:1,id:141\u0026quot; 
 
 # This rule will be skipped over when REMOTE_ADDR is 127.0.0.1 
 SecRule \u0026amp;REQUEST_HEADERS:Accept \u0026quot;@eq 0\u0026quot; \u0026quot;phase:1,id:142,deny,msg:'Request Missing an Accept Header'\u0026quot;
@@ -992,7 +992,7 @@ SecRule \u0026amp;REQUEST_HEADERS:Accept \u0026quot;@eq 0\u0026quot; \u0026quot;
 \u003cp\u003e\u003cstrong\u003eAction Group:\u003c/strong\u003e Flow\u003c/p\u003e
 \u003cp\u003e\u003cstrong\u003eExample:\u003c/strong\u003e The following rules implement the same logic as the skip example, but using skipAfter:\u003c/p\u003e
 \u003cpre\u003e\u003ccode\u003e# Require Accept header, but not from access from the localhost 
-SecRule REMOTE_ADDR \u0026quot;^127\\.0\\.0\\.1\$\u0026quot; \u0026quot;phase:1,id:143,skipAfter:IGNORE_LOCALHOST\u0026quot; 
+SecRule REMOTE_ADDR \u0026quot;^127\\.0\\.0\\.1$\u0026quot; \u0026quot;phase:1,id:143,skipAfter:IGNORE_LOCALHOST\u0026quot; 
 
 # This rule will be skipped over when REMOTE_ADDR is 127.0.0.1 
 SecRule \u0026amp;REQUEST_HEADERS:Accept \u0026quot;@eq 0\u0026quot; \u0026quot;phase:1,deny,id:144,msg:'Request Missing an Accept Header'\u0026quot; 
@@ -1006,7 +1006,7 @@ SecMarker IGNORE_LOCALHOST
 tag:'OWASP_TOP_10/A7',tag:'PCI/6.5.10',severity:'5',setvar:'tx.msg=%{rule.msg}',setvar:tx.anomaly_score=+%{tx.notice_anomaly_score}, \\
 setvar:tx.protocol_violation_score=+%{tx.notice_anomaly_score},setvar:tx.%{rule.id}-PROTOCOL_VIOLATION/MISSING_HEADER-%{matched_var_name}=%{matched_var}\u0026quot;
 
-	SecRule REQUEST_HEADERS:Host \u0026quot;^\$\u0026quot; \\
+	SecRule REQUEST_HEADERS:Host \u0026quot;^$\u0026quot; \\
     		\u0026quot;phase:2,rev:'2.1.3',t:none,block,msg:'Request Missing a Host Header',id:'960008',tag:'PROTOCOL_VIOLATION/MISSING_HEADER_HOST',tag:'WASCTC/WASC-21',tag:'OWASP_TOP_10/A7', \\
 tag:'PCI/6.5.10',severity:'5',setvar:'tx.msg=%{rule.msg}',setvar:tx.anomaly_score=+%{tx.notice_anomaly_score},setvar:tx.protocol_violation_score=+%{tx.notice_anomaly_score}, \\
 setvar:tx.%{rule.id}-PROTOCOL_VIOLATION/MISSING_HEADER-%{matched_var_name}=%{matched_var}\u0026quot;
@@ -1094,7 +1094,7 @@ third rule
 \u003cpre\u003e\u003ccode\u003eSecMarker BEGIN_HOST_CHECK
 
 SecRule \u0026amp;REQUEST_HEADERS:Host \u0026quot;@eq 0\u0026quot; \u0026quot;phase:1,id:1, pass\u0026quot;
-SecRule REQUEST_HEADERS:Host \u0026quot;^\$\u0026quot; \u0026quot;phase:1,id:2, pass\u0026quot;
+SecRule REQUEST_HEADERS:Host \u0026quot;^$\u0026quot; \u0026quot;phase:1,id:2, pass\u0026quot;
 
 SecMarker END_HOST_CHECK
 \u003c/code\u003e\u003c/pre\u003e
@@ -1103,7 +1103,7 @@ SecMarker END_HOST_CHECK
 SecMarker BEGIN_HOST_CHECK
 
 SecRule \u0026amp;REQUEST_HEADERS:Host \u0026quot;@eq 0\u0026quot; \u0026quot;phase:1,id:2, pass\u0026quot;
-SecRule REQUEST_HEADERS:Host \u0026quot;^\$\u0026quot; \u0026quot;phase:1,id:3, pass\u0026quot;
+SecRule REQUEST_HEADERS:Host \u0026quot;^$\u0026quot; \u0026quot;phase:1,id:3, pass\u0026quot;
 
 SecMarker END_HOST_CHECK
 SecAction \u0026quot;id:4, phase:1, pass\u0026quot;
@@ -1396,36 +1396,36 @@ SecRule \u0026amp;REQUEST_HEADERS_NAMES \u0026quot;@gt 15\u0026quot; \u0026quot;
 # web server, and ClamAV
 
 
-\$CLAMSCAN = \u0026quot;clamscan\u0026quot;;
+$CLAMSCAN = \u0026quot;clamscan\u0026quot;;
 
-if (\$#ARGV != 0) {
+if ($#ARGV != 0) {
     print \u0026quot;Usage: runav.pl \u0026lt;filename\u0026gt;\\n\u0026quot;;
     exit;
 }
 
-my (\$FILE) = shift @ARGV;
+my ($FILE) = shift @ARGV;
 
-\$cmd = \u0026quot;\$CLAMSCAN --stdout --no-summary \$FILE\u0026quot;;
-\$input = \`\$cmd\`;
-\$input =~ m/^(.+)/;
-\$error_message = \$1;
+$cmd = \u0026quot;$CLAMSCAN --stdout --no-summary $FILE\u0026quot;;
+$input = \`$cmd\`;
+$input =~ m/^(.+)/;
+$error_message = $1;
 
-\$output = \u0026quot;0 Unable to parse clamscan output [\$1]\u0026quot;;
+$output = \u0026quot;0 Unable to parse clamscan output [$1]\u0026quot;;
 
-if (\$error_message =~ m/: Empty file\\.?\$/) {
-    \$output = \u0026quot;1 empty file\u0026quot;;
+if ($error_message =~ m/: Empty file\\.?$/) {
+    $output = \u0026quot;1 empty file\u0026quot;;
 }
-elsif (\$error_message =~ m/: (.+) ERROR\$/) {
-    \$output = \u0026quot;0 clamscan: \$1\u0026quot;;
+elsif ($error_message =~ m/: (.+) ERROR$/) {
+    $output = \u0026quot;0 clamscan: $1\u0026quot;;
 }
-elsif (\$error_message =~ m/: (.+) FOUND\$/) {
-    \$output = \u0026quot;0 clamscan: \$1\u0026quot;;
+elsif ($error_message =~ m/: (.+) FOUND$/) {
+    $output = \u0026quot;0 clamscan: $1\u0026quot;;
 }
-elsif (\$error_message =~ m/: OK\$/) {
-    \$output = \u0026quot;1 clamscan: OK\u0026quot;;
+elsif ($error_message =~ m/: OK$/) {
+    $output = \u0026quot;1 clamscan: OK\u0026quot;;
 }
 
-print \u0026quot;\$output\\n\u0026quot;;
+print \u0026quot;$output\\n\u0026quot;;
 \u003c/code\u003e\u003c/pre\u003e
 \u003cp\u003e\u003cstrong\u003eExample:\u003c/strong\u003e Using the runav.pl script:\u003c/p\u003e
 \u003cpre\u003e\u003ccode\u003e# Execute external program to validate uploaded files 
@@ -1549,7 +1549,7 @@ SecRule STREAM_OUTPUT_BODY \u0026quot;@rsub s// /\u0026quot; \u0026quot;phase:4,
 Regular expressions are handled by the PCRE library http://www.pcre.org. Coraza compiles its regular expressions with the following settings:\u003c/p\u003e
 \u003cp\u003eThe entire input is treated as a single line, even when there are newline characters present.
 All matches are case-sensitive. If you wish to perform case-insensitive matching, you can either use the lowercase transformation function or force case-insensitive matching by prefixing the regular expression pattern with the (?i) modifier (a PCRE feature; you will find many similar features in the PCRE documentation). Also a flag [d] should be used if you want to escape the regex string chars when use macro expansion.
-The PCRE_DOTALL and PCRE_DOLLAR_ENDONLY flags are set during compilation, meaning that a single dot will match any character, including the newlines, and a \$ end anchor will not match a trailing newline character.
+The PCRE_DOTALL and PCRE_DOLLAR_ENDONLY flags are set during compilation, meaning that a single dot will match any character, including the newlines, and a $ end anchor will not match a trailing newline character.
 Regular expressions are a very powerful tool. You are strongly advised to read the PCRE documentation to get acquainted with its features.\u003c/p\u003e
 \u003cp\u003e\u003cstrong\u003eNote:\u003c/strong\u003e This operator supports the \u0026ldquo;capture\u0026rdquo; action.\u003c/p\u003e
 \u003ch2 id="rx"\u003erx\u003c/h2\u003e
@@ -1567,7 +1567,7 @@ SecRule REQUEST_HEADERS:User-Agent \u0026quot;(?i)nikto\u0026quot; \u0026quot;id
 \u003cp\u003eRegular expressions are handled by the RE2. Coraza compiles its regular expressions with the following settings:\u003c/p\u003e
 \u003cp\u003eThe entire input is treated as a single line, even when there are newline characters present.
 All matches are case-sensitive. If you wish to perform case-insensitive matching, you can either use the lowercase transformation function or force case-insensitive matching by prefixing the regular expression pattern with the (?i) modifier (a PCRE feature; you will find many similar features in the PCRE documentation).
-A single dot will match any character, including the newlines, and a \$ end anchor will not match a trailing newline character.
+A single dot will match any character, including the newlines, and a $ end anchor will not match a trailing newline character.
 Regular expressions are a very powerful tool. You are strongly advised to read the PCRE documentation to get acquainted with its features.\u003c/p\u003e
 \u003cp\u003e\u003cstrong\u003eNote:\u003c/strong\u003e This operator supports the \u0026ldquo;capture\u0026rdquo; action.\u003c/p\u003e
 \u003ch2 id="streq"\u003estreq\u003c/h2\u003e
@@ -1648,7 +1648,7 @@ SecRule ARGS \u0026quot;@verifyCC \\d{13,16}\u0026quot; \u0026quot;phase:2,id:19
 SecRule REQUEST_METHOD \u0026quot;!@within GET,POST,HEAD\u0026quot;
 \u003c/code\u003e\u003c/pre\u003e
 \u003cp\u003e\u003cstrong\u003eNote:\u003c/strong\u003e There are no delimiters for this operator, it is therefore often necessary to artificially impose some; this can be done using setvar. For instance in the example below, without the imposed delimiters (of \u0026lsquo;/\u0026rsquo;) this rule would also match on the \u0026lsquo;range\u0026rsquo; header (along with many other combinations), since \u0026lsquo;range\u0026rsquo; is within the provided parameter. With the imposed delimiters, the rule would check for \u0026lsquo;/range/\u0026rsquo; when the range header is provided, and therefore would not match since \u0026lsquo;/range/ is not part of the @within parameter.\u003c/p\u003e
-\u003cpre\u003e\u003ccode\u003eSecRule REQUEST_HEADERS_NAMES \u0026quot;@rx ^.*\$\u0026quot; \\
+\u003cpre\u003e\u003ccode\u003eSecRule REQUEST_HEADERS_NAMES \u0026quot;@rx ^.*$\u0026quot; \\
 \u0026quot;chain,\\
 id:1,\\
 block,\\
@@ -1684,7 +1684,7 @@ SecDirective2 \u0026quot;some option between brackets \\\u0026quot; and escaped\
 \u003c/code\u003e\u003c/pre\u003e
 \u003cp\u003e\u003cstrong\u003eVariable with regex\u003c/strong\u003e\u003c/p\u003e
 \u003cp\u003ePCRE compatible regex can be used to query a mapped VARIABLE like ARGS, the following example will match all parameters (get and post) where the key begins with \u003ccode\u003eparam\u003c/code\u003e and the value of this argument is \u003ccode\u003esomeval\u003c/code\u003e.\u003c/p\u003e
-\u003cpre\u003e\u003ccode\u003eSecRule ARGS:/^param.*\$/ \u0026quot;someval\u0026quot; \u0026quot;id:1\u0026quot;
+\u003cpre\u003e\u003ccode\u003eSecRule ARGS:/^param.*$/ \u0026quot;someval\u0026quot; \u0026quot;id:1\u0026quot;
 \u003c/code\u003e\u003c/pre\u003e
 \u003cp\u003eNote: In the future we are migrating to RE2, so don\u0026rsquo;t create rules with RE2 unsupported features.\u003c/p\u003e
 \u003cp\u003e\u003cstrong\u003eVariable exceptions\u003c/strong\u003e\u003c/p\u003e
@@ -1767,9 +1767,9 @@ SecAction \u0026quot;id:3, log, logdata:'%{tx.argcount} arguments found.'\u0026q
 The remainder of this section documents the transformation functions currently available in Coraza.\u003c/p\u003e
 \u003ch2 id="base64decode"\u003ebase64Decode\u003c/h2\u003e
 \u003cp\u003eDecodes a Base64-encoded string.\u003c/p\u003e
-\u003cpre\u003e\u003ccode\u003eSecRule REQUEST_HEADERS:Authorization \u0026quot;^Basic ([a-zA-Z0-9]+=*)\$\u0026quot; \u0026quot;phase:1,id:93,capture,chain,logdata:%{TX.1}\u0026quot;
+\u003cpre\u003e\u003ccode\u003eSecRule REQUEST_HEADERS:Authorization \u0026quot;^Basic ([a-zA-Z0-9]+=*)$\u0026quot; \u0026quot;phase:1,id:93,capture,chain,logdata:%{TX.1}\u0026quot;
   SecRule TX:1 ^(\\w+): t:base64Decode,capture,chain
-    SecRule TX:1 ^(admin|root|backup)\$ 
+    SecRule TX:1 ^(admin|root|backup)$ 
 \u003c/code\u003e\u003c/pre\u003e
 \u003cp\u003eNote : Be careful when applying base64Decode with other transformations. The order of your transformation matters in this case as certain transformations may change or invalidate the base64 encoded string prior to being decoded (i.e t:lowercase, etc). This of course means that it is also very difficult to write a single rule that checks for a base64decoded value OR an unencoded value with transformations, it is best to write two rules in this situation.
 sqlHexDecode
@@ -1886,7 +1886,7 @@ Decode sql hex data. Example (0x414243) will be decoded to (ABC).\u003c/p\u003e
 \u003cpre\u003e\u003ccode\u003eSecRule ARGS|!ARGS:z dirty \u0026quot;id:9\u0026quot;
 \u003c/code\u003e\u003c/pre\u003e
 \u003cp\u003eThere is a special operator that allows you to count how many variables there are in a collection. The following rule will trigger if there is more than zero arguments in the request (ignore the second parameter for the time being):\u003c/p\u003e
-\u003cpre\u003e\u003ccode\u003eSecRule \u0026amp;ARGS !^0\$ \u0026quot;id:10\u0026quot;
+\u003cpre\u003e\u003ccode\u003eSecRule \u0026amp;ARGS !^0$ \u0026quot;id:10\u0026quot;
 \u003c/code\u003e\u003c/pre\u003e
 \u003cp\u003eAnd sometimes you need to look at an array of parameters, each with a slightly different name. In this case you can specify a regular expression in the selection operator itself. The following rule will look into all arguments whose names begin with id_:\u003c/p\u003e
 \u003cpre\u003e\u003ccode\u003eSecRule ARGS:/^id_/ dirty \u0026quot;id:11\u0026quot;
@@ -1902,7 +1902,7 @@ Decode sql hex data. Example (0x414243) will be decoded to (ABC).\u003c/p\u003e
 \u003cp\u003e\u003cstrong\u003eARGS_GET_NAMES\u003c/strong\u003e is similar to \u003cstrong\u003eARGS_NAMES\u003c/strong\u003e, but contains only the names of query string parameters.\u003c/p\u003e
 \u003ch2 id="args_names"\u003eARGS_NAMES\u003c/h2\u003e
 \u003cp\u003eContains all request parameter names. You can search for specific parameter names that you want to inspect. In a positive policy scenario, you can also whitelist (using an inverted rule with the exclamation mark) only the authorized argument names. This example rule allows only two argument names: p and a:\u003c/p\u003e
-\u003cpre\u003e\u003ccode\u003eSecRule ARGS_NAMES \u0026quot;!^(p|a)\$\u0026quot; \u0026quot;id:13\u0026quot;
+\u003cpre\u003e\u003ccode\u003eSecRule ARGS_NAMES \u0026quot;!^(p|a)$\u0026quot; \u0026quot;id:13\u0026quot;
 \u003c/code\u003e\u003c/pre\u003e
 \u003ch2 id="args_post"\u003eARGS_POST\u003c/h2\u003e
 \u003cp\u003e\u003cstrong\u003eARGS_POST\u003c/strong\u003e is similar to \u003cstrong\u003eARGS\u003c/strong\u003e, but only contains arguments from the POST body.\u003c/p\u003e
@@ -1929,7 +1929,7 @@ SecRule TX:ANOMALY_SCORE \u0026quot;@gt 0\u0026quot; \u0026quot;phase:5,id:16,ms
 \u003cp\u003e\u003cstrong\u003eNote :\u003c/strong\u003e Use setenv to set environment variables to be accessed by Apache.\u003c/p\u003e
 \u003ch2 id="files"\u003eFILES\u003c/h2\u003e
 \u003cp\u003eContains a collection of original file names (as they were called on the remote user’s filesys- tem). Available only on inspected multipart/form-data requests.\u003c/p\u003e
-\u003cpre\u003e\u003ccode\u003eSecRule FILES \u0026quot;@rx \\.conf\$\u0026quot; \u0026quot;id:17\u0026quot;
+\u003cpre\u003e\u003ccode\u003eSecRule FILES \u0026quot;@rx \\.conf$\u0026quot; \u0026quot;id:17\u0026quot;
 \u003c/code\u003e\u003c/pre\u003e
 \u003cp\u003e\u003cstrong\u003eNote :\u003c/strong\u003e Only available if files were extracted from the request body.\u003c/p\u003e
 \u003ch2 id="files_combined_size"\u003eFILES_COMBINED_SIZE\u003c/h2\u003e
@@ -1938,7 +1938,7 @@ SecRule TX:ANOMALY_SCORE \u0026quot;@gt 0\u0026quot; \u0026quot;phase:5,id:16,ms
 \u003c/code\u003e\u003c/pre\u003e
 \u003ch2 id="files_names"\u003eFILES_NAMES\u003c/h2\u003e
 \u003cp\u003eContains a list of form fields that were used for file upload. Available only on inspected multipart/form-data requests.\u003c/p\u003e
-\u003cpre\u003e\u003ccode\u003eSecRule FILES_NAMES \u0026quot;^upfile\$\u0026quot; \u0026quot;id:19\u0026quot;
+\u003cpre\u003e\u003ccode\u003eSecRule FILES_NAMES \u0026quot;^upfile$\u0026quot; \u0026quot;id:19\u0026quot;
 \u003c/code\u003e\u003c/pre\u003e
 \u003ch2 id="full_request"\u003eFULL_REQUEST\u003c/h2\u003e
 \u003cp\u003eContains the complete request: Request line, Request headers and Request body (if any). The last available only if SecRequestBodyAccess was set to On. Note that all properties of SecRequestBodyAccess will be respected here, such as: SecRequestBodyLimit.\u003c/p\u003e
@@ -1959,7 +1959,7 @@ SecRule TX:ANOMALY_SCORE \u0026quot;@gt 0\u0026quot; \u0026quot;phase:5,id:16,ms
 \u003c/code\u003e\u003c/pre\u003e
 \u003ch2 id="files_tmp_content"\u003eFILES_TMP_CONTENT\u003c/h2\u003e
 \u003cp\u003eContains a key-value set where value is the content of the file which was uploaded. Useful when used together with @fuzzyHash.\u003c/p\u003e
-\u003cpre\u003e\u003ccode\u003eSecRule FILES_TMP_CONTENT \u0026quot;@fuzzyHash \$ENV{CONF_DIR}/ssdeep.txt 1\u0026quot; \u0026quot;id:192372,log,deny\u0026quot;
+\u003cpre\u003e\u003ccode\u003eSecRule FILES_TMP_CONTENT \u0026quot;@fuzzyHash $ENV{CONF_DIR}/ssdeep.txt 1\u0026quot; \u0026quot;id:192372,log,deny\u0026quot;
 \u003c/code\u003e\u003c/pre\u003e
 \u003cp\u003e\u003cstrong\u003eNote :\u003c/strong\u003e SecUploadKeepFiles should be set to \u0026lsquo;On\u0026rsquo; in order to have this collection filled.\u003c/p\u003e
 \u003ch2 id="geo"\u003eGEO\u003c/h2\u003e
@@ -2114,7 +2114,7 @@ SecAction \u0026quot;phase:5,id:95002,pass,log, msg:'File inspection took %{PERF
 \u003c/code\u003e\u003c/pre\u003e
 \u003ch2 id="remote_host"\u003eREMOTE_HOST\u003c/h2\u003e
 \u003cp\u003eIf the Apache directive HostnameLookups is set to On, then this variable will hold the remote hostname resolved through DNS. If the directive is set to Off, this variable it will hold the remote IP address (same as REMOTE_ADDR). Possible uses for this variable would be to deny known bad client hosts or network blocks, or conversely, to allow in authorized hosts.\u003c/p\u003e
-\u003cpre\u003e\u003ccode\u003eSecRule REMOTE_HOST \u0026quot;\\.evil\\.network\\org\$\u0026quot; \u0026quot;id:36\u0026quot;
+\u003cpre\u003e\u003ccode\u003eSecRule REMOTE_HOST \u0026quot;\\.evil\\.network\\org$\u0026quot; \u0026quot;id:36\u0026quot;
 \u003c/code\u003e\u003c/pre\u003e
 \u003ch2 id="remote_port"\u003eREMOTE_PORT\u003c/h2\u003e
 \u003cp\u003eThis variable holds information on the source port that the client used when initiating the connection to our web server.\u003c/p\u003e
@@ -2137,17 +2137,17 @@ SecAction \u0026quot;phase:5,id:95002,pass,log, msg:'File inspection took %{PERF
 \u003c/code\u003e\u003c/pre\u003e
 \u003ch2 id="reqbody_processor"\u003eREQBODY_PROCESSOR\u003c/h2\u003e
 \u003cp\u003eContains the name of the currently used request body processor. The possible values are URLENCODED, JSON, MULTIPART, and XML.\u003c/p\u003e
-\u003cpre\u003e\u003ccode\u003eSecRule REQBODY_PROCESSOR \u0026quot;^XML\$ chain,id:41 
+\u003cpre\u003e\u003ccode\u003eSecRule REQBODY_PROCESSOR \u0026quot;^XML$ chain,id:41 
   SecRule XML://* \u0026quot;something\u0026quot; \u0026quot;id:123\u0026quot;
 \u003c/code\u003e\u003c/pre\u003e
 \u003ch2 id="request_basename"\u003eREQUEST_BASENAME\u003c/h2\u003e
 \u003cp\u003eThis variable holds just the filename part of REQUEST_FILENAME (e.g., index.php).\u003c/p\u003e
-\u003cpre\u003e\u003ccode\u003eSecRule REQUEST_BASENAME \u0026quot;^login\\.php\$\u0026quot; phase:2,id:42,t:none,t:lowercase
+\u003cpre\u003e\u003ccode\u003eSecRule REQUEST_BASENAME \u0026quot;^login\\.php$\u0026quot; phase:2,id:42,t:none,t:lowercase
 \u003c/code\u003e\u003c/pre\u003e
 \u003cp\u003e\u003cstrong\u003eNote :\u003c/strong\u003e Please note that anti-evasion transformations are not applied to this variable by default. REQUEST_BASENAME will recognize both / and \\ as path separators. You should understand that the value of this variable depends on what was provided in request, and that it does not have to correspond to the resource (on disk) that will be used by the web server.\u003c/p\u003e
 \u003ch2 id="request_body"\u003eREQUEST_BODY\u003c/h2\u003e
 \u003cp\u003eHolds the raw request body. This variable is available only if the URLENCODED request body processor was used, which will occur by default when the application/x-www-form-urlencoded content type is detected, or if the use of the URLENCODED request body parser was forced.\u003c/p\u003e
-\u003cpre\u003e\u003ccode\u003eSecRule REQUEST_BODY \u0026quot;^username=\\w{25,}\\\u0026amp;password=\\w{25,}\\\u0026amp;Submit\\=login\$\u0026quot; \u0026quot;id:43\u0026quot;
+\u003cpre\u003e\u003ccode\u003eSecRule REQUEST_BODY \u0026quot;^username=\\w{25,}\\\u0026amp;password=\\w{25,}\\\u0026amp;Submit\\=login$\u0026quot; \u0026quot;id:43\u0026quot;
 \u003c/code\u003e\u003c/pre\u003e
 \u003cp\u003eIt is possible to force the presence of the REQUEST_BODY variable, but only when there is no request body processor defined using the \u003ccode\u003ectl:forceRequestBodyVariable\u003c/code\u003e option in the REQUEST_HEADERS phase.\u003c/p\u003e
 \u003ch2 id="request_body_length"\u003eREQUEST_BODY_LENGTH\u003c/h2\u003e
@@ -2162,12 +2162,12 @@ SecAction \u0026quot;phase:5,id:95002,pass,log, msg:'File inspection took %{PERF
 \u003c/code\u003e\u003c/pre\u003e
 \u003ch2 id="request_filename"\u003eREQUEST_FILENAME\u003c/h2\u003e
 \u003cp\u003eThis variable holds the relative request URL without the query string part (e.g., /index.php).\u003c/p\u003e
-\u003cpre\u003e\u003ccode\u003eSecRule REQUEST_FILENAME \u0026quot;^/cgi-bin/login\\.php\$\u0026quot; phase:2,id:46,t:none,t:normalizePath
+\u003cpre\u003e\u003ccode\u003eSecRule REQUEST_FILENAME \u0026quot;^/cgi-bin/login\\.php$\u0026quot; phase:2,id:46,t:none,t:normalizePath
 \u003c/code\u003e\u003c/pre\u003e
 \u003cp\u003e\u003cstrong\u003eNote :\u003c/strong\u003e Please note that anti-evasion transformations are not used on REQUEST_FILENAME, which means that you will have to specify them in the rules that use this variable.\u003c/p\u003e
 \u003ch2 id="request_headers"\u003eREQUEST_HEADERS\u003c/h2\u003e
 \u003cp\u003eThis variable can be used as either a collection of all of the request headers or can be used to inspect selected headers (by using the REQUEST_HEADERS:Header-Name syntax).\u003c/p\u003e
-\u003cpre\u003e\u003ccode\u003eSecRule REQUEST_HEADERS:Host \u0026quot;^[\\d\\.]+\$\u0026quot; \u0026quot;deny,id:47,log,status:400,msg:'Host header is a numeric IP address'\u0026quot;
+\u003cpre\u003e\u003ccode\u003eSecRule REQUEST_HEADERS:Host \u0026quot;^[\\d\\.]+$\u0026quot; \u0026quot;deny,id:47,log,status:400,msg:'Host header is a numeric IP address'\u0026quot;
 \u003c/code\u003e\u003c/pre\u003e
 \u003cp\u003e\u003cstrong\u003eNote:\u003c/strong\u003e Coraza will treat multiple headers that have identical names as a \u0026ldquo;list\u0026rdquo;, processing each single value.\u003c/p\u003e
 \u003ch2 id="request_headers_names"\u003eREQUEST_HEADERS_NAMES\u003c/h2\u003e
@@ -2178,15 +2178,15 @@ SecAction \u0026quot;phase:5,id:95002,pass,log, msg:'File inspection took %{PERF
 \u003cp\u003eThis variable holds the complete request line sent to the server (including the request method and HTTP version information).\u003c/p\u003e
 \u003cpre\u003e\u003ccode\u003e# Allow only POST, GET and HEAD request methods, as well as only
 # the valid protocol versions 
-SecRule REQUEST_LINE \u0026quot;!(^((?:(?:POS|GE)T|HEAD))|HTTP/(0\\.9|1\\.0|1\\.1)\$)\u0026quot; \u0026quot;phase:1,id:49,log,block,t:none\u0026quot;
+SecRule REQUEST_LINE \u0026quot;!(^((?:(?:POS|GE)T|HEAD))|HTTP/(0\\.9|1\\.0|1\\.1)$)\u0026quot; \u0026quot;phase:1,id:49,log,block,t:none\u0026quot;
 \u003c/code\u003e\u003c/pre\u003e
 \u003ch2 id="request_method"\u003eREQUEST_METHOD\u003c/h2\u003e
 \u003cp\u003eThis variable holds the request method used in the transaction.\u003c/p\u003e
-\u003cpre\u003e\u003ccode\u003eSecRule REQUEST_METHOD \u0026quot;^(?:CONNECT|TRACE)\$\u0026quot; \u0026quot;id:50,t:none\u0026quot;
+\u003cpre\u003e\u003ccode\u003eSecRule REQUEST_METHOD \u0026quot;^(?:CONNECT|TRACE)$\u0026quot; \u0026quot;id:50,t:none\u0026quot;
 \u003c/code\u003e\u003c/pre\u003e
 \u003ch2 id="request_protocol"\u003eREQUEST_PROTOCOL\u003c/h2\u003e
 \u003cp\u003eThis variable holds the request protocol version information.\u003c/p\u003e
-\u003cpre\u003e\u003ccode\u003eSecRule REQUEST_PROTOCOL \u0026quot;!^HTTP/(0\\.9|1\\.0|1\\.1)\$\u0026quot; \u0026quot;id:51\u0026quot;
+\u003cpre\u003e\u003ccode\u003eSecRule REQUEST_PROTOCOL \u0026quot;!^HTTP/(0\\.9|1\\.0|1\\.1)$\u0026quot; \u0026quot;id:51\u0026quot;
 \u003c/code\u003e\u003c/pre\u003e
 \u003cp\u003e## REQUEST_URI
 This variable holds the full request URL including the query string data (e.g., /index.php? p=X). However, it will never contain a domain name, even if it was provided on the request line.\u003c/p\u003e
@@ -2235,20 +2235,20 @@ This variable holds the full request URL including the query string data (e.g., 
 \u003c/code\u003e\u003c/pre\u003e
 \u003ch2 id="server_name"\u003eSERVER_NAME\u003c/h2\u003e
 \u003cp\u003eThis variable contains the transaction’s hostname or IP address, taken from the request itself (which means that, in principle, it should not be trusted).\u003c/p\u003e
-\u003cpre\u003e\u003ccode\u003eSecRule SERVER_NAME \u0026quot;hostname\\.com\$\u0026quot; \u0026quot;id:68\u0026quot;
+\u003cpre\u003e\u003ccode\u003eSecRule SERVER_NAME \u0026quot;hostname\\.com$\u0026quot; \u0026quot;id:68\u0026quot;
 \u003c/code\u003e\u003c/pre\u003e
 \u003ch2 id="server_port"\u003eSERVER_PORT\u003c/h2\u003e
 \u003cp\u003eThis variable contains the local port that the web server (or reverse proxy) is listening on.\u003c/p\u003e
-\u003cpre\u003e\u003ccode\u003eSecRule SERVER_PORT \u0026quot;^80\$\u0026quot; \u0026quot;id:69\u0026quot;
+\u003cpre\u003e\u003ccode\u003eSecRule SERVER_PORT \u0026quot;^80$\u0026quot; \u0026quot;id:69\u0026quot;
 \u003c/code\u003e\u003c/pre\u003e
 \u003ch2 id="session"\u003eSESSION\u003c/h2\u003e
 \u003cp\u003eThis variable is a collection that contains session information. It becomes available only after setsid is executed.\u003c/p\u003e
 \u003cp\u003eThe following example shows how to initialize SESSION using setsid, how to use setvar to increase the SESSION.score values, how to set the SESSION.blocked variable, and finally, how to deny the connection based on the SESSION:blocked value:\u003c/p\u003e
 \u003cpre\u003e\u003ccode\u003e# Initialize session storage 
-SecRule REQUEST_COOKIES:PHPSESSID !^\$ \u0026quot;phase:2,id:70,nolog,pass,setsid:%{REQUEST_COOKIES.PHPSESSID}\u0026quot;
+SecRule REQUEST_COOKIES:PHPSESSID !^$ \u0026quot;phase:2,id:70,nolog,pass,setsid:%{REQUEST_COOKIES.PHPSESSID}\u0026quot;
 
 # Increment session score on attack 
-SecRule REQUEST_URI \u0026quot;^/cgi-bin/finger\$\u0026quot; \u0026quot;phase:2,id:71,t:none,t:lowercase,t:normalizePath,pass,setvar:SESSION.score=+10\u0026quot; 
+SecRule REQUEST_URI \u0026quot;^/cgi-bin/finger$\u0026quot; \u0026quot;phase:2,id:71,t:none,t:lowercase,t:normalizePath,pass,setvar:SESSION.score=+10\u0026quot; 
 
 # Detect too many attacks in a session
 SecRule SESSION:score \u0026quot;@gt 50\u0026quot; \u0026quot;phase:2,id:72,pass,setvar:SESSION.blocked=1\u0026quot;
@@ -2267,17 +2267,17 @@ Version: 2.x
 \u003cp\u003e\u003cstrong\u003eSupported on Coraza:\u003c/strong\u003e TBI\u003c/p\u003e
 \u003ch2 id="time"\u003eTIME\u003c/h2\u003e
 \u003cp\u003eThis variable holds a formatted string representing the time (hour:minute:second).\u003c/p\u003e
-\u003cpre\u003e\u003ccode\u003eSecRule TIME \u0026quot;^(([1](8|9))|([2](0|1|2|3))):\\d{2}:\\d{2}\$\u0026quot; \u0026quot;id:74\u0026quot;
+\u003cpre\u003e\u003ccode\u003eSecRule TIME \u0026quot;^(([1](8|9))|([2](0|1|2|3))):\\d{2}:\\d{2}$\u0026quot; \u0026quot;id:74\u0026quot;
 \u003c/code\u003e\u003c/pre\u003e
 \u003cp\u003e## TIME_DAY
 This variable holds the current date (1–31). The following rule triggers on a transaction that’s happening anytime between the 10th and 20th in a month:\u003c/p\u003e
-\u003cpre\u003e\u003ccode\u003eSecRule TIME_DAY \u0026quot;^(([1](0|1|2|3|4|5|6|7|8|9))|20)\$\u0026quot; \u0026quot;id:75\u0026quot;
+\u003cpre\u003e\u003ccode\u003eSecRule TIME_DAY \u0026quot;^(([1](0|1|2|3|4|5|6|7|8|9))|20)$\u0026quot; \u0026quot;id:75\u0026quot;
 \u003c/code\u003e\u003c/pre\u003e
 \u003ch2 id="time_epoch"\u003eTIME_EPOCH\u003c/h2\u003e
 \u003cp\u003eThis variable holds the time in seconds since 1970.\u003c/p\u003e
 \u003ch2 id="time_hour"\u003eTIME_HOUR\u003c/h2\u003e
 \u003cp\u003eThis variable holds the current hour value (0–23). The following rule triggers when a request is made “off hours”:\u003c/p\u003e
-\u003cpre\u003e\u003ccode\u003eSecRule TIME_HOUR \u0026quot;^(0|1|2|3|4|5|6|[1](8|9)|[2](0|1|2|3))\$\u0026quot; \u0026quot;id:76\u0026quot;
+\u003cpre\u003e\u003ccode\u003eSecRule TIME_HOUR \u0026quot;^(0|1|2|3|4|5|6|[1](8|9)|[2](0|1|2|3))$\u0026quot; \u0026quot;id:76\u0026quot;
 \u003c/code\u003e\u003c/pre\u003e
 \u003ch2 id="time_min"\u003eTIME_MIN\u003c/h2\u003e
 \u003cp\u003eThis variable holds the current minute value (0–59). The following rule triggers during the last half hour of every hour:\u003c/p\u003e
@@ -2295,12 +2295,12 @@ This variable holds the current date (1–31). The following rule triggers on a 
 \u003ch2 id="time_wday"\u003eTIME_WDAY\u003c/h2\u003e
 \u003cp\u003eThis variable holds the current weekday value (0–6). The following rule triggers only on Satur- day and Sunday:\u003c/p\u003e
 \u003cp\u003e\u003cstrong\u003eSupported:\u003c/strong\u003e TBI\u003c/p\u003e
-\u003cpre\u003e\u003ccode\u003eSecRule TIME_WDAY \u0026quot;^(0|6)\$\u0026quot; \u0026quot;id:80\u0026quot;
+\u003cpre\u003e\u003ccode\u003eSecRule TIME_WDAY \u0026quot;^(0|6)$\u0026quot; \u0026quot;id:80\u0026quot;
 \u003c/code\u003e\u003c/pre\u003e
 \u003ch2 id="time_year"\u003eTIME_YEAR\u003c/h2\u003e
 \u003cp\u003eThis variable holds the current four-digit year value.\u003c/p\u003e
 \u003cp\u003e\u003cstrong\u003eSupported:\u003c/strong\u003e TBI\u003c/p\u003e
-\u003cpre\u003e\u003ccode\u003eSecRule TIME_YEAR \u0026quot;^2006\$\u0026quot; \u0026quot;id:81\u0026quot;
+\u003cpre\u003e\u003ccode\u003eSecRule TIME_YEAR \u0026quot;^2006$\u0026quot; \u0026quot;id:81\u0026quot;
 \u003c/code\u003e\u003c/pre\u003e
 \u003ch2 id="tx"\u003eTX\u003c/h2\u003e
 \u003cp\u003eThis is the transient transaction collection, which is used to store pieces of data, create a transaction anomaly score, and so on. The variables placed into this collection are available only until the transaction is complete.\u003c/p\u003e
@@ -2334,8 +2334,8 @@ SecRule USERID \u0026quot;admin\u0026quot; \u0026quot;id:85\u0026quot;
 \u003ch2 id="xml"\u003eXML\u003c/h2\u003e
 \u003cp\u003eSpecial collection used to interact with the XML parser. It must contain a valid XPath expression, which will then be evaluated against a previously parsed XML DOM tree.\u003c/p\u003e
 \u003cpre\u003e\u003ccode\u003eSecDefaultAction log,deny,status:403,phase:2,id:90
-SecRule REQUEST_HEADERS:Content-Type ^text/xml\$ \u0026quot;phase:1,id:87,t:lowercase,nolog,pass,ctl:requestBodyProcessor=XML\u0026quot;
-SecRule REQBODY_PROCESSOR \u0026quot;!^XML\$\u0026quot; skipAfter:12345,id:88
+SecRule REQUEST_HEADERS:Content-Type ^text/xml$ \u0026quot;phase:1,id:87,t:lowercase,nolog,pass,ctl:requestBodyProcessor=XML\u0026quot;
+SecRule REQBODY_PROCESSOR \u0026quot;!^XML$\u0026quot; skipAfter:12345,id:88
 \u003c/code\u003e\u003c/pre\u003e
 \u003cp\u003eIt would match against payload such as this one:\u003c/p\u003e
 \u003cpre\u003e\u003ccode class="language-xml"\u003e\u0026lt;employees\u0026gt;
