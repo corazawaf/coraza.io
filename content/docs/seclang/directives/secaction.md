@@ -16,5 +16,5 @@ type: seclang/directives
 This directive is commonly used to set variables and initialize persistent collections using the initcol action. For example:
 
 ```
-SecAction nolog,phase:1,initcol:RESOURCE=%{REQUEST_FILENAME}
+SecAction "nolog,phase:1,initcol:RESOURCE=%{REQUEST_FILENAME}"
 ```

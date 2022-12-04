@@ -12,43 +12,19 @@ weight: 1100
 toc: true
 ---
 
+We made a big effort for v3 to keep the API similar to the previous version. But some minor changes are still needed for migrating to the new major release.
+
 This tutorial details the steps requiring to upgrade your Coraza v2 application to Coraza v3.
 
 ### Seclang parser
 
-NewParser now panics instead of returning an error.
+NewParser now panics instead of returning an error, and it doesn't need the _waf_ as parameter.
 
 ```go
 // old code:
 parser, err := seclang.NewParser(waf)
 // new code:
 parser := seclang.NewParser()
-```
-
-### Transaction
-
-Transactions now takes a `context.Background` as an argument.
-
-```go
-// old code:
-tx := waf.NewTransaction()
-// new code:
-tx := waf.NewTransaction(context.Background())
-```
-
-Example of a transaction timeout using context
-
-```go
-ctxTimeout, cancel := context.WithTimeout(context.Background(), time.Second*3)
-defer cancel()
-go func(){
-  tx := waf.NewTransaction(ctxTimeout)
-}()
-
-select {
-case <-ctxTimeout.Done():
-  fmt.Printf("Transaction cancelled: %v\n", ctxTimeout.Err())
-}
 ```
 
 ### Directives and rules

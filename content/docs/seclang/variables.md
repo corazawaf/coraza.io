@@ -591,7 +591,8 @@ This variable holds the request protocol version information.
 SecRule REQUEST_PROTOCOL "!^HTTP/(0\.9|1\.0|1\.1)$" "id:51"
 ```
 
-##  REQUEST_URI
+## REQUEST_URI
+
 This variable holds the full request URL including the query string data (e.g., /index.php? p=X). However, it will never contain a domain name, even if it was provided on the request line.
 
 ```
@@ -740,7 +741,8 @@ This variable holds a formatted string representing the time (hour:minute:second
 SecRule TIME "^(([1](8|9))|([2](0|1|2|3))):\d{2}:\d{2}$" "id:74"
 ```
 
-##  TIME_DAY
+## TIME_DAY
+
 This variable holds the current date (1–31). The following rule triggers on a transaction that’s happening anytime between the 10th and 20th in a month:
 
 ```
