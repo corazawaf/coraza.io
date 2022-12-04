@@ -4,13 +4,6 @@
   identifier = "tutorials"
   url = "/docs/tutorials/"
 
-
-[[docs]]
-  name = "Integrations"
-  weight = 50
-  identifier = "integrations"
-  url = "/docs/integrations/"  
-
 [[docs]]
   name = "Reference"
   weight = 60

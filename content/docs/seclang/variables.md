@@ -1,7 +1,7 @@
 ---
 title: "Variables"
-description: "..."
-lead: "The following variables are supported in Coraza"
+description: ""
+lead: ""
 date: 2020-10-06T08:48:57+00:00
 lastmod: 2020-10-06T08:48:57+00:00
 draft: false
@@ -12,6 +12,11 @@ menu:
 weight: 100
 toc: true
 ---
+
+Variables are embedded in the core for performance reasons, which means they cannot be programmatically created. For that reason, there is a set of predefined variables that are available to plugin developers.
+- GRAPHQL
+- JWT
+- EXTRA
 
 ## ARGS
 
