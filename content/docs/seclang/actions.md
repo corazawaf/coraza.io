@@ -1,7 +1,7 @@
 ---
 title: "Actions"
-description: "..."
-lead: "..."
+description: "Actions available in Coraza"
+lead: "These are the available actions in Coraza"
 date: 2020-10-06T08:48:57+00:00
 lastmod: 2020-10-06T08:48:57+00:00
 draft: false
@@ -32,10 +32,17 @@ Disruptive actions will NOT be executed if the `SecRuleEngine` is set to `Detect
 
 **Example:**
 
-```conf
+```
 SecRule REQUEST_FILENAME|ARGS_NAMES|ARGS|XML:/* "\bgetparentfolder\b" \
- "phase:2,ver:'CRS/2.2.4,accuracy:'9',maturity:'9',capture,t:none,t:htmlEntityDecode,t:compressWhiteSpace,t:lowercase,ctl:auditLogParts=+E,block,msg:'Cross-site Scripting (XSS) Attack',id:'958016',tag:'WEB_ATTACK/XSS',tag:'WASCTC/WASC-8',tag:'WASCTC/WASC-22',tag:'OWASP_TOP_10/A2',tag:'OWASP_AppSensor/IE1',tag:'PCI/6.5.1',logdata:'% \
-{TX.0}',severity:'2',setvar:'tx.msg=%{rule.msg}',setvar:tx.xss_score=+%{tx.critical_anomaly_score},setvar:tx.anomaly_score=+%{tx.critical_anomaly_score},setvar:tx.%{rule.id}-WEB_ATTACK/XSS-%{matched_var_name}=%{tx.0}"
+    "id:'958016',phase:2,ver:'CRS/2.2.4,accuracy:'9',maturity:'9',capture,\
+    t:none,t:htmlEntityDecode,t:compressWhiteSpace,t:lowercase,\
+    ctl:auditLogParts=+E,block,msg:'Cross-site Scripting (XSS) Attack',\
+    tag:'WEB_ATTACK/XSS',tag:'WASCTC/WASC-8',tag:'WASCTC/WASC-22',tag:'OWASP_TOP_10/A2',\
+    tag:'OWASP_AppSensor/IE1',tag:'PCI/6.5.1',logdata:'%{TX.0}',\
+    severity:'2',setvar:'tx.msg=%{rule.msg}',\
+    setvar:tx.xss_score=+%{tx.critical_anomaly_score},\
+    setvar:tx.anomaly_score=+%{tx.critical_anomaly_score},\
+    setvar:tx.%{rule.id}-WEB_ATTACK/XSS-%{matched_var_name}=%{tx.0}"
 ```
 
 ## allow
@@ -46,7 +53,7 @@ SecRule REQUEST_FILENAME|ARGS_NAMES|ARGS|XML:/* "\bgetparentfolder\b" \
 
 **Example:**
 
-```conf
+```
 # Allow unrestricted access from 192.168.1.100 
 SecRule REMOTE_ADDR "^192\.168\.1\.100$" phase:1,id:95,nolog,allow
 ```
@@ -58,7 +65,7 @@ If used with parameter "phase", allow will cause the engine to stop processing t
 If used with parameter "request", allow will cause the engine to stop processing the current phase. The next phase to be processed will be phase RESPONSE_HEADERS.
 Examples:
 
-```conf
+```
 # Do not process request but process response.
 SecAction phase:1,allow:request,id:96
 
@@ -80,7 +87,7 @@ SecAction phase:3,allow,id:98
 
 **Example:**
 
-```conf
+```
 SecRule RESPONSE_CONTENT_TYPE "^text/html" "nolog,id:99,pass,append:'<hr>Footer'"
 ```
 
@@ -94,15 +101,15 @@ Warning : Although macro expansion is allowed in the additional content, you are
 
 **Example:**
 
-```conf
-SecRule REMOTE_ADDR "^192\.168\.1\.100$" auditlog,phase:1,id:100,allow
+```
+SecRule REMOTE_ADDR "^192\.168\.1\.100$" "auditlog,phase:1,id:100,allow"
 ```
 
 Note : The auditlog action is now explicit if log is already specified.
 
 ## block
 
-**Description**: Performs the disruptive action defined by the previous SecDefaultAction.
+**Description**: Performs the disruptive action defined by the previous `SecDefaultAction`.
 
 **Action Group:** Disruptive
 
@@ -110,15 +117,15 @@ This action is essentially a placeholder that is intended to be used by rule wri
 
 **Examples:**
 
-```conf
+```
 # Specify how blocking is to be done 
-SecDefaultAction phase:2,deny,id:101,status:403,log,auditlog
+SecDefaultAction "phase:2,deny,id:101,status:403,log,auditlog"
 
 # Detect attacks where we want to block 
-SecRule ARGS attack1 phase:2,block,id:102
+SecRule ARGS "@rx attack1" "phase:2,block,id:102"
 
 # Detect attacks where we want only to warn 
-SecRule ARGS attack2 phase:2,pass,id:103
+SecRule ARGS "@rx attack2" "phase:2,pass,id:103"
 ```
 
 It is possible to use the SecRuleUpdateActionById directive to override how a rule handles blocking. This is useful in three cases:
@@ -129,15 +136,15 @@ It is possible to use the SecRuleUpdateActionById directive to override how a ru
 
 The following example demonstrates the first case, in which the hard-coded block is removed in favor of the user-controllable block:
 
-```conf
+```
 # Specify how blocking is to be done 
-SecDefaultAction phase:2,deny,status:403,log,auditlog,id:104
+SecDefaultAction "phase:2,deny,status:403,log,auditlog,id:104"
 
 # Detect attacks and block 
-SecRule ARGS attack1 phase:2,id:1,deny
+SecRule ARGS "@rx attack1" "phase:2,id:1,deny"
 
 # Change how rule ID 1 blocks 
-SecRuleUpdateActionById 1 block
+SecRuleUpdateActionById 1 "block"
 ```
 
 ## capture
@@ -148,7 +155,7 @@ SecRuleUpdateActionById 1 block
 
 **Example:**
 
-```conf
+```
 SecRule REQUEST_BODY "^username=(\w{25,})" phase:2,capture,t:none,chain,id:105
   SecRule TX:1 "(?:(?:a(dmin|nonymous)))"
 ```
@@ -165,12 +172,12 @@ Up to 10 captures will be copied on a successful pattern match, each with a name
 
 **Example:**
 
-```conf
+```
 # Refuse to accept POST requests that do not contain Content-Length header. 
 # (Do note that this rule should be preceded by a rule 
 # that verifies only valid request methods are used.) 
-SecRule REQUEST_METHOD "^POST$" phase:1,chain,t:none,id:105
-  SecRule &REQUEST_HEADERS:Content-Length "@eq 0" t:none
+SecRule REQUEST_METHOD "^POST$" "phase:1,chain,t:none,id:105"
+  SecRule &REQUEST_HEADERS:Content-Length "@eq 0" "t:none"
 ```
 
 Note : Rule chains allow you to simulate logical AND. The disruptive actions specified in the first portion of the chained rule will be triggered only if all of the variable checks return positive hits. If any one aspect of a chained rule comes back negative, then the entire rule chain will fail to match. Also note that disruptive actions, execution phases, metadata actions (id, rev, msg, tag, severity, logdata), skip, and skipAfter actions can be specified only by the chain starter rule.
@@ -194,13 +201,13 @@ Special rules control the usage of actions in chained rules:
 
 **Example:**
 
-```conf
+```
 # Parse requests with Content-Type "text/xml" as XML 
 SecRule REQUEST_CONTENT_TYPE ^text/xml "nolog,pass,id:106,ctl:requestBodyProcessor=XML"
 
 # white-list the user parameter for rule #981260 when the REQUEST_URI is /index.php
-SecRule REQUEST_URI "@beginsWith /index.php" "phase:1,t:none,pass, \
-  nolog,ctl:ruleRemoveTargetById=981260;ARGS:user
+SecRule REQUEST_URI "@beginsWith /index.php" "phase:1,t:none,pass,\
+  nolog,ctl:ruleRemoveTargetById=981260;ARGS:user"
 ```
 
 The following configuration options are supported:
@@ -237,7 +244,7 @@ Request body processors will not interrupt a transaction if an error occurs duri
 **Action Group:** Disruptive
 
 **Example:** 
-```conf
+```
 SecRule REQUEST_HEADERS:User-Agent "nikto" "log,deny,id:107,msg:'Nikto Scanners Identified'"
 ```
 
@@ -249,7 +256,7 @@ SecRule REQUEST_HEADERS:User-Agent "nikto" "log,deny,id:107,msg:'Nikto Scanners 
 
 **Example:** The following example initiates an IP collection for tracking Basic Authentication attempts. If the client goes over the threshold of more than 25 attempts in 2 minutes, it will DROP subsequent connections.
 
-```conf
+```
 SecAction phase:1,id:109,initcol:ip=%{REMOTE_ADDR},nolog
 SecRule ARGS:login "!^$" "nolog,phase:1,id:110,setvar:ip.auth_attempt=+1,deprecatevar:ip.auth_attempt=25/120"
 SecRule IP:AUTH_ATTEMPT "@gt 25" "log,drop,phase:1,id:111,msg:'Possible Brute Force Attack'"
@@ -267,7 +274,7 @@ This action is extremely useful when responding to both Brute Force and Denial o
 
 **Example:**
 
-```conf
+```
 # Run external program on rule match 
 SecRule REQUEST_URI "^/cgi-bin/script\.pl" "phase:2,id:112,t:none,t:lowercase,t:normalizePath,block,\ exec:/usr/local/apache/bin/test.sh"
 
@@ -287,9 +294,10 @@ The `exec` action is executed independently from any disruptive actions specifie
 
 **Example:**
 
-```conf
+```
 SecRule REQUEST_COOKIES:JSESSIONID "!^$" "nolog,phase:1,id:114,pass,setsid:%{REQUEST_COOKIES:JSESSIONID}"
-SecRule REQUEST_URI "^/cgi-bin/script\.pl" "phase:2,id:115,t:none,t:lowercase,t:normalizePath,log,allow,setvar:session.suspicious=1,expirevar:session.suspicious=3600,phase:1"
+SecRule REQUEST_URI "^/cgi-bin/script\.pl" "phase:2,id:115,t:none,t:lowercase,t:normalizePath,log,allow,\
+    setvar:session.suspicious=1,expirevar:session.suspicious=3600,phase:1"
 ```
 
 You should use the expirevar actions at the same time that you use setvar actions in order to keep the intended expiration time. If they are used on their own (perhaps in a SecAction directive), the expire time will be reset.
@@ -302,7 +310,7 @@ You should use the expirevar actions at the same time that you use setvar action
 
 **Example:**
 
-```conf
+```
 SecRule &REQUEST_HEADERS:Host "@eq 0" "log,id:60008,severity:2,msg:'Request Missing a Host Header'"
 ```
 
@@ -318,8 +326,8 @@ Note : The id action is required for all SecRule/SecAction.
 
 **Example:** The following example initiates IP address tracking, which is best done in phase 1:
 
-```conf
-SecAction phase:1,id:116,nolog,pass,initcol:ip=%{REMOTE_ADDR}
+```
+SecAction "phase:1,id:116,nolog,pass,initcol:ip=%{REMOTE_ADDR}"
 ```
 
 Collections are loaded into memory on-demand, when the initcol action is executed. A collection will be persisted only if a change was made to it in the course of transaction processing.
@@ -334,8 +342,8 @@ See the "Persistent Storage" section for further details.
 
 **Example:**
 
-```conf
-SecAction phase:1,id:117,pass,initcol:ip=%{REMOTE_ADDR},log
+```
+SecAction "phase:1,id:117,pass,initcol:ip=%{REMOTE_ADDR},log"
 ```
 
 This action will log matches to the Apache error log file and the Coraza audit log.
@@ -348,7 +356,7 @@ This action will log matches to the Apache error log file and the Coraza audit l
 
 **Example:**
 
-```conf
+```
 SecRule ARGS:p "@rx <script>" "phase:2,id:118,log,pass,logdata:%{MATCHED_VAR}"
 ```
 
@@ -362,9 +370,9 @@ The logdata information appears in the error and/or audit log files. Macro expan
 
 **Example:**
 
-```conf
+```
 SecRule REQUEST_FILENAME|ARGS_NAMES|ARGS|XML:/* "\bgetparentfolder\b" \
- "phase:2,ver:'CRS/2.2.4,accuracy:'9',maturity:'9',capture,t:none,t:htmlEntityDecode,t:compressWhiteSpace,t:lowercase,ctl:auditLogParts=+E,block,msg:'Cross-site Scripting (XSS) Attack',id:'958016',tag:'WEB_ATTACK/XSS',tag:'WASCTC/WASC-8',tag:'WASCTC/WASC-22',tag:'OWASP_TOP_10/A2',tag:'OWASP_AppSensor/IE1',tag:'PCI/6.5.1',logdata:'% \
+    "phase:2,ver:'CRS/2.2.4,accuracy:'9',maturity:'9',capture,t:none,t:htmlEntityDecode,t:compressWhiteSpace,t:lowercase,ctl:auditLogParts=+E,block,msg:'Cross-site Scripting (XSS) Attack',id:'958016',tag:'WEB_ATTACK/XSS',tag:'WASCTC/WASC-8',tag:'WASCTC/WASC-22',tag:'OWASP_TOP_10/A2',tag:'OWASP_AppSensor/IE1',tag:'PCI/6.5.1',logdata:'% \
 {TX.0}',severity:'2',setvar:'tx.msg=%{rule.msg}',setvar:tx.xss_score=+%{tx.critical_anomaly_score},setvar:tx.anomaly_score=+%{tx.critical_anomaly_score},setvar:tx.%{rule.id}-WEB_ATTACK/XSS-%{matched_var_name}=%{tx.0}"
 ```
 
@@ -376,7 +384,7 @@ SecRule REQUEST_FILENAME|ARGS_NAMES|ARGS|XML:/* "\bgetparentfolder\b" \
 
 **Example:**
 
-```conf
+```
 SecRule &REQUEST_HEADERS:Host "@eq 0" "log,id:60008,severity:2,msg:'Request Missing a Host Header'"
 ```
 
@@ -390,7 +398,7 @@ Note : The msg information appears in the error and/or audit log files and is no
 
 **Example:**
 
-```conf
+```
 SecRule ARGS "attack" "phase1,log,deny,id:119,t:removeNulls,t:lowercase,multiMatch"
 ```
 
@@ -405,7 +413,7 @@ Normally, variables are inspected only once per rule, and only after all transfo
 **Example:**
 
 ```
-SecRule REQUEST_HEADERS:User-Agent "Test" allow,noauditlog,id:120
+SecRule REQUEST_HEADERS:User-Agent "@streq Test" "allow,noauditlog,id:120"
 ```
 
 If the SecAuditEngine is set to On, all of the transactions will be logged. If it is set to RelevantOnly, then you can control the logging with the noauditlog action.
@@ -421,7 +429,7 @@ The noauditlog action affects only the current rule. If you prevent audit loggin
 **Example:**
 
 ```
-SecRule REQUEST_HEADERS:User-Agent "Test" allow,nolog,id:121
+SecRule REQUEST_HEADERS:User-Agent "@streq Test" "allow,nolog,id:121"
 ```
 
 Although nolog implies noauditlog, you can override the former by using nolog,auditlog.
@@ -434,13 +442,13 @@ Although nolog implies noauditlog, you can override the former by using nolog,au
 
 **Example:**
 
-```conf
-SecRule REQUEST_HEADERS:User-Agent "Test" "log,pass,id:122"
+```
+SecRule REQUEST_HEADERS:User-Agent "@streq Test" "log,pass,id:122"
 ```
 
 When using pass with a SecRule with multiple targets, all variables will be inspected and all non-disruptive actions trigger for every match. In the following example, the TX.test variable will be incremented once for every request parameter:
 
-```conf
+```
 # Set TX.test to zero 
 SecAction "phase:2,nolog,pass,setvar:TX.test=0,id:123"
 
@@ -464,13 +472,13 @@ Warning : This feature can be of limited benefit for slowing down brute force au
 
 ## phase
 
-**Description**: Places the rule or chain into one of five available processing phases. It can also be used in SecDefaultAction to establish the rule defaults.
+**Description**: Places the rule or chain into one of five available processing phases. It can also be used in `SecDefaultAction` to establish the rule defaults.
 
 **Action Group:** Meta-data
 
 **Example:**
 
-```conf
+```
 # Initialize IP address tracking in phase 1
 SecAction phase:1,nolog,pass,id:126,initcol:IP=%{REMOTE_ADDR}
 ```
@@ -483,7 +491,7 @@ There are aliases for some phase numbers:
 
 **Example:**
 
-```conf
+```
 SecRule REQUEST_HEADERS:User-Agent "Test" "phase:request,log,deny,id:127"
 ```
 
@@ -499,8 +507,8 @@ Warning : Keep in mind that if you specify the incorrect phase, the variable use
 
 **Example:**
 
-```conf
-SecRule RESPONSE_CONTENT_TYPE ^text/html \ "phase:3,nolog,pass,id:128,prepend:'Header<br>'"
+```
+SecRule RESPONSE_CONTENT_TYPE "^text/html" "phase:3,nolog,pass,id:128,prepend:'Header<br>'"
 ```
 
 Warning : Although macro expansion is allowed in the injected content, you are strongly cautioned against inserting user defined data fields int output. Doing so would create a cross-site scripting vulnerability.
@@ -513,8 +521,8 @@ Warning : Although macro expansion is allowed in the injected content, you are s
 
 **Example:**
 
-```conf
-SecRule REQUEST_HEADERS:User-Agent "Test" "log,id:129,proxy:http://honeypothost/"
+```
+SecRule REQUEST_HEADERS:User-Agent "@streq Test" "log,id:129,proxy:http://honeypothost/"
 SecRule REQUEST_URI "@streq /test.txt" "phase:1,proxy:'http://$ENV{SERVER_NAME}:$ENV{SERVER_PORT}/test.txt',id:500005"
 ```
 
@@ -528,8 +536,8 @@ For this action to work, the implementation must handle the proxy connection aft
 
 **Example:**
 
-```conf
-SecRule REQUEST_HEADERS:User-Agent "Test" "phase:1,id:130,log,redirect:http://www.example.com/failed.html"
+```
+SecRule REQUEST_HEADERS:User-Agent "@streq Test" "phase:1,id:130,log,redirect:http://www.example.com/failed.html"
 ```
 
 If the status action is present on the same rule, and its value can be used for a redirection (i.e., is one of the following: 301, 302, 303, or 307), the value will be used for the redirection status code. Otherwise, status code 302 will be used.
@@ -542,9 +550,9 @@ If the status action is present on the same rule, and its value can be used for 
 
 **Example:**
 
-```conf
+```
 SecRule REQUEST_FILENAME|ARGS_NAMES|ARGS|XML:/* "(?:(?:[\;\|\`]\W*?\bcc|\b(wget|curl))\b|\/cc(?:[\'\"\|\;\`\-\s]|$))" \
-                 "phase:2,rev:'2.1.3',capture,t:none,t:normalizePath,t:lowercase,ctl:auditLogParts=+E,block,msg:'System Command Injection',id:'950907',tag:'WEB_ATTACK/COMMAND_INJECTION',tag:'WASCTC/WASC-31',tag:'OWASP_TOP_10/A1',tag:'PCI/6.5.2',logdata:'%{TX.0}',severity:'2',setvar:'tx.msg=%{rule.msg}',setvar:tx.anomaly_score=+%{tx.critical_anomaly_score},setvar:tx.command_injection_score=+%{tx.critical_anomaly_score},setvar:tx.%{rule.id}-WEB_ATTACK/COMMAND_INJECTION-%{matched_var_name}=%{tx.0},skipAfter:END_COMMAND_INJECTION1"
+    "phase:2,rev:'2.1.3',capture,t:none,t:normalizePath,t:lowercase,ctl:auditLogParts=+E,block,msg:'System Command Injection',id:'950907',tag:'WEB_ATTACK/COMMAND_INJECTION',tag:'WASCTC/WASC-31',tag:'OWASP_TOP_10/A1',tag:'PCI/6.5.2',logdata:'%{TX.0}',severity:'2',setvar:'tx.msg=%{rule.msg}',setvar:tx.anomaly_score=+%{tx.critical_anomaly_score},setvar:tx.command_injection_score=+%{tx.critical_anomaly_score},setvar:tx.%{rule.id}-WEB_ATTACK/COMMAND_INJECTION-%{matched_var_name}=%{tx.0},skipAfter:END_COMMAND_INJECTION1"
 ```
 
 Note : This action is used in combination with the id action to allow the same rule ID to be used after changes take place but to still provide some indication the rule changed.
@@ -559,7 +567,7 @@ Note : This action is used in combination with the id action to allow the same r
 
 **Example:**
 
-```conf
+```
 # Never log passwords 
 SecAction "nolog,phase:2,id:131,sanitiseArg:password,sanitiseArg:newPassword,sanitiseArg:oldPassword"
 ```
@@ -576,7 +584,7 @@ Note : The sanitize actions affect only the data as it is logged to audit log. H
 
 **Example:** This action can be used to sanitise arbitrary transaction elements when they match a condition. For example, the example below will sanitise any argument that contains the word password in the name.
 
-```conf
+```
 SecRule ARGS_NAMES password nolog,pass,id:132,sanitiseMatched
 ```
 
@@ -595,7 +603,7 @@ Note : The sanitize actions affect only the data as it is logged to audit log. H
 * `sanitiseMatchedBytes` -- This would x out only the bytes that matched.
 * `sanitiseMatchedBytes`:1/4 -- This would x out the bytes that matched, but keep the first byte and last 4 bytes
 
-```conf
+```
 # Detect credit card numbers in parameters and 
 # prevent them from being logged to audit log 
 SecRule ARGS "@verifyCC \d{13,16}" "phase:2,id:133,nolog,capture,pass,msg:'Potential credit card number in request',sanitiseMatchedBytes"
@@ -614,7 +622,7 @@ Note : The sanitize actions affect only the data as it is logged to audit log. H
 
 **Example:** This will sanitise the data in the Authorization header.
 
-```conf
+```
 SecAction "phase:1,nolog,pass,id:135,sanitiseRequestHeader:Authorization"
 ```
 
@@ -630,7 +638,7 @@ Note : The sanitize actions affect only the data as it is logged to audit log. H
 
 **Example:** This will sanitise the Set-Cookie data sent to the client.
 
-```conf
+```
 SecAction "phase:3,nolog,pass,id:136,sanitiseResponseHeader:Set-Cookie"
 ```
 
@@ -644,7 +652,7 @@ Note : The sanitize actions affect only the data as it is logged to audit log. H
 
 **Example:**
 
-```conf
+```
 SecRule REQUEST_METHOD "^PUT$" "id:340002,rev:1,severity:CRITICAL,msg:'Restricted HTTP function'"
 ```
 
@@ -671,7 +679,7 @@ It is possible to specify severity levels using either the numerical values or t
 
 **Example:**
 
-```conf
+```
 SecRule ARGS:username ".*" "phase:2,id:137,t:none,pass,nolog,noauditlog,capture,setvar:session.username=%{TX.0},setuid:%{TX.0}"
 ```
 
@@ -687,7 +695,7 @@ After initialization takes place, the variable USERID will be available for use 
 
 **Example:**
 
-```conf
+```
 SecAction "phase:1,pass,id:3,log,setrsc:'abcd1234'"
 ```
 
@@ -703,7 +711,7 @@ This action understands application namespaces (configured using SecWebAppId), a
 
 **Example:**
 
-```conf
+```
 # Initialise session variables using the session cookie value 
 SecRule REQUEST_COOKIES:PHPSESSID !^$ "nolog,pass,id:138,setsid:%{REQUEST_COOKIES.PHPSESSID}"
 ```
@@ -720,7 +728,7 @@ Setsid takes an individual variable, not a collection. Variables within an actio
 
 Examples:
 
-```conf
+```
 SecRule RESPONSE_HEADERS:/Set-Cookie2?/ "(?i:(j?sessionid|(php)?sessid|(asp|jserv|jw)?session[-_]?(id)?|cf(id|token)|sid))" "phase:3,t:none,pass,id:139,nolog,setvar:tx.sessionid=%{matched_var}"
 SecRule TX:SESSIONID "!(?i:\;? ?httponly;?)" "phase:3,id:140,t:none,setenv:httponly_cookie=%{matched_var},pass,log,auditlog,msg:'AppDefect: Missing HttpOnly Cookie Flag.'"
 ```
@@ -747,7 +755,7 @@ To increase or decrease variable value, use + and - characters in front of a num
 
 Example from OWASP CRS:
 
-```conf
+```
 SecRule REQUEST_FILENAME|ARGS_NAMES|ARGS|XML:/* "\bsys\.user_catalog\b" \
   "phase:2,rev:'2.1.3',capture,t:none,t:urlDecodeUni,t:htmlEntityDecode,t:lowercase,t:replaceComments,t:compressWhiteSpace,ctl:auditLogParts=+E, \
 block,msg:'Blind SQL Injection Attack',id:'959517',tag:'WEB_ATTACK/SQL_INJECTION',tag:'WASCTC/WASC-19',tag:'OWASP_TOP_10/A1',tag:'OWASP_AppSensor/CIE1', \
@@ -757,14 +765,14 @@ setvar:tx.anomaly_score=+%{tx.critical_anomaly_score},setvar:tx.%{rule.id}-WEB_A
 
 Note : When used in a chain this action will be executed when an individual rule matches and not the entire chain.This means that
 
-```conf
+```
 SecRule REQUEST_FILENAME "@contains /test.php" "chain,id:7,phase:1,t:none,nolog,setvar:tx.auth_attempt=+1" 
     SecRule ARGS_POST:action "@streq login" "t:none"
 ```
 
 will increment every time that test.php is visited (regardless of the parameters submitted). If the desired goal is to set the variable only if the entire rule matches, it should be included in the last rule of the chain. For instance:
 
-```conf
+```
 SecRule REQUEST_FILENAME "@streq test.php" "chain,id:7,phase:1,t:none,nolog"
     SecRule ARGS_POST:action "@streq login" "t:none,setvar:tx.auth_attempt=+1"
 
@@ -778,7 +786,7 @@ SecRule REQUEST_FILENAME "@streq test.php" "chain,id:7,phase:1,t:none,nolog"
 
 **Example:**
 
-```conf
+```
 # Require Accept header, but not from access from the localhost 
 SecRule REMOTE_ADDR "^127\.0\.0\.1$" "phase:1,skip:1,id:141" 
 
@@ -796,7 +804,7 @@ The `skip` action works only within the current processing phase and not necessa
 
 **Example:** The following rules implement the same logic as the skip example, but using skipAfter:
 
-```conf
+```
 # Require Accept header, but not from access from the localhost 
 SecRule REMOTE_ADDR "^127\.0\.0\.1$" "phase:1,id:143,skipAfter:IGNORE_LOCALHOST" 
 
@@ -807,7 +815,7 @@ SecMarker IGNORE_LOCALHOST
 
 Example from the OWASP CRS:
 
-```conf
+```
 SecMarker BEGIN_HOST_CHECK
 
  SecRule &REQUEST_HEADERS:Host "@eq 0" \
@@ -833,7 +841,7 @@ The `skipAfter` action works only within the current processing phase and not ne
 
 **Example:**
 
-```conf
+```
 # Deny with status 403
 SecDefaultAction "phase:1,log,deny,id:145,status:403"
 ```
@@ -846,11 +854,11 @@ SecDefaultAction "phase:1,log,deny,id:145,status:403"
 
 **Example:**
 
-```conf
+```
 SecRule ARGS "(asfunction|javascript|vbscript|data|mocha|livescript):" "id:146,t:none,t:htmlEntityDecode,t:lowercase,t:removeNulls,t:removeWhitespace"
 ```
 
-Any transformation functions that you specify in a SecRule will be added to the previous ones specified in SecDefaultAction. It is recommended that you always use t:none in your rules, which prevents them depending on the default configuration.
+Any transformation functions that you specify in a SecRule will be added to the previous ones specified in `SecDefaultAction`. It is recommended that you always use t:none in your rules, which prevents them depending on the default configuration.
 
 ## tag
 
@@ -860,7 +868,7 @@ Any transformation functions that you specify in a SecRule will be added to the 
 
 **Example:**
 
-```conf
+```
 SecRule REQUEST_FILENAME|ARGS_NAMES|ARGS|XML:/* "\bgetparentfolder\b" \
  "phase:2,rev:'2.1.3',capture,t:none,t:htmlEntityDecode,t:compressWhiteSpace,t:lowercase,ctl:auditLogParts=+E,block,msg:'Cross-site Scripting (XSS) Attack',id:'958016',tag:'WEB_ATTACK/XSS',tag:'WASCTC/WASC-8',tag:'WASCTC/WASC-22',tag:'OWASP_TOP_10/A2',tag:'OWASP_AppSensor/IE1',tag:'PCI/6.5.1',logdata:'% \
 {TX.0}',severity:'2',setvar:'tx.msg=%{rule.msg}',setvar:tx.xss_score=+%{tx.critical_anomaly_score},setvar:tx.anomaly_score=+%{tx.critical_anomaly_score},setvar:tx.%{rule.id}-WEB_ATTACK/XSS-%{matched_var_name}=%{tx.0}"
@@ -876,7 +884,7 @@ The tag information appears along with other rule metadata. The purpose of the t
 
 **Example:**
 
-```conf
+```
 SecRule REQUEST_FILENAME|ARGS_NAMES|ARGS|XML:/* "\bgetparentfolder\b" \
  "phase:2,ver:'CRS/2.2.4,capture,t:none,t:htmlEntityDecode,t:compressWhiteSpace,t:lowercase,ctl:auditLogParts=+E,block,msg:'Cross-site Scripting (XSS) Attack',id:'958016',tag:'WEB_ATTACK/XSS',tag:'WASCTC/WASC-8',tag:'WASCTC/WASC-22',tag:'OWASP_TOP_10/A2',tag:'OWASP_AppSensor/IE1',tag:'PCI/6.5.1',logdata:'% \
 {TX.0}',severity:'2',setvar:'tx.msg=%{rule.msg}',setvar:tx.xss_score=+%{tx.critical_anomaly_score},setvar:tx.anomaly_score=+%{tx.critical_anomaly_score},setvar:tx.%{rule.id}-WEB_ATTACK/XSS-%{matched_var_name}=%{tx.0}"

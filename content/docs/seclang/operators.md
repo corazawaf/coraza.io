@@ -1,7 +1,7 @@
 ---
 title: "Operators"
-description: "..."
-lead: "..."
+description: "This section documents the operators currently available in Coraza."
+lead: "This section documents the operators currently available in Coraza."
 date: 2020-10-06T08:48:57+00:00
 lastmod: 2020-10-06T08:48:57+00:00
 draft: false
@@ -12,8 +12,6 @@ menu:
 weight: 100
 toc: true
 ---
-
-This section documents the operators currently available in Coraza.
 
 ## beginsWith
 
@@ -56,7 +54,7 @@ Your site has a wide selection of computers.
 
 ## endsWith
 
-**Description:** Returns true if the parameter string is found at the end of the input. Macro expansion is performed on the parameter string before comparison.
+**Description:** Returns _true_ if the parameter string is found at the end of the input. Macro expansion is performed on the parameter string before comparison.
 
 **Example:**
 
@@ -67,7 +65,7 @@ SecRule REQUEST_LINE "!@endsWith HTTP/1.1" "id:152"
 
 ## fuzzyHash
 
-**Description:** The fuzzyHash operator uses the ssdeep, which is a program for computing context triggered piecewise hashes (CTPH). Also called fuzzy hashes, CTPH can match inputs that have homologies. Such inputs have sequences of identical bytes in the same order, although bytes in between these sequences may be different in both content and length.
+**Description:** The `fuzzyHash` operator uses the ssdeep, which is a program for computing context triggered piecewise hashes (CTPH). Also called fuzzy hashes, CTPH can match inputs that have homologies. Such inputs have sequences of identical bytes in the same order, although bytes in between these sequences may be different in both content and length.
 
 For further information on ssdeep, visit its site: http://ssdeep.sourceforge.net/
 
@@ -141,7 +139,7 @@ SecRule &REQUEST_HEADERS_NAMES "@gt 15" "id:158"
 ## inspectFile
 **Description:** Executes an external program for every variable in the target list. The contents of the variable is provided to the script as the first parameter on the command line. The program must be specified as the first parameter to the operator. As of version 2.5.0, if the supplied program filename is not absolute, it is treated as relative to the directory in which the configuration file resides. Also as of version 2.5.0, if the filename is determined to be a Lua script (based on its .lua extension), the script will be processed by the internal Lua engine. Internally processed scripts will often run faster (there is no process creation overhead) and have full access to the transaction context of Coraza.
 
-The @inspectFile operator was initially designed for file inspection (hence the name), but it can also be used in any situation that requires decision making using external logic.
+The `inspectFile` operator was initially designed for file inspection (hence the name), but it can also be used in any situation that requires decision making using external logic.
 
 ```
 #!/usr/bin/perl
@@ -222,7 +220,7 @@ SecRule REMOTE_ADDR "@ipMatch 192.168.1.100,192.168.1.50,10.10.50.0/24" "id:162"
 
 ## ipMatchF
 
-short alias for ipMatchFromFile
+short alias for `ipMatchFromFile`
 
 ## ipMatchFromFile
 
@@ -290,9 +288,8 @@ SecRule &REQUEST_HEADERS_NAMES "@lt 15" "id:165"
 SecRule REQUEST_HEADERS:User-Agent "@pm WebZIP WebCopier Webster WebStripper ... SiteSnagger ProWebWalker CheeseBot" "id:166"
 ```
 
-**Note:** This operator supports a snort/suricata content style. ie: "@pm A|42|C|44|F".
-
-**Note:** This operator does not support macro expansion.
+{{< alert icon="👉" text="This operator supports a snort/suricata content style. ie: \"@pm A|42|C|44|F\"." />}}
+{{< alert icon="⚠️" text="This operator does not support macro expansion." />}}
 
 **Note:** This operator supports the "capture" action.
 
