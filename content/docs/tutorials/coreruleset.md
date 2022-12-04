@@ -47,7 +47,6 @@ func initCoraza(){
 }
 ```
 
-
 ## Configuration
 
 Please check [https://coreruleset.org/installation/](https://coreruleset.org/installation/) for configuration examples.

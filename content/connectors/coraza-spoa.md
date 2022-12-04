@@ -14,7 +14,7 @@ repo: https://github.com/corazawaf/coraza-spoa
 weight: 100
 ---
 
-## Overview 
+## Overview
 
 [Coraza SPOA](https://github.com/corazawaf/coraza-spoa) runs the Coraza Web
 Application Firewall (WAF) as a backing service for HAProxy. It already embeds
@@ -48,7 +48,7 @@ install: `pkg-config make gcc`.
 
 Clone the coraza-spoa repository:
 
-```
+```sh
 git clone https://github.com/corazawaf/coraza-spoa.git
 ```
 
@@ -59,10 +59,10 @@ all dependencies and compile a `coraza-spoa` binary.
 
 Since the configuration is split-up in a couple of files, here is a quick rundown:
 
- - /etc/haproxy/haproxy.cfg - HAProxy Main Configuration
- - /etc/haproxy/coraza.cfg  - HAProxy SPOE Configuration
- - /etc/coraza-spoa/config.yml - Coraza SPOA Main Configuration
- - /etc/coraza-spoa/coraza.conf - Coraza Engine Configuration
+- /etc/haproxy/haproxy.cfg - HAProxy Main Configuration
+- /etc/haproxy/coraza.cfg  - HAProxy SPOE Configuration
+- /etc/coraza-spoa/config.yml - Coraza SPOA Main Configuration
+- /etc/coraza-spoa/coraza.conf - Coraza Engine Configuration
 
 To perform the configuration:
 
@@ -85,7 +85,7 @@ which component they configure.
 
 Below is a example haproxy.cfg configuration:
 
-```
+```conf
 global
     log stdout format raw local0
 
@@ -143,7 +143,7 @@ blocked with a `deny_status 504`. By default HAProxy would just disable the
 
 The HAProxy SPOE is configured in the `/etc/haproxy/coraza.cfg`:
 
-```
+```conf
 # https://github.com/haproxy/haproxy/blob/master/doc/SPOE.txt
 [coraza]
 spoe-agent coraza-agent
@@ -207,15 +207,14 @@ Coraza SPOA also embeds the [Coraza Engine](https://github.com/corazawaf/coraza)
 [OWASP Coreruleset](https://coreruleset.org), which are configured by the files
 listed in the `include` section:
 
- - [/etc/coraza-spoa/coraza.conf](https://github.com/corazawaf/coraza/blob/v2/master/coraza.conf-recommended) - Coraza Engine Configuration
- - [/etc/coraza-spoa/crs-setup.conf](https://github.com/coreruleset/coreruleset/blob/v4.0/dev/crs-setup.conf.example) - Core Ruleset Main
- - [/etc/coraza-spoa/rules/*.conf](https://github.com/coreruleset/coreruleset/tree/v4.0/dev/rules) - Core Ruleset Rules
- - [/etc/coraza-spoa/plugins/*.conf](https://github.com/coreruleset/coreruleset/tree/v4.0/dev/plugins) - Core Ruleset Plugins
+- [/etc/coraza-spoa/coraza.conf](https://github.com/corazawaf/coraza/blob/v2/master/coraza.conf-recommended) - Coraza Engine Configuration
+- [/etc/coraza-spoa/crs-setup.conf](https://github.com/coreruleset/coreruleset/blob/v4.0/dev/crs-setup.conf.example) - Core Ruleset Main
+- [/etc/coraza-spoa/rules/*.conf](https://github.com/coreruleset/coreruleset/tree/v4.0/dev/rules) - Core Ruleset Rules
+- [/etc/coraza-spoa/plugins/*.conf](https://github.com/coreruleset/coreruleset/tree/v4.0/dev/plugins) - Core Ruleset Plugins
 
 Once the coraza-spoa daemon is running you can begin with the
 [Coraza Engine](http://localhost:1313/docs/seclang/directives/) and
 [Coreruleset configuration](https://coreruleset.org/docs/).
-
 
 ## HELP
 

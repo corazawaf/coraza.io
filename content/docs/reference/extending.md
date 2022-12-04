@@ -17,17 +17,17 @@ toc: true
 - **Rule Transformations:** Create rule transformations like t:rot13 to encode your values in ROT13
 - **Rule Actions:** Create rule actions like challenge to redirect a malicious request to some bot detection system
 
-The plugin interface provides three functions to extend rule operators, transformations and actions. Each one of them must match it's proper type or interface and be registered using the ```plugins``` package. 
+The plugin interface provides three functions to extend rule operators, transformations and actions. Each one of them must match it's proper type or interface and be registered using the ```plugins``` package.
 
-* **Operators**: ```type PluginOperatorWrapper() types.RuleOperator```
-* **Actions**: ```type PluginOperatorWrapper() types.RuleAction```
-* **Transformations**: ```type Transformation = func(input string, tools *transformations.Tools) string```
+- **Operators**: ```type PluginOperatorWrapper() types.RuleOperator```
+- **Actions**: ```type PluginOperatorWrapper() types.RuleAction```
+- **Transformations**: ```type Transformation = func(input string, tools *transformations.Tools) string```
 
 After defining the plugins, we must register them using the ```plugins.Register...``` function inside the init function ```func init(){}```.
 
-* **Operators**: ```operators.RegisterPlugin(operator PluginOperatorWrapper)```
-* **Actions**: ```actions.RegisterPlugin(action PluginActionWrapper)```
-* **Transformations**: ```transformations.RegisterPlugin(transformation transformations.Transformation)```
+- **Operators**: ```operators.RegisterPlugin(operator PluginOperatorWrapper)```
+- **Actions**: ```actions.RegisterPlugin(action PluginActionWrapper)```
+- **Transformations**: ```transformations.RegisterPlugin(transformation transformations.Transformation)```
 
 **Important:** Some integrations like Traefik does not support plugins, because we cannot control how the integration is compiled by Pilot.
 
@@ -37,7 +37,7 @@ Plugin model is based on Caddy plugins system, they must be compiled within the 
 
 ```go
 import(
-    "github.com/jptosso/coraza-waf/v2"
+    "github.com/coraza-waf/coraza/v2"
     _ "github.com/someone/somecorazaplugin"
 )
 ```
@@ -75,8 +75,8 @@ type id15 struct{}
 
 // Initializes an action, will be done during compilation
 func (id15) Init(rule *coraza.Rule, _ string) error {
-	rule.Id = 15
-	return nil
+ rule.Id = 15
+ return nil
 }
 
 // Evaluate will be done during rule evaluation
@@ -84,7 +84,7 @@ func (id15) Evaluate(_ *coraza.Rule, _ *coraza.Transaction) {}
 
 // ACTION_TYPE_DATA will be only evaluated while compiling the rule, Evaluate won't be called
 func (id15) Type() int {
-	return coraza.ACTION_TYPE_DATA
+ return coraza.ACTION_TYPE_DATA
 }
 
 // Tripwire to match coraza.RuleAction type
@@ -97,26 +97,26 @@ Once the action is created, it must be wrapper inside a ```type PluginActionWrap
 
 ```go
 import(
-    "github.com/jptosso/coraza-waf/v2/actions"
-    "github.com/jptosso/coraza-waf/v2/types"
+    "github.com/coraza-waf/coraza/v2/actions"
+    "github.com/coraza-waf/coraza/v2/types"
 )
 
 func init() {
-	actions.RegisterPlugin("id15", func() types.RuleAction {
-		return &id15{}
-	})
+ actions.RegisterPlugin("id15", func() types.RuleAction {
+  return &id15{}
+ })
 }
 ```
 
 After properly importing the plugin, you may be able to create rules with ```id15``` action, for example:
 
-```
+```conf
 SecAction "id15, nolog, pass"
 ```
 
 ## Creating Rule Transformations
 
-Transformations are the easiest components to extend, each transformation implements the ```transformations.Transformation``` type and can be registered directly using ```plugins.RegisterPlugin(transformation transformations.Transformation)```. 
+Transformations are the easiest components to extend, each transformation implements the ```transformations.Transformation``` type and can be registered directly using ```plugins.RegisterPlugin(transformation transformations.Transformation)```.
 
 The *Tools struct is designed to add additional functionalities like logging and unicode mapping.
 
@@ -130,12 +130,12 @@ type Transformation = func(input string, tools *Tools) string
 
 ```go
 import (
-  "github.com/jptosso/coraza-waf/v2/transformations"
+  "github.com/coraza-waf/coraza/v2/transformations"
   "strings"
 )
 
 func transformationToLowercase(input string) (string, error) {
-	return strings.ToLower(input)
+ return strings.ToLower(input)
 }
 
 func init() {
@@ -150,13 +150,13 @@ func init() {
 ```go
 // Operator interface is used to define rule @operators
 type Operator interface {
-	// Init is used during compilation to setup and cache
-	// the operator
-	Init(string) error
-	// Evaluate is used during the rule evaluation,
-	// it returns true if the operator succeeded against
-	// the input data for the transaction
-	Evaluate(*Transaction, string) bool
+ // Init is used during compilation to setup and cache
+ // the operator
+ Init(string) error
+ // Evaluate is used during the rule evaluation,
+ // it returns true if the operator succeeded against
+ // the input data for the transaction
+ Evaluate(*Transaction, string) bool
 }
 ```
 
@@ -166,12 +166,12 @@ type Operator interface {
 type opEven struct{}
 
 func (opEven) Init(_ string) error {
-	return nil
+ return nil
 }
 
 func (opEven) Evaluate(_ *coraza.Transaction, input string) bool {
-	i, _ := strconv.Atoi(input)
-	return i%2 == 0
+ i, _ := strconv.Atoi(input)
+ return i%2 == 0
 }
 
 //Tripwire
@@ -184,20 +184,20 @@ Once the operator is created, it must be wrapper inside a ```type PluginOperator
 
 ```go
 import(
-    "github.com/jptosso/coraza-waf/v2/operators"
-    "github.com/jptosso/coraza-waf/v2/types"
+    "github.com/coraza-waf/coraza/v2/operators"
+    "github.com/coraza-waf/coraza/v2/types"
 )
 
 func init() {
-	operators.RegisterPlugin("even", func() types.Operator {
-		return &opEven{}
-	})
+ operators.RegisterPlugin("even", func() types.Operator {
+  return &opEven{}
+ })
 }
 ```
 
 After properly importing the plugin, you may be able to create rules with ```even``` operator, for example:
 
-```
+```conf
 SecRule ARGS:id "@even" "id:1, nolog, pass"
 ```
 

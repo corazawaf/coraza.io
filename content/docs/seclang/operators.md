@@ -16,6 +16,7 @@ toc: true
 This section documents the operators currently available in Coraza.
 
 ## beginsWith
+
 **Description:** Returns true if the parameter string is found at the beginning of the input. Macro expansion is performed on the parameter string before comparison.
 
 **Example:**
@@ -26,6 +27,7 @@ SecRule REQUEST_LINE "!@beginsWith GET" "id:149"
 ```
 
 ## contains
+
 **Description:** Returns true if the parameter string is found anywhere in the input. Macro expansion is performed on the parameter string before comparison.
 
 **Example:**
@@ -36,6 +38,7 @@ SecRule REQUEST_LINE "@contains .php" "id:150"
 ```
 
 ## containsWord
+
 **Description:** Returns true if the parameter string (with word boundaries) is found anywhere in the input. Macro expansion is performed on the parameter string before comparison.
 
 **Example:**
@@ -52,6 +55,7 @@ But not on -
 Your site has a wide selection of computers.
 
 ## endsWith
+
 **Description:** Returns true if the parameter string is found at the end of the input. Macro expansion is performed on the parameter string before comparison.
 
 **Example:**
@@ -62,6 +66,7 @@ SecRule REQUEST_LINE "!@endsWith HTTP/1.1" "id:152"
 ```
 
 ## fuzzyHash
+
 **Description:** The fuzzyHash operator uses the ssdeep, which is a program for computing context triggered piecewise hashes (CTPH). Also called fuzzy hashes, CTPH can match inputs that have homologies. Such inputs have sequences of identical bytes in the same order, although bytes in between these sequences may be different in both content and length.
 
 For further information on ssdeep, visit its site: http://ssdeep.sourceforge.net/
@@ -75,6 +80,7 @@ SecRule REQUEST_BODY "\@fuzzyHash /path/to/ssdeep/hashes.txt 6" "id:192372,log,d
 ```
 
 ## eq
+
 **Description:** Performs numerical comparison and returns true if the input value is equal to the provided parameter. Macro expansion is performed on the parameter string before comparison.
 
 **Example:**
@@ -87,6 +93,7 @@ SecRule &REQUEST_HEADERS_NAMES "@eq 15" "id:153"
 **Note:** If a value is provided that cannot be converted to an integer (i.e a string) this operator will treat that value as 0.
 
 ## ge
+
 **Description:** Performs numerical comparison and returns true if the input value is greater than or equal to the provided parameter. Macro expansion is performed on the parameter string before comparison.
 
 **Example:**
@@ -99,6 +106,7 @@ SecRule &REQUEST_HEADERS_NAMES "@ge 15" "id:154"
 **Note:** If a value is provided that cannot be converted to an integer (i.e a string) this operator will treat that value as 0.
 
 ## geoLookup
+
 **Description:** Performs a geolocation lookup using the IP address in input against the geolocation database previously configured using SecGeoLookupDb. If the lookup is successful, the obtained information is captured in the GEO collection.
 
 **Example:** The geoLookup operator matches on success and is thus best used in combination with nolog,pass. If you wish to block on a failed lookup (which may be over the top, depending on how accurate the geolocation database is), the following example demonstrates how best to do it:
@@ -118,6 +126,7 @@ See the GEO variable for an example and more information on various fields avail
 **Note:** This operator supports the "capture" action.
 
 ## gt
+
 **Description:** Performs numerical comparison and returns true if the input value is greater than the operator parameter. Macro expansion is performed on the parameter string before comparison.
 
 **Example:**
@@ -133,7 +142,6 @@ SecRule &REQUEST_HEADERS_NAMES "@gt 15" "id:158"
 **Description:** Executes an external program for every variable in the target list. The contents of the variable is provided to the script as the first parameter on the command line. The program must be specified as the first parameter to the operator. As of version 2.5.0, if the supplied program filename is not absolute, it is treated as relative to the directory in which the configuration file resides. Also as of version 2.5.0, if the filename is determined to be a Lua script (based on its .lua extension), the script will be processed by the internal Lua engine. Internally processed scripts will often run faster (there is no process creation overhead) and have full access to the transaction context of Coraza.
 
 The @inspectFile operator was initially designed for file inspection (hence the name), but it can also be used in any situation that requires decision making using external logic.
-
 
 ```
 #!/usr/bin/perl
@@ -194,6 +202,7 @@ SecRule FILES_TMPNAMES "@inspectFile /path/to/util/runav.pl" "id:159"
 **Reference:** http://sourceforge.net/p/mod-security/mailman/mod-security-users/?viewmonth=201512
 
 ## ipMatch
+
 **Description:** Performs a fast ipv4 or ipv6 match of REMOTE_ADDR variable data. Can handle the following formats:
 
 - Full IPv4 Address - 192.168.1.100
@@ -212,9 +221,11 @@ SecRule REMOTE_ADDR "@ipMatch 192.168.1.100,192.168.1.50,10.10.50.0/24" "id:162"
 ```
 
 ## ipMatchF
+
 short alias for ipMatchFromFile
 
 ## ipMatchFromFile
+
 **Description:** Performs a fast ipv4 or ipv6 match of REMOTE_ADDR variable, loading data from a file. Can handle the following formats:
 
 - Full IPv4 Address - 192.168.1.100
@@ -239,6 +250,7 @@ The file ips.txt may contain:
 **Note:** When used with content served by a HTTPS server, the directive SecRemoteRulesFailAction can be used to configure a warning instead of an abort, when the remote content could not be retrieved.
 
 ## le
+
 **Description:** Performs numerical comparison and returns true if the input value is less than or equal to the operator parameter. Macro expansion is performed on the parameter string before comparison.
 
 **Example:**
@@ -247,9 +259,11 @@ The file ips.txt may contain:
 # Detect 15 or fewer headers in a request 
 SecRule &REQUEST_HEADERS_NAMES "@le 15" "id:164"
 ```
+
 **Note:** If a value is provided that cannot be converted to an integer (i.e a string) this operator will treat that value as 0.
 
 ## lt
+
 **Description:** Performs numerical comparison and returns true if the input value is less than to the operator parameter. Macro expansion is performed on the parameter string before comparison.
 
 **Example:**
@@ -258,12 +272,15 @@ SecRule &REQUEST_HEADERS_NAMES "@le 15" "id:164"
 # Detect fewer than 15 headers in a request 
 SecRule &REQUEST_HEADERS_NAMES "@lt 15" "id:165"
 ```
+
 **Note:** If a value is provided that cannot be converted to an integer (i.e a string) this operator will treat that value as 0.
 
 ## noMatch
+
 **Description:** Will force the rule to always return false.
 
 ## pm
+
 **Description:** Performs a case-insensitive match of the provided phrases against the desired input value. The operator uses a set-based matching algorithm (Aho-Corasick), which means that it will match any number of keywords in parallel. When matching of a large number of keywords is needed, this operator performs much better than a regular expression.
 
 **Example:**
@@ -280,9 +297,11 @@ SecRule REQUEST_HEADERS:User-Agent "@pm WebZIP WebCopier Webster WebStripper ...
 **Note:** This operator supports the "capture" action.
 
 ## pmf
+
 Short alias for pmFromFile.
 
 ## pmFromFile
+
 **Description:** Performs a case-insensitive match of the provided phrases against the desired input value. The operator uses a set-based matching algorithm (Aho-Corasick), which means that it will match any number of keywords in parallel. When matching of a large number of keywords is needed, this operator performs much better than a regular expression.
 
 This operator is the same as @pm, except that it takes a list of files as arguments. It will match any one of the phrases listed in the file(s) anywhere in the target value.
@@ -345,6 +364,7 @@ setvar:tx.%{rule.id}-AUTOMATION/MALICIOUS-%{matched_var_name}=%{matched_var},set
 **Note:** This operator supports the "capture" action.
 
 ## rsub
+
 **Description:** Performs regular expression data substitution when applied to either the STREAM_INPUT_BODY or STREAM_OUTPUT_BODY variables. This operator also supports macro expansion. Starting with Coraza 2.7.0 this operator supports the syntax |hex| allowing users to use special chars like \n \r
 
 **Syntax:** @rsub s/regex/str/[id]
@@ -369,6 +389,7 @@ Regular expressions are a very powerful tool. You are strongly advised to read t
 **Note:** This operator supports the "capture" action.
 
 ## rx
+
 **Description:** Performs a regular expression match of the pattern provided as parameter. This is the default operator; the rules that do not explicitly specify an operator default to @rx.
 
 **Examples:**
@@ -394,6 +415,7 @@ Regular expressions are a very powerful tool. You are strongly advised to read t
 **Note:** This operator supports the "capture" action.
 
 ## streq
+
 **Description:** Performs a string comparison and returns true if the parameter string is identical to the input string. Macro expansion is performed on the parameter string before comparison.
 
 **Example:**
@@ -404,6 +426,7 @@ SecRule ARGS:foo "!@streq bar" "id:176"
 ```
 
 ## strmatch
+
 **Description:** Performs a string match of the provided word against the desired input value. The operator uses the pattern matching Boyer-Moore-Horspool algorithm, which means that it is a single pattern matching operator. This operator performs much better than a regular expression.
 
 **Example:**
@@ -425,6 +448,7 @@ SecRule REMOTE_ADDR "@unconditionalMatch" "id:1000,phase:1,pass,nolog,t:hexEncod
 ```
 
 ## validateByteRange
+
 **Description:** Validates that the byte values used in input fall into the range specified by the operator parameter. This operator matches on an input value that contains bytes that are not in the specified range.
 
 **Example:**
@@ -445,8 +469,8 @@ SecRule ARGS "@validateByteRange 1-255" "id:179"
 
 **Note:** You can force requests to consist only of bytes from a certain byte range. This can be useful to avoid stack overflow attacks (since they usually contain "random" binary content). Default range values are 0 and 255, i.e. all byte values are allowed. This directive does not check byte range in a POST payload when multipart/form-data encoding (file upload) is used. Doing so would prevent binary files from being uploaded. However, after the parameters are extracted from such request they are checked for a valid range.
 
-
 ## validateHash
+
 **Description:** Validates REQUEST_URI that contains data protected by the hash engine.
 
 **Supported:** TBI
@@ -459,6 +483,7 @@ SecRule REQUEST_URI "@validatehash "product_info|product_list" "phase:1,deny,id:
 ```
 
 ## validateUrlEncoding
+
 **Description:** Validates the URL-encoded characters in the provided input string.
 
 **Example:**
@@ -467,6 +492,7 @@ SecRule REQUEST_URI "@validatehash "product_info|product_list" "phase:1,deny,id:
 # Validate URL-encoded characters in the request URI 
 SecRule REQUEST_URI_RAW "@validateUrlEncoding" "id:192"
 ```
+
 Coraza will automatically decode the URL-encoded characters in request parameters, which means that there is little sense in applying the @validateUrlEncoding operator to them —that is, unless you know that some of the request parameters were URL-encoded more than once. Use this operator against raw input, or against the input that you know is URL-encoded. For example, some applications will URL-encode cookies, although that’s not in the standard. Because it is not in the standard, Coraza will neither validate nor decode such encodings.
 
 ## validateUtf8Encoding
@@ -479,6 +505,7 @@ Coraza will automatically decode the URL-encoded characters in request parameter
 # Make sure all request parameters contain only valid UTF-8 
 SecRule ARGS "@validateUtf8Encoding" "id:193"
 ```
+
 The @validateUtf8Encoding operator detects the following problems:
 
 - **Not enough bytes :** UTF-8 supports two-, three-, four-, five-, and six-byte encodings. Coraza will locate cases when one or more bytes is/are missing from a character.
@@ -486,10 +513,12 @@ The @validateUtf8Encoding operator detects the following problems:
 - **Overlong characters :** ASCII characters are mapped directly into UTF-8, which means that an ASCII character is one UTF-8 character at the same time. However, in UTF-8 many ASCII characters can also be encoded with two, three, four, five, and six bytes. This is no longer legal in the newer versions of Unicode, but many older implementations still support it. The use of overlong UTF-8 characters is common for evasion.
 
 **Notes :**
+
 - Most, but not all applications use UTF-8. If you are dealing with an application that does, validating that all request parameters are valid UTF-8 strings is a great way to prevent a number of evasion techniques that use the assorted UTF-8 weaknesses. False positives are likely if you use this operator in an application that does not use UTF-8.
 - Many web servers will also allow UTF-8 in request URIs. If yours does, you can verify the request URI using @validateUtf8Encoding.
 
 ## verifyCC
+
 **Description:** Detects credit card numbers in input. This operator will first use the supplied regular expression to perform an initial match, following up with the Luhn algorithm calculation to minimize false positives.
 
 **Supported on Coraza:** TBI
@@ -505,6 +534,7 @@ SecRule ARGS "@verifyCC \d{13,16}" "phase:2,id:194,nolog,pass,msg:'Potential cre
 **Note:** This operator supports the "capture" action.
 
 ## within
+
 **Description:** Returns true if the input value (the needle) is found anywhere within the @within parameter (the haystack). Macro expansion is performed on the parameter string before comparison.
 
 **Example:**

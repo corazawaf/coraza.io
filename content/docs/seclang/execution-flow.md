@@ -66,6 +66,7 @@ SecAction "id:300, phase: 1, logdata:'third rule', log"
 ```
 
 This will evaluate the rules based on it's phase, not it's id, and show the following logdata:
+
 ```
 third rule
 second rule

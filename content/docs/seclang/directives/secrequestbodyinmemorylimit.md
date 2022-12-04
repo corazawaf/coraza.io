@@ -17,5 +17,3 @@ type: seclang/directives
 When a multipart/form-data request is being processed, once the in-memory limit is reached, the request body will start to be streamed into a temporary file on disk.
 
 {{< alert icon="👉" text="If a tinygo implementation is not capable of writing files, this feature will be disabled." />}}
-
-

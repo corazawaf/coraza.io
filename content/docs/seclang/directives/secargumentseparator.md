@@ -15,4 +15,3 @@ type: seclang/directives
 ---
 
 This directive is needed if a backend web application is using a nonstandard argument separator. Applications are sometimes (very rarely) written to use a semicolon separator. You should not change the default setting unless you establish that the application you are working with requires a different separator. If this directive is not set properly for each web application, then Coraza will not be able to parse the arguments appropriately and the effectiveness of the rule matching will be significantly decreased.
-

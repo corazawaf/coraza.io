@@ -25,6 +25,7 @@ toc: true
   - GET request: no body
 
 ## Results
+
 **Machine specs:** Apple M1 Pro (10 cores, 16 GB RAM)
 
 Values are requests analyzed per second. The higher the value, the better results.
@@ -40,6 +41,7 @@ Values are requests analyzed per second. The higher the value, the better result
 | Giant URLENCODED Request  | 632       | **871**       | 840         |
 
 **Test Versions:**
+
 - **Coraza v3:** v3.0.0-dev (no tag)
 - **Coraza v2:** v2.0.1
 - **Modsecurity v3:** v3.0.7
@@ -47,6 +49,7 @@ Values are requests analyzed per second. The higher the value, the better result
 ## Run your own benchmarks
 
 ### Using golang
+
 ```sh
 # compile modsecurity: https://github.com/SpiderLabs/ModSecurity/wiki/Compilation-recipes-for-v3.x
 git clone https://github.com/jptosso/coraza-benchmark
@@ -55,6 +58,7 @@ go test -bench=. ./...
 ```
 
 ### Using Docker
+
 ```sh
 docker run jptosso/coraza-benchmark:latest
 ```

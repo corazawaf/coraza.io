@@ -22,7 +22,7 @@ Available audit log parts:
 - **B:** Request headers.
 - **C:** Request body (present only if the request body exists and Coraza is configured to intercept it. This would require SecRequestBodyAccess to be set to on).
 - **D:** Reserved for intermediary response headers; not implemented yet.
-- **E:** Intermediary response body (present only if Coraza is configured to intercept response bodies, and if the audit log engine is configured to record it. Intercepting response bodies requires SecResponseBodyAccess to be enabled). Intermediary response body is the same as the actual response body unless Coraza intercepts the intermediary response body, in which case the actual response body will contain the error message (either the Apache default error message, - **or **the ErrorDocument page).
+- **E:** Intermediary response body (present only if Coraza is configured to intercept response bodies, and if the audit log engine is configured to record it. Intercepting response bodies requires SecResponseBodyAccess to be enabled). Intermediary response body is the same as the actual response body unless Coraza intercepts the intermediary response body, in which case the actual response body will contain the error message (either the Apache default error message, - **or**the ErrorDocument page).
 - **F:** Final response headers (excluding the Date and Server headers, which are always added by Apache in the late stage of content delivery).
 - **G:** Reserved for the actual response body; not implemented yet.
 - **H:** Audit log trailer.

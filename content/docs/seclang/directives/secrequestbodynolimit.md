@@ -14,4 +14,3 @@ type: seclang/directives
 ---
 
 Generally speaking, the default value is not small enough. For most applications, you should be able to reduce it down to 128 KB or lower. Anything over the limit will be rejected with status code 413 (Request Entity Too Large). There is a hard limit of 1 GB.
-

@@ -20,7 +20,6 @@ SecDirective1 some options
 SecDirective2 "some option between brackets \" and escaped"
 ```
 
-
 ```
 SecSampleDirective this \
     directive \
@@ -33,7 +32,7 @@ SecSampleDirective this \
 
 Rules are a special directive that must contain variables, operator and actions: ```SecRule VARIABLES "@OPERATOR OPERATOR_ARGUMENTS" "ACTIONS"```.
 
-* All rules **must** have a unique ID action, for example ```"id:1"```. 
+* All rules **must** have a unique ID action, for example ```"id:1"```.
 * If there is no **phase** action, the phase will default to 2 (request headers).
 * Rules can contain only one disruptive action
 * More default actions can be set with [SecDefaultAction](#)
@@ -78,6 +77,7 @@ SecRule REQUEST_HEADERS|!REQUEST_HEADERS:User-Agent "@detectSQLi" "id:2, deny, s
 
 ## The second rule will be evaluated for each request header except User-Agent.
 ```
+
 **XPATH variables**
 
 If the body processor is set to process JSON or XML, you may use the special variables **XML** and **JSON**, for example:
@@ -109,7 +109,7 @@ SecRule VARIABLE1|VARIABLE2|VARIABLE3:/some-regex/|&VARIABLE4|!VARIABLE3:id "!@r
 
 ### Operators
 
-Operators are functions that returns true or false. Only one operator can be used per rule, unless you use chains. The syntax for an operator is: ```"@OPERATOR ARGUMENTS"```, you can negate the result using ```"!@OPERATOR ARGUMENTS"```. 
+Operators are functions that returns true or false. Only one operator can be used per rule, unless you use chains. The syntax for an operator is: ```"@OPERATOR ARGUMENTS"```, you can negate the result using ```"!@OPERATOR ARGUMENTS"```.
 
 **Note:** If you don't indicate any operator, the default used operator will be ```@rx```.
 
@@ -121,12 +121,12 @@ Actions are key-value instructions for the rule that will be triggered per compi
 
 Actions values are optional, the key-value syntax is ```key:value``` and some actions can be reused as much as you want, like **t**.
 
-**Action types:** 
+**Action types:**
 
-- **Non-disruptive actions** - Do something, but that something does not and cannot affect the rule processing flow. Setting a variable, or changing its value is an example of a non-disruptive action. Non-disruptive action can appear in any rule, including each rule belonging to a chain.
-- **Flow actions** - These actions affect the rule flow (for example skip or skipAfter).
-- **Meta-data actions** - Meta-data actions are used to provide more information about rules. Examples include id, rev, severity and msg.
-- **Data actions** - Not really actions, these are mere containers that hold data used by other actions. For example, the status action holds the status that will be used for blocking (if it takes place).
+* **Non-disruptive actions** - Do something, but that something does not and cannot affect the rule processing flow. Setting a variable, or changing its value is an example of a non-disruptive action. Non-disruptive action can appear in any rule, including each rule belonging to a chain.
+* **Flow actions** - These actions affect the rule flow (for example skip or skipAfter).
+* **Meta-data actions** - Meta-data actions are used to provide more information about rules. Examples include id, rev, severity and msg.
+* **Data actions** - Not really actions, these are mere containers that hold data used by other actions. For example, the status action holds the status that will be used for blocking (if it takes place).
 
 ### Default Actions
 

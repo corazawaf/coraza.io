@@ -15,4 +15,3 @@ type: seclang/directives
 ---
 
 Anything over the limit will be rejected with status code 413 (Request Entity Too Large). There is a hard limit of 1 GB.
-

@@ -14,11 +14,11 @@ tinygo: Yes
 type: seclang/directives
 ---
 
-Every rule following a previous SecDefaultAction directive in the same configuration context will inherit its settings unless more specific actions are used. 
+Every rule following a previous SecDefaultAction directive in the same configuration context will inherit its settings unless more specific actions are used.
 
 Rulesets like OWASP Core Ruleset uses this to define operation modes:
+
 - You can set the default disruptive action to block for phases 1 and 2 and you can force a phase 3 rule to be disrupted if the thread score is high.
 - You can set the default disruptive action to deny and each risky rule will interrupt the connection.
 
-**Important: **Every SecDefaultAction directive must specify a disruptive action and a processing phase and cannot contain metadata actions.
-
+**Important:**Every SecDefaultAction directive must specify a disruptive action and a processing phase and cannot contain metadata actions.

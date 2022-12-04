@@ -19,7 +19,7 @@ Plugins must be included in your project's main package, for example:
 package main
 
 include(
-  "github.com/jptosso/coraza-waf/v2"
+  "github.com/coraza-waf/coraza/v2"
   _ "github.com/jptosso/coraza-libinjection"
 )
 ```

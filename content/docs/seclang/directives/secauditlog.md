@@ -15,7 +15,6 @@ type: seclang/directives
 
 {{< alert icon="👉" text="Writing to programs using pipe (|) is not implemented yet." />}}
 
-
 ```apache
 SecAuditLog "|/path/to/mlogc /path/to/mlogc.conf"
 ```

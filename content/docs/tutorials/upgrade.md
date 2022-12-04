@@ -26,6 +26,7 @@ parser := seclang.NewParser()
 ```
 
 ### Transaction
+
 Transactions now takes a `context.Background` as an argument.
 
 ```go
@@ -36,6 +37,7 @@ tx := waf.NewTransaction(context.Background())
 ```
 
 Example of a transaction timeout using context
+
 ```go
 ctxTimeout, cancel := context.WithTimeout(context.Background(), time.Second*3)
 defer cancel()
@@ -52,7 +54,6 @@ case <-ctxTimeout.Done():
 ### Directives and rules
 
 No changes required.
-
 
 ### Plugins Interfaces
 

@@ -24,8 +24,8 @@ twitterCreator = "@jptosso"
 ## JSON-LD
 # schemaType = "Organization"
 schemaType = "Person"
-schemaName = "OWASP oraza WAF"
-schemaAuthor = "Juan Pablo Tosso"
+schemaName = "OWASP Coraza WAF"
+schemaAuthor = "Juan Pablo Tosso and Coraza contributors"
 schemaAuthorTwitter = "https://twitter.com/jptosso"
 schemaAuthorLinkedIn = "https://www.linkedin.com/in/jptosso/"
 schemaAuthorGitHub = "https://github.com/corazawaf"
@@ -55,11 +55,11 @@ portraitPhotoWidths = [800, 700, 600, 500]
 lqipWidth = "20x"
 
 # Footer
-footer = "Powered by a lot of love ❤️ (and code) - By Juan Pablo Tosso"
+footer = "Powered by a lot of love ❤️ (and code) - By Juan Pablo Tosso and Coraza Contributors"
 copyRight = ""
 
 # Edit Page
-docsRepo = "https://github.com/jptosso/coraza.io"
+docsRepo = "https://github.com/corazawaf/coraza.io"
 editPage = true
 
 [options]
