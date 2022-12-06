@@ -1,10 +1,15 @@
 # Meta Data for SEO
 
 ## Homepage
-title = "OWASP Coraza WAF"
+title = "OWASP Coraza"
 titleSeparator = "-"
 titleAddition = "Enterprise-grade open source web application firewall library"
 description = "OWASP Coraza is an enterprise-grade, open-source, and high-performance Web Application Firewall library ready to protect your beloved applications."
+
+# Alert
+alert = true
+alertDismissable = true
+alertText = "Coraza v3 will be available soon, <a href=\"https://github.com/corazawaf/coraza/issues/336\">stay tuned!</a>"
 
 ## Open Graph
 images = ["doks.png"]
@@ -19,8 +24,8 @@ twitterCreator = "@jptosso"
 ## JSON-LD
 # schemaType = "Organization"
 schemaType = "Person"
-schemaName = "OWASP oraza WAF"
-schemaAuthor = "Juan Pablo Tosso"
+schemaName = "OWASP Coraza WAF"
+schemaAuthor = "Juan Pablo Tosso and Coraza contributors"
 schemaAuthorTwitter = "https://twitter.com/jptosso"
 schemaAuthorLinkedIn = "https://www.linkedin.com/in/jptosso/"
 schemaAuthorGitHub = "https://github.com/corazawaf"
@@ -50,15 +55,11 @@ portraitPhotoWidths = [800, 700, 600, 500]
 lqipWidth = "20x"
 
 # Footer
-footer = "Powered by a lot of love ❤️ (and code) - By Juan Pablo Tosso"
-copyRight = "Copyright (c) 2020-2021 Juan Pablo Tosso"
-
-# Alert
-alert = false
-alertText = "Like Coraza? <a class=\"alert-link\" href=\"https://github.com/jptosso/coraza-waf/stargazers\">Star on GitHub</a>. Thanks!</a>"
+footer = "Powered by a lot of love ❤️ (and code) - By Juan Pablo Tosso and Coraza Contributors"
+copyRight = ""
 
 # Edit Page
-docsRepo = "https://github.com/jptosso/coraza.io"
+docsRepo = "https://github.com/corazawaf/coraza.io"
 editPage = true
 
 [options]
@@ -66,9 +67,15 @@ editPage = true
   clipBoard = true
   instantPage = true
   flexSearch = true
+  searchSectionsShow = []
+  searchSectionsIndex = []
   darkMode = true
   bootStrapJs = true
   breadCrumb = true
   highLight = true
   kaTex = false
-  collapsibleSidebar = false
+  multilingualMode = false
+  docsVersioning = false
+  fullWidth = false
+  navbarSticky = true
+  toTopButton = true

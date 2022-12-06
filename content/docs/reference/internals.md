@@ -50,7 +50,7 @@ Once a rule is triggered, it will follow the following flow:
 6. Execute the current operator for each variable
 7. Continue if there was any match
 8. Evaluate all non-disruptive actions
-9. Evaluate chains recursively 
+9. Evaluate chains recursively
 10. Log data if requested
 11. Evaluate ``disruptive`` and ``flow`` rules
 
@@ -60,13 +60,13 @@ The return of this function contains each ``MatchData``, which will tell the tra
 
 ### Operators
 
-Operators are stored in ``github.com/jptosso/coraza-waf/v2/operators`` and contains an initializer and an evaluation function. Initializers are used to apply arguments during compilation, for example, ``"@rx /\d+/"`` will run ``op.Init("/\\d+")``. ``op.Evaluate(tx, "args")`` is applied for each compiled variable and will return if the condition matches. Operators uses ``Transaction`` to create logs, capture fields and access additional variables from the transaction.
+Operators are stored in ``github.com/coraza-waf/coraza/v2/operators`` and contains an initializer and an evaluation function. Initializers are used to apply arguments during compilation, for example, ``"@rx /\d+/"`` will run ``op.Init("/\\d+")``. ``op.Evaluate(tx, "args")`` is applied for each compiled variable and will return if the condition matches. Operators uses ``Transaction`` to create logs, capture fields and access additional variables from the transaction.
 
 **Note:** Operators must be concurrent-friendly
 
 ### Actions
 
-Actions are stored in ``github.com/jptosso/coraza-waf/v2/actions`` and contains an initializer and an evaluation function, the initializers are evaluated during compilation, for example, ``id:4`` will run ``act.Init("4")``. Depending on the ``Type()`` of each action, it will run on different phases.
+Actions are stored in ``github.com/coraza-waf/coraza/v2/actions`` and contains an initializer and an evaluation function, the initializers are evaluated during compilation, for example, ``id:4`` will run ``act.Init("4")``. Depending on the ``Type()`` of each action, it will run on different phases.
 
 * **Non-Disruptive:** Do something, but that something does not and cannot affect the rule processing flow. Setting a variable, or changing its value is an example of a non-disruptive action. Non-disruptive action can appear in any rule, including each rule belonging to a chain. **Non-disruptive rules are evaluated after the rule matches some data**.
 * **Flow actions:** These actions affect the rule flow (for example skip or skipAfter). Flow actions are evaluated after the rule successfully matched and will only run for the parent rule of a chain.
@@ -78,7 +78,6 @@ Transformations are simple functions to transform some string into another strin
 
 **Note:** Transformations are evaluated thousands of times per transaction and they must be SUPER FAST.
 
-
 ## Rule Groups
 
 Rule Groups are like Modsecurity ``Rules``, it's just a container for rules that will return the list of rules concurrent-safe and will evaluate rules based on the requested phase.
@@ -87,7 +86,7 @@ Rule Groups are like Modsecurity ``Rules``, it's just a container for rules that
 
 Collections are used by Coraza to store ``Variables``, all Variables are treated as the same type, even if they map values, they are single values or arrays.
 
-Collections are stored as a slice ``[]*Collection``, each index is assigned based on it's constant name provided by ``variables.go``. For example, if you want to get a collection you might use ``tx.GetCollection(variables.Files)``. If you want to transform a named variable to it's constant you may use: 
+Collections are stored as a slice ``[]*Collection``, each index is assigned based on it's constant name provided by ``variables.go``. For example, if you want to get a collection you might use ``tx.GetCollection(variables.Files)``. If you want to transform a named variable to it's constant you may use:
 
 ```go
 b, _ := variables.ParseVariable("FILES")

@@ -1,6 +1,6 @@
 ---
 title: "Juan Pablo Tosso"
-description: "Creator of Coraza."
+description: "Author and co-leader of Coraza."
 date: 2020-10-06T08:50:45+00:00
 lastmod: 2020-10-06T08:50:45+00:00
 draft: false
@@ -9,7 +9,7 @@ images: []
 
 <p align="center">
   <samp>
-    Hi, I'm Juan Pablo Tosso, Chief Cybersecurity Officer at <a href="https://makros.cl/">Makros</a> and founder of Coraza.
+    Hi, I'm Juan Pablo Tosso, OWASP #Coraza project co-leader - Research Engineer at @traceableai, Proud Father and Open-Source Developer.
   </samp>
   <br><br>
 </p>

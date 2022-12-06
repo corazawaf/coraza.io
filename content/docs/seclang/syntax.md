@@ -9,17 +9,16 @@ images: []
 menu:
   docs:
     parent: "seclang"
-weight: 100
+weight: 10
 toc: true
 ---
 
-Seclang is a language created by Modsecurity to define a list of sequential directives
+The original language for configuring the ModSecurity Apache module was a set of extension directives to the Apache config language. This extension allows you to generate your Security Policy where you take an access control decision based on a set of parameters. Directives can be used to configure the engine itself, but also to send directives to the engine for access control. Directives look like the examples below:
 
 ```modsecurity
 SecDirective1 some options
 SecDirective2 "some option between brackets \" and escaped"
 ```
-
 
 ```
 SecSampleDirective this \
@@ -33,10 +32,10 @@ SecSampleDirective this \
 
 Rules are a special directive that must contain variables, operator and actions: ```SecRule VARIABLES "@OPERATOR OPERATOR_ARGUMENTS" "ACTIONS"```.
 
-* All rules **must** have a unique ID action, for example ```"id:1"```. 
+* All rules **must** have a unique ID action, for example ```"id:1"```.
 * If there is no **phase** action, the phase will default to 2 (request headers).
 * Rules can contain only one disruptive action
-* More default actions can be set with [SecDefaultAction](#)
+* More default actions can be set with [SecDefaultAction]({{< relref "directives/#SecDefaultAction" >}})
 
 ```
 SecRule REMOTE_ADDR "127.0.0.1" "id:1, phase:1, pass, log, logdata:'Request from localhost'"
@@ -56,13 +55,13 @@ SecRule REQUEST_HEADERS:user-agent "@contains firefox" "id:1, pass, log, logdata
 
 **Variable with regex**
 
-PCRE compatible regex can be used to query a mapped VARIABLE like ARGS, the following example will match all parameters (get and post) where the key begins with ```param``` and the value of this argument is ```someval```.
+(v2 Only): PCRE compatible regex can be used to query a mapped VARIABLE like ARGS, the following example will match all parameters (get and post) where the key begins with ```param``` and the value of this argument is ```someval```.
 
 ```
 SecRule ARGS:/^param.*$/ "someval" "id:1"
 ```
 
-Note: In the future we are migrating to RE2, so don't create rules with RE2 unsupported features.
+{{< alert icon="👉" text="Only RE2 will be supported in v3." />}}
 
 **Variable exceptions**
 
@@ -70,15 +69,16 @@ You can remove specific taget keys from the variables list using the **!** prefi
 
 ```
 # We want to apply some Sql Injection validations against the REQUEST_HEADERS
-SecRule REQUEST_HEADERS "@detectSQLi" "id:1, deny, status:403"
+SecRule REQUEST_HEADERS "@detectSQLi" "id:1,deny,status:403"
 
 # There is a false positive for some User-Agents so we want to ignore the 
 # User-Agent header:
-SecRule REQUEST_HEADERS|!REQUEST_HEADERS:User-Agent "@detectSQLi" "id:2, deny, status:403"
+SecRule REQUEST_HEADERS|!REQUEST_HEADERS:User-Agent "@detectSQLi" "id:2,deny,status:403"
 
 ## The second rule will be evaluated for each request header except User-Agent.
 ```
-**XPATH variables**
+
+#### XPATH variables
 
 If the body processor is set to process JSON or XML, you may use the special variables **XML** and **JSON**, for example:
 
@@ -109,11 +109,14 @@ SecRule VARIABLE1|VARIABLE2|VARIABLE3:/some-regex/|&VARIABLE4|!VARIABLE3:id "!@r
 
 ### Operators
 
-Operators are functions that returns true or false. Only one operator can be used per rule, unless you use chains. The syntax for an operator is: ```"@OPERATOR ARGUMENTS"```, you can negate the result using ```"!@OPERATOR ARGUMENTS"```. 
+Operators are functions that returns true or false. Only one operator can be used per rule, unless you use chains. The syntax for an operator is: ```"@OPERATOR ARGUMENTS"```, you can negate the result using ```"!@OPERATOR ARGUMENTS"```.
 
-**Note:** If you don't indicate any operator, the default used operator will be ```@rx```.
+{{< alert icon="👉">}}
 
-**Note:** Operators must begin with **@**.
+* If you don't indicate any operator, the default used operator will be ```@rx```.
+
+* Operators must begin with **@**.
+{{</alert>}}
 
 ### Actions
 
@@ -121,12 +124,12 @@ Actions are key-value instructions for the rule that will be triggered per compi
 
 Actions values are optional, the key-value syntax is ```key:value``` and some actions can be reused as much as you want, like **t**.
 
-**Action types:** 
+**Action types:**
 
-- **Non-disruptive actions** - Do something, but that something does not and cannot affect the rule processing flow. Setting a variable, or changing its value is an example of a non-disruptive action. Non-disruptive action can appear in any rule, including each rule belonging to a chain.
-- **Flow actions** - These actions affect the rule flow (for example skip or skipAfter).
-- **Meta-data actions** - Meta-data actions are used to provide more information about rules. Examples include id, rev, severity and msg.
-- **Data actions** - Not really actions, these are mere containers that hold data used by other actions. For example, the status action holds the status that will be used for blocking (if it takes place).
+* **Non-disruptive actions** - Do something, but that something does not and cannot affect the rule processing flow. Setting a variable, or changing its value is an example of a non-disruptive action. Non-disruptive action can appear in any rule, including each rule belonging to a chain.
+* **Flow actions** - These actions affect the rule flow (for example skip or skipAfter).
+* **Meta-data actions** - Meta-data actions are used to provide more information about rules. Examples include id, rev, severity and msg.
+* **Data actions** - Not really actions, these are mere containers that hold data used by other actions. For example, the status action holds the status that will be used for blocking (if it takes place).
 
 ### Default Actions
 

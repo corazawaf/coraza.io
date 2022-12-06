@@ -13,40 +13,52 @@ weight: 0
 toc: true
 ---
 
+## Tests description
+
+- Tests are performed using OWASP Core Ruleset v4 and go benchmarks.
+- The benchmark tool supports coraza v2, v3 and modsecurity.
+- Modsecurity is executed using CGO.
+- There are currently 4 test-cases and 7 variations:
+  - JSON request: 1kb and 100kb payload
+  - URLENCODED request: 1kb and 100kb payload
+  - Multipart file upload: 1kb and 100kb payload
+  - GET request: no body
+
 ## Results
 
-### 1. Without rules GET
+**Machine specs:** Apple M1 Pro (10 cores, 16 GB RAM)
 
-### 2. Without rules POST Multipart
+Values are requests analyzed per second. The higher the value, the better results.
 
-### 3. Without rules POST XML
+| Test                      | Coraza v2 | Coraza v3 | Modsecurity |
+|---------------------------|-----------|-----------|-------------|
+| Simple JSON Request       | 639       | 903       | **1011**    |
+| Giant JSON Request        | 603       | **908**    | 847        |
+| Multipart Request         | 606       | 817       | **976**     |
+| Giant Multipart Request   | 573       | 781       | **958**         |
+| Simple GET Request        | 654       | 955       | **1135**        |
+| Simple URLENCODED Request | 624       | **892**       | 842         |
+| Giant URLENCODED Request  | 632       | **871**       | 840         |
 
-### 4. With CRS GET
+**Test Versions:**
 
-### 5. With CRS POST Multipart
-
-### 6. With CRS POST XML
-
-## Methodology
+- **Coraza v3:** v3.0.0-dev (no tag)
+- **Coraza v2:** v2.0.1
+- **Modsecurity v3:** v3.0.7
 
 ## Run your own benchmarks
 
-First make sure you meet all the requirements:
-
-- golang 1.16+
-- libpcre and libinjection installed
-- gcc compiler
-- libinjection installed
-- python 3
+### Using golang
 
 ```sh
-git clone https://github.com/jptosso/coraza-benchmark --depth=1
+# compile modsecurity: https://github.com/SpiderLabs/ModSecurity/wiki/Compilation-recipes-for-v3.x
+git clone https://github.com/jptosso/coraza-benchmark
 cd coraza-benchmark
-make all
-./run-benchmarks.sh
-./parse-results.sh
+go test -bench=. ./...
 ```
 
-This will print the tables with the benchmark results.
+### Using Docker
 
-You may also run the docker image from the Dockerfile using ```docker build -t coraza-benchmark .```
+```sh
+docker run jptosso/coraza-benchmark:latest
+```

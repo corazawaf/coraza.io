@@ -15,15 +15,15 @@ toc: true
 
 # Coraza Web Application Firewall v2
 
-![Build Status](https://github.com/jptosso/coraza-waf/actions/workflows/regression.yml/badge.svg)
-![CodeQL](https://github.com/jptosso/coraza-waf/workflows/CodeQL/badge.svg)
+![Build Status](https://github.com/coraza-waf/coraza/actions/workflows/regression.yml/badge.svg)
+![CodeQL](https://github.com/coraza-waf/coraza/workflows/CodeQL/badge.svg)
 [![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=jptosso_coraza-waf&metric=sqale_rating)](https://sonarcloud.io/dashboard?id=jptosso_coraza-waf)
 [![Coverage](https://sonarcloud.io/api/project_badges/measure?project=jptosso_coraza-waf&metric=coverage)](https://sonarcloud.io/dashboard?id=jptosso_coraza-waf)
-[![GoDoc](https://godoc.org/github.com/jptosso/coraza-waf?status.svg)](https://godoc.org/github.com/jptosso/coraza-waf)
+[![GoDoc](https://godoc.org/github.com/coraza-waf/coraza?status.svg)](https://godoc.org/github.com/coraza-waf/coraza)
 [![Project Status: Active – The project has reached a stable, usable state and is being actively developed.](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active)
 
 <div align="center">
-	<img src="https://coraza.io/images/logo.png" width="50%">
+ <img src="https://coraza.io/images/logo.png" width="50%">
 </div>
 Welcome to Coraza Web Application Firewall, this project is an enterprise grade, Golang port of ModSecurity, flexible and powerful enough to serve as the baseline for many projects.
 
@@ -32,7 +32,6 @@ Welcome to Coraza Web Application Firewall, this project is an enterprise grade,
 * Linux distribution (Debian and Centos are recommended, Windows is not supported yet)
 * Golang compiler v1.16+
 
-
 ## Migrate from v1
 
 * Rollback SecAuditLog to the legacy syntax (serial/concurrent)
@@ -40,7 +39,6 @@ Welcome to Coraza Web Application Firewall, this project is an enterprise grade,
 * If you are using @detectXSS and @detectSQLi (CRS) install the plugin [github.com/jptosso/coraza-libinjection](https://github.com/jptosso/coraza-libinjection)
 * If you are using @rx with libpcre (CRS) install the plugin [github.com/jptosso/coraza-pcre](https://github.com/jptosso/coraza-pcre)
 * If you are using low level APIs check the complete changelog as most of them were removed
-
 
 ## Running the tests
 
@@ -66,29 +64,29 @@ go test -race ./...
 ```go
 package main
 import(
-	"fmt"
-	"github.com/jptosso/coraza-waf/v2"
-	"github.com/jptosso/coraza-waf/v2/seclang"
+ "fmt"
+ "github.com/coraza-waf/coraza/v2"
+ "github.com/coraza-waf/coraza/v2/seclang"
 )
 
 func main() {
-	// First we initialize our waf and our seclang parser
-	waf := coraza.NewWaf()
-	parser, _ := seclang.NewParser(waf)
+ // First we initialize our waf and our seclang parser
+ waf := coraza.NewWaf()
+ parser, _ := seclang.NewParser(waf)
 
-	// Now we parse our rules
-	if err := parser.FromString(`SecRule REMOTE_ADDR "@rx .*" "id:1,phase:1,deny,status:403"`); err != nil {
-		fmt.Println(err)
-	}
+ // Now we parse our rules
+ if err := parser.FromString(`SecRule REMOTE_ADDR "@rx .*" "id:1,phase:1,deny,status:403"`); err != nil {
+  fmt.Println(err)
+ }
 
-	// Then we create a transaction and assign some variables
-	tx := waf.NewTransaction()
-	tx.ProcessConnection("127.0.0.1", 8080, "127.0.0.1", 12345)
+ // Then we create a transaction and assign some variables
+ tx := waf.NewTransaction()
+ tx.ProcessConnection("127.0.0.1", 8080, "127.0.0.1", 12345)
 
-	// Finally we process the request headers phase, which may return an interruption
-	if it := tx.ProcessRequestHeaders(); it != nil {
-		fmt.Printf("Transaction was interrupted with status %d\n", it.Status)
-	}
+ // Finally we process the request headers phase, which may return an interruption
+ if it := tx.ProcessRequestHeaders(); it != nil {
+  fmt.Printf("Transaction was interrupted with status %d\n", it.Status)
+ }
 }
 ```
 

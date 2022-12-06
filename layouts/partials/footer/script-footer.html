@@ -34,9 +34,14 @@
   {{ $slice = $slice | append $instantPage -}}
 {{ end -}}
 
-{{ if .Site.Params.options.flexSearch -}}
+{{ $showFlexSearch := .Site.Params.options.flexSearch }}
+
+{{ if $showFlexSearch -}}
   {{ $flexSearch := resources.Get "js/vendor/flexsearch/dist/flexsearch.bundle.js" -}}
   {{ $slice = $slice | append $flexSearch -}}
+  {{ if and (isset .Site.Params.options "searchsectionsshow") (not (eq .Site.Params.options.searchSectionsShow "ALL")) -}}
+  {{ $showFlexSearch = or (eq (len .Site.Params.options.searchSectionsShow) 0) (in .Site.Params.options.searchSectionsShow .Section) (and .IsHome (in .Site.Params.options.searchSectionsShow "HomePage")) -}}
+  {{ end -}}
 {{ end -}}
 
 {{ if .Site.Params.options.darkMode -}}
@@ -45,10 +50,25 @@
   {{ $slice = $slice | append $darkMode -}}
 {{ end -}}
 
+{{ if and (.Site.Params.alert) (.Site.Params.alertDismissable) -}}
+  {{ $alert := resources.Get "js/alert.js" -}}
+  {{ $alert := $alert | js.Build -}}
+  {{ $slice = $slice | append $alert -}}
+{{ end -}}
+
 {{ if .Site.Params.options.kaTex -}}
   {{ $katexConfig := resources.Get "js/katex.js" -}}
   {{ $katexConfig := $katexConfig | js.Build -}}
   {{ $slice = $slice | append $katexConfig -}}
+{{ end -}}
+
+{{ $scrollLock := resources.Get "js/scroll-lock.js" | js.Build -}}
+{{ $slice = $slice | append $scrollLock -}}
+
+{{ if .Site.Params.options.toTopButton -}}
+  {{ $toTopButton := resources.Get "js/to-top.js" -}}
+  {{ $toTopButton := $toTopButton | js.Build -}}
+  {{ $slice = $slice | append $toTopButton -}}
 {{ end -}}
 
 {{ $js := $slice | resources.Concat "main.js" -}}
@@ -68,7 +88,7 @@
   {{ with .Params.mermaid -}}
     <script src="{{ $mermaid.RelPermalink }}" defer></script>
   {{ end -}}
-  {{ if .Site.Params.options.flexSearch -}}
+  {{ if $showFlexSearch -}}
     <script src="{{ $index.RelPermalink }}" defer></script>
   {{ end -}}
 {{ else -}}
@@ -93,7 +113,7 @@
   {{ with .Params.mermaid -}}
     <script src="{{ $mermaid.RelPermalink }}" integrity="{{ $mermaid.Data.Integrity }}" crossorigin="anonymous" defer></script>
   {{ end -}}
-  {{ if .Site.Params.options.flexSearch -}}
-    <script src="{{ $index.RelPermalink }}" integrity="{{ $index.Data.Integrity }}" crossorigin="anonymous" defer></script>
+  {{ if $showFlexSearch -}}
+    <script src="{{ $index.Permalink }}" integrity="{{ $index.Data.Integrity }}" crossorigin="anonymous" defer></script>
   {{ end -}}
 {{ end -}}

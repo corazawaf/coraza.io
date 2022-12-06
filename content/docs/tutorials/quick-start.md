@@ -14,14 +14,15 @@ toc: true
 ---
 
 If you are not looking to use Coraza WAF as a library and you want a working WAF implementation or integration, check the integrations page.
+
 ## Requirements
 
-- Golang 1.16+
+- Golang 1.17+
 
 ## Add Coraza to your go project
 
 ```sh
-go get github.com/jptosso/coraza-waf/v2@latest
+go get github.com/coraza-waf/coraza/v3@latest
 ```
 
 ### Create a WAF instance
@@ -31,13 +32,12 @@ WAF instances are the main container for settings and rules which are inherited 
 ```go
 package main
 import (
-  "github.com/jptosso/coraza-waf/v2"
+  "github.com/coraza-waf/coraza/v3"
 )
 func initCoraza(){
   coraza.NewWaf()
 }
 ```
-
 
 ### Adding rules to a Waf Instance
 
@@ -48,11 +48,11 @@ Rules are unmarshaled using the seclang package which provides functionalities t
 ```go
 package main
 import (
-  "github.com/jptosso/coraza-waf/v2"
-  "github.com/jptosso/coraza-waf/v2/seclang"
+  "github.com/coraza-waf/coraza/v3"
+  "github.com/coraza-waf/coraza/v3/seclang"
 )
 func parseRules(waf *coraza.Waf){
-  parser, _ := seclang.NewParser(waf)
+  parser := seclang.NewParser(waf)
   if err := parser.FromString(`SecAction "id:1,phase:1,deny:403,log"`); err != nil {
     panic(err)
   }
