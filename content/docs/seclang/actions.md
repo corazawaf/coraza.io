@@ -1,7 +1,7 @@
 ---
 title: "Actions"
 description: "Actions available in Coraza"
-lead: "The action of a rule defines how to handle HTTP requests that have matched one or more rule conditions."
+lead: "These are the available actions in Coraza"
 date: 2020-10-06T08:48:57+00:00
 lastmod: 2020-10-06T08:48:57+00:00
 draft: false
@@ -13,9 +13,7 @@ weight: 100
 toc: true
 ---
 
-Actions are defined as part of a `SecRule` or as parameter for `SecAction` or `SecDefaultAction`. A rule can have no or serveral actions which need to be separated by a comma.
-
-Actions can be categorized by how they affect overall processing:
+Each action belongs to one of five groups:
 
 * **Disruptive actions** - Cause Coraza to do something. In many cases something means block transaction, but not in all. For example, the allow action is classified as a disruptive action, but it does the opposite of blocking. There can only be one disruptive action per rule (if there are multiple disruptive actions present, or inherited, only the last one will take effect), or rule chain (in a chain, a disruptive action can only appear in the first rule).
 {{< alert icon="👉" >}}
@@ -62,7 +60,7 @@ SecRule REMOTE_ADDR "^192\.168\.1\.100$" phase:1,id:95,nolog,allow
 
 Prior to Coraza 2.5 the allow action would only affect the current phase. An allow in phase 1 would skip processing the remaining rules in phase 1 but the rules from phase 2 would execute. Starting with v2.5.0 allow was enhanced to allow for fine-grained control of what is done. The following rules now apply:
 
-If used on its own, like in the example above, allow will affect the entire transaction, stopping processing of the current phase, but also skipping over all other phases apart from the logging phase. (The logging phase is special; it is designed to always execute.)
+If used one its own, like in the example above, allow will affect the entire transaction, stopping processing of the current phase but also skipping over all other phases apart from the logging phase. (The logging phase is special; it is designed to always execute.)
 If used with parameter "phase", allow will cause the engine to stop processing the current phase. Other phases will continue as normal.
 If used with parameter "request", allow will cause the engine to stop processing the current phase. The next phase to be processed will be phase RESPONSE_HEADERS.
 Examples:
@@ -81,7 +79,7 @@ SecAction phase:3,allow,id:98
 
 ## append
 
-**Description**: Appends text given as parameter to the end of response body. Content injection must be enabled (using the SecContentInjection directive). No content type checks are made, which means that before using any of the content injection actions, you must check whether the content type of the response is adequate for injection.
+**Description**: Appends text given as parameter to the end of response body. Content injection must be en- abled (using the SecContentInjection directive). No content type checks are made, which means that before using any of the content injection actions, you must check whether the content type of the response is adequate for injection.
 
 **Action Group:** Non-disruptive
 
@@ -93,7 +91,7 @@ SecAction phase:3,allow,id:98
 SecRule RESPONSE_CONTENT_TYPE "^text/html" "nolog,id:99,pass,append:'<hr>Footer'"
 ```
 
-Warning : Although macro expansion is allowed in the additional content, you are strongly cautioned against inserting user-defined data fields into output. Doing so would create a cross-site scripting vulnerability.
+Warning : Although macro expansion is allowed in the additional content, you are strongly cau- tioned against inserting user-defined data fields into output. Doing so would create a cross-site scripting vulnerability.
 
 ## auditlog
 
@@ -130,11 +128,11 @@ SecRule ARGS "@rx attack1" "phase:2,block,id:102"
 SecRule ARGS "@rx attack2" "phase:2,pass,id:103"
 ```
 
-It is possible to use the `SecRuleUpdateActionById` directive to override how a rule handles blocking. This is useful in three cases:
+It is possible to use the SecRuleUpdateActionById directive to override how a rule handles blocking. This is useful in three cases:
 
 1. If a rule has blocking hard-coded, and you want it to use the policy you determine
-2. If a rule was written to `block`, but you want it to only warn
-3. If a rule was written to only `warn`, but you want it to block
+2. If a rule was written to block, but you want it to only warn
+3. If a rule was written to only warn, but you want it to block
 
 The following example demonstrates the first case, in which the hard-coded block is removed in favor of the user-controllable block:
 
@@ -151,7 +149,7 @@ SecRuleUpdateActionById 1 "block"
 
 ## capture
 
-**Description**: When used together with the regular expression operator `@rx`, the capture action creates a copy of the regular expression captures and places them into the transaction variable collection.
+**Description**: When used together with the regular expression operator (@rx), the capture action will create copies of the regular expression captures and place them into the transaction variable collection.
 
 **Action Group:** Non-disruptive
 
@@ -162,7 +160,7 @@ SecRule REQUEST_BODY "^username=(\w{25,})" phase:2,capture,t:none,chain,id:105
   SecRule TX:1 "(?:(?:a(dmin|nonymous)))"
 ```
 
-Up to 10 captures will be copied on a successful pattern match, each with a name consisting of a digit from 0 to 9. The `TX.0` variable always contains the entire area that the regular expression matched. All the other variables contain the captured values, in the order in which the capturing parentheses appear in the regular expression.
+Up to 10 captures will be copied on a successful pattern match, each with a name consisting of a digit from 0 to 9. The TX.0 variable always contains the entire area that the regular expression matched. All the other variables contain the captured values, in the order in which the capturing parentheses appear in the regular expression.
 
 **This action is being forced by now, it might be reused in the future)
 
@@ -174,11 +172,10 @@ Up to 10 captures will be copied on a successful pattern match, each with a name
 
 **Example:**
 
-```bash
-# Refuse to accept POST requests that do not contain a Content-Length header. 
-#
-# Note: this rule should be preceded by a rule that verifies only valid
-# request methods are used.
+```
+# Refuse to accept POST requests that do not contain Content-Length header. 
+# (Do note that this rule should be preceded by a rule 
+# that verifies only valid request methods are used.) 
 SecRule REQUEST_METHOD "^POST$" "phase:1,chain,t:none,id:105"
   SecRule &REQUEST_HEADERS:Content-Length "@eq 0" "t:none"
 ```
@@ -215,24 +212,24 @@ SecRule REQUEST_URI "@beginsWith /index.php" "phase:1,t:none,pass,\
 
 The following configuration options are supported:
 
-* `auditEngine`
-* `auditLogParts`
-* `debugLogLevel`
-* `forceRequestBodyVariable`
-* `requestBodyAccess`
-* `requestBodyLimit`
-* `requestBodyProcessor`
-* `responseBodyAccess`
-* `responseBodyLimit`
-* `ruleEngine`
-* `ruleRemoveById` - since this action us triggered at run time, it should be specified before the rule in which it is disabling.
-* `ruleRemoveByMsg`
-* `ruleRemoveByTag`
-* `ruleRemoveTargetById` - since this action is used to just remove targets, users don't need to use the char ! before the target list.
-* `ruleRemoveTargetByMsg` - since this action is used to just remove targets, users don't need to use the char ! before the target list.
-* `ruleRemoveTargetByTag` - since this action is used to just remove targets, users don't need to use the char ! before the target list.
-* `hashEngine` (**Supported on Coraza:** TBI)
-* `hashEnforcement` (**Supported on Coraza:** TBI)
+* auditEngine
+* auditLogParts
+* debugLogLevel
+* forceRequestBodyVariable
+* requestBodyAccess
+* requestBodyLimit
+* requestBodyProcessor
+* responseBodyAccess
+* responseBodyLimit
+* ruleEngine
+* ruleRemoveById - since this action us triggered at run time, it should be specified before the rule in which it is disabling.
+* ruleRemoveByMsg
+* ruleRemoveByTag
+* ruleRemoveTargetById - since this action is used to just remove targets, users don't need to use the char ! before the target list.
+* ruleRemoveTargetByMsg - since this action is used to just remove targets, users don't need to use the char ! before the target list.
+* ruleRemoveTargetByTag - since this action is used to just remove targets, users don't need to use the char ! before the target list.
+* hashEngine (**Supported on Coraza:** TBI)
+* hashEnforcement (**Supported on Coraza:** TBI)
 
 With the exception of the `requestBodyProcessor` and `forceRequestBodyVariable` settings, each configuration option corresponds to one configuration directive and the usage is identical.
 
@@ -257,7 +254,7 @@ SecRule REQUEST_HEADERS:User-Agent "nikto" "log,deny,id:107,msg:'Nikto Scanners 
 
 **Action Group:** Disruptive
 
-**Example:** The following example initiates an IP collection for tracking Basic Authentication attempts. If the client goes over the threshold of more than 25 attempts in 2 minutes, it will `DROP` subsequent connections.
+**Example:** The following example initiates an IP collection for tracking Basic Authentication attempts. If the client goes over the threshold of more than 25 attempts in 2 minutes, it will DROP subsequent connections.
 
 ```
 SecAction phase:1,id:109,initcol:ip=%{REMOTE_ADDR},nolog

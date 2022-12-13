@@ -133,7 +133,7 @@ Actions values are optional, the key-value syntax is ```key:value``` and some ac
 
 ### Default Actions
 
-`SecDefaultAction` is used to define a default list of actions per phase. The default phases will be added to each rule and can be overwritten by using the specified action again.
+SecDefaultActions is used to define a default list of actions per phase. The default phases will be added to each rule and can be overwritten by using the specified action again.
 
 If you define default actions, you are forced to indicate a **phase** and a **disruptive action**.
 

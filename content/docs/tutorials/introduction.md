@@ -15,11 +15,10 @@ toc: true
 
 # Coraza Web Application Firewall v2
 
-![Build Status](https://github.com/corazawaf/coraza/actions/workflows/regression.yml/badge.svg)
-[![Coreruleset Compatibility](https://img.shields.io/badge/Coreruleset%20Compatibility-100%25-brightgreen)](#)
-![CodeQL](https://github.com/corazawaf/coraza/workflows/CodeQL/badge.svg)
-[![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=coraza&metric=sqale_rating)](https://sonarcloud.io/dashboard?id=coraza)
-[![Coverage](https://sonarcloud.io/api/project_badges/measure?project=coraza&metric=coverage)](https://sonarcloud.io/project/overview?id=coraza)
+![Build Status](https://github.com/coraza-waf/coraza/actions/workflows/regression.yml/badge.svg)
+![CodeQL](https://github.com/coraza-waf/coraza/workflows/CodeQL/badge.svg)
+[![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=jptosso_coraza-waf&metric=sqale_rating)](https://sonarcloud.io/dashboard?id=jptosso_coraza-waf)
+[![Coverage](https://sonarcloud.io/api/project_badges/measure?project=jptosso_coraza-waf&metric=coverage)](https://sonarcloud.io/dashboard?id=jptosso_coraza-waf)
 [![GoDoc](https://godoc.org/github.com/coraza-waf/coraza?status.svg)](https://godoc.org/github.com/coraza-waf/coraza)
 [![Project Status: Active – The project has reached a stable, usable state and is being actively developed.](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active)
 

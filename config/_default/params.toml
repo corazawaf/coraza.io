@@ -9,7 +9,7 @@ description = "OWASP Coraza is an enterprise-grade, open-source, and high-perfor
 # Alert
 alert = true
 alertDismissable = true
-alertText = "Coraza v3 will be available soon, <a class=\"alert-link\" href=\"https://github.com/corazawaf/coraza/issues/336\">stay tuned!</a>"
+alertText = "Coraza v3 will be available soon, <a href=\"https://github.com/corazawaf/coraza/issues/336\">stay tuned!</a>"
 
 ## Open Graph
 images = ["doks.png"]
