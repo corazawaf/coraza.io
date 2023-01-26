@@ -36,7 +36,7 @@ func main() {
 
 	fset := token.NewFileSet() // positions are relative to fset
 
-	src, err := os.ReadFile("../coraza/internal/seclang/directives.go")
+	src, err := os.ReadFile("./coraza/internal/seclang/directives.go")
 	if err != nil {
 		log.Fatal(err)
 	}

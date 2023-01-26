@@ -4,7 +4,7 @@ description: "Configures which response status code is to be considered relevant
 syntax: "SecAuditLogRelevantStatus [REGEX]"
 default: ""
 date: ""
-lastmod: "2023-01-26T13:50:31&#43;01:00"
+lastmod: "2023-01-26T14:57:12&#43;01:00"
 draft: false
 images: []
 weight: 100
