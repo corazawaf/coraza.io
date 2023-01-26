@@ -4,7 +4,7 @@ description: "Defines the path to the main audit log file (serial logging format
 syntax: "SecAuditLog /path/to/audit.log"
 default: ""
 date: ""
-lastmod: "2023-01-26T14:57:12&#43;01:00"
+lastmod: "2023-01-26T20:49:29+01:00"
 draft: false
 images: []
 weight: 100
@@ -16,7 +16,7 @@ When used in combination with mlogc (only possible with concurrent logging), thi
 directive defines the mlogc location and command line.
 
 ```apache
-SecAuditLog &#34;|/path/to/mlogc /path/to/mlogc.conf&#34;
+SecAuditLog "|/path/to/mlogc /path/to/mlogc.conf"
 ```
 Note: Writing to programs using pipe (|) is not implemented yet.
 

@@ -4,7 +4,7 @@ description: "Configures which response status code is to be considered relevant
 syntax: "SecAuditLogRelevantStatus [REGEX]"
 default: ""
 date: ""
-lastmod: "2023-01-26T14:57:12&#43;01:00"
+lastmod: "2023-01-26T20:49:29+01:00"
 draft: false
 images: []
 weight: 100
@@ -18,7 +18,7 @@ expression.
 
 Example:
 ```
-SecAuditLogRelevantStatus &#34;^(?:5|40[1235])&#34;
+SecAuditLogRelevantStatus "^(?:5|40[1235])"
 ```
 The example provided would log all 5xx and 4xx level status codes,
 except for 404s. Although you could achieve the same effect with a rule in phase 5,

@@ -2,11 +2,13 @@ package main
 
 import (
 	"bufio"
+	"bytes"
 	_ "embed"
 	"fmt"
 	"go/ast"
 	"go/parser"
 	"go/token"
+	"html"
 	"html/template"
 	"log"
 	"os"
@@ -71,7 +73,13 @@ func main() {
 
 			d := parseDirective(directiveName, fn.Doc.Text())
 
-			err = tmpl.Execute(f, d)
+			content := bytes.Buffer{}
+			err = tmpl.Execute(&content, d)
+			if err != nil {
+				log.Fatal(err)
+			}
+
+			_, err = f.WriteString(html.UnescapeString(content.String()))
 			if err != nil {
 				log.Fatal(err)
 			}

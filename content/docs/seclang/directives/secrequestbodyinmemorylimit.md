@@ -4,7 +4,7 @@ description: "Configures the maximum request body size that Coraza will store in
 syntax: "SecRequestBodyInMemoryLimit [LIMIT_IN_BYTES]"
 default: "131072 (128 KB)"
 date: ""
-lastmod: "2023-01-26T14:57:12&#43;01:00"
+lastmod: "2023-01-26T20:49:29+01:00"
 draft: false
 images: []
 weight: 100
