@@ -1,10 +1,10 @@
 ---
-title: "SecDefaultAction"
-description: "Defines the default list of actions, which will be inherited by the rules in the same configuration context."
-syntax: "SecDefaultAction "phase:2,log,auditlog,deny,status:403,tag:'SLA 24/7'""
-default: "phase:2,log,auditlog,pass"
-date: ""
-lastmod: "2023-01-26T20:49:29+01:00"
+title: SecDefaultAction
+description: Defines the default list of actions, which will be inherited by the rules in the same configuration context.
+syntax: SecDefaultAction "phase:2,log,auditlog,deny,status:403,tag:'SLA 24/7'"
+default: phase:2,log,auditlog,pass
+date: 
+lastmod: "2023-01-30T13:00:45+01:00"
 draft: false
 images: []
 weight: 100

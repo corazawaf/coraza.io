@@ -1,10 +1,10 @@
 ---
-title: "SecResponseBodyLimit"
-description: "Configures the maximum response body size that will be accepted for buffering."
-syntax: "SecResponseBodyLimit [LIMIT_IN_BYTES]"
-default: "524288 (512 KB)"
-date: ""
-lastmod: "2023-01-26T20:49:29+01:00"
+title: SecResponseBodyLimit
+description: Configures the maximum response body size that will be accepted for buffering.
+syntax: SecResponseBodyLimit [LIMIT_IN_BYTES]
+default: 524288 (512 KB)
+date: 
+lastmod: "2023-01-30T13:00:45+01:00"
 draft: false
 images: []
 weight: 100

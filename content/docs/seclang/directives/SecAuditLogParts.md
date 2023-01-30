@@ -1,10 +1,10 @@
 ---
-title: "SecAuditLogParts"
-description: "Defines which parts of each transaction are going to be recorded in the audit log. Each part is assigned a single letter; when a letter appears in the list then the equivalent part will be recorded. See below for the list of all parts."
-syntax: "SecAuditLogParts [PARTLETTERS]"
-default: "ABCFHZ Note"
-date: ""
-lastmod: "2023-01-26T20:49:29+01:00"
+title: SecAuditLogParts
+description: Defines which parts of each transaction are going to be recorded in the audit log. Each part is assigned a single letter; when a letter appears in the list then the equivalent part will be recorded. See below for the list of all parts.
+syntax: SecAuditLogParts [PARTLETTERS]
+default: ABCFHZ Note
+date: 
+lastmod: "2023-01-30T13:00:45+01:00"
 draft: false
 images: []
 weight: 100

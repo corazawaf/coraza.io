@@ -1,10 +1,10 @@
 ---
-title: "SecDebugLogLevel"
-description: "Configures the verboseness of the debug log data."
-syntax: "SecDebugLogLevel [LOG_LEVEL]"
-default: "2"
-date: ""
-lastmod: "2023-01-26T20:49:29+01:00"
+title: SecDebugLogLevel
+description: Configures the verboseness of the debug log data.
+syntax: SecDebugLogLevel [LOG_LEVEL]
+default: 2
+date: 
+lastmod: "2023-01-30T13:00:45+01:00"
 draft: false
 images: []
 weight: 100

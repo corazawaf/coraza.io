@@ -1,10 +1,10 @@
 ---
-title: "SecAuditLog"
-description: "Defines the path to the main audit log file (serial logging format) or the concurrent logging index file (concurrent logging format)."
-syntax: "SecAuditLog /path/to/audit.log"
-default: ""
-date: ""
-lastmod: "2023-01-26T20:49:29+01:00"
+title: SecAuditLog
+description: Defines the path to the main audit log file (serial logging format) or the concurrent logging index file (concurrent logging format).
+syntax: SecAuditLog /path/to/audit.log
+default: 
+date: 
+lastmod: "2023-01-30T13:00:45+01:00"
 draft: false
 images: []
 weight: 100

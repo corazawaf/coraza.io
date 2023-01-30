@@ -1,10 +1,10 @@
 ---
-title: "SecRequestBodyLimit"
-description: "Configures the maximum request body size Coraza will accept for buffering."
-syntax: "SecRequestBodyLimit 134217728"
-default: "134217728 (131072 KB)"
-date: ""
-lastmod: "2023-01-26T20:49:29+01:00"
+title: SecRequestBodyLimit
+description: Configures the maximum request body size Coraza will accept for buffering.
+syntax: SecRequestBodyLimit 134217728
+default: 134217728 (131072 KB)
+date: 
+lastmod: "2023-01-30T13:00:45+01:00"
 draft: false
 images: []
 weight: 100

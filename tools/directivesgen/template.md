@@ -1,9 +1,9 @@
 ---
-title: "{{ .Name }}"
-description: "{{ .Description }}"
-syntax: "{{ .Syntax }}"
-default: "{{ .Default }}"
-date: "{{ .Date }}"
+title: {{ .Name }}
+description: {{ .Description }}
+syntax: {{ .Syntax }}
+default: {{ .Default }}
+date: {{ .Date }}
 lastmod: "{{ .LastModification }}"
 draft: false
 images: []

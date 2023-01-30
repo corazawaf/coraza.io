@@ -1,3 +1,6 @@
+// Copyright 2023 The OWASP Coraza contributors
+// SPDX-License-Identifier: Apache-2.0
+
 package main
 
 import (
@@ -17,18 +20,19 @@ import (
 )
 
 type Directive struct {
-	Name                 string
-	Description          string
-	Syntax               string
-	Default              string
-	Date                 string
-	LastModification     string
-	Content              string
-	VersionCompatibility string
+	Name             string
+	Description      string
+	Syntax           string
+	Default          string
+	Date             string
+	LastModification string
+	Content          string
 }
 
 //go:embed template.md
 var contentTemplate string
+
+const dstDir = "./content/docs/seclang/directives"
 
 func main() {
 	tmpl, err := template.New("directive").Parse(contentTemplate)
@@ -65,7 +69,7 @@ func main() {
 				return true
 			}
 
-			f, err := os.Create(fmt.Sprintf("./content/docs/seclang/directives/%s.md", directiveName))
+			f, err := os.Create(fmt.Sprintf("%s/%s.md", dstDir, directiveName))
 			if err != nil {
 				log.Fatal(err)
 			}
@@ -94,6 +98,12 @@ func parseDirective(name string, doc string) Directive {
 		LastModification: time.Now().Format(time.RFC3339),
 	}
 
+	fieldAppenders := map[string]func(d *Directive, value string){
+		"Description": func(d *Directive, value string) { d.Description += value },
+		"Syntax":      func(d *Directive, value string) { d.Syntax += value },
+		"Default":     func(d *Directive, value string) { d.Default += value },
+	}
+
 	previousKey := ""
 	scanner := bufio.NewScanner(strings.NewReader(doc))
 	for scanner.Scan() {
@@ -115,17 +125,14 @@ func parseDirective(name string, doc string) Directive {
 			value = " " + scanner.Text()
 		}
 
-		switch key {
-		case "Description":
-			d.Description += value
-		case "Syntax":
-			d.Syntax += value
-		case "Default":
-			d.Default += value
-		case "Version Compatibility":
-			d.VersionCompatibility += value
+		if fn, ok := fieldAppenders[key]; ok {
+			fn(&d, value)
+			previousKey = key
+		} else if previousKey != "" {
+			fieldAppenders[previousKey](&d, value)
+		} else {
+			log.Fatalf("unknown field %q", key)
 		}
-		previousKey = key
 	}
 
 	for scanner.Scan() {

@@ -1,10 +1,10 @@
 ---
-title: "SecAuditLogRelevantStatus"
-description: "Configures which response status code is to be considered relevant for the purpose of audit logging."
-syntax: "SecAuditLogRelevantStatus [REGEX]"
-default: ""
-date: ""
-lastmod: "2023-01-26T20:49:29+01:00"
+title: SecAuditLogRelevantStatus
+description: Configures which response status code is to be considered relevant for the purpose of audit logging.
+syntax: SecAuditLogRelevantStatus [REGEX]
+default: 
+date: 
+lastmod: "2023-01-30T13:00:45+01:00"
 draft: false
 images: []
 weight: 100

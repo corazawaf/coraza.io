@@ -1,10 +1,10 @@
 ---
-title: "SecRuleEngine"
-description: "Configures the rules engine."
-syntax: "SecRuleEngine On|Off|DetectionOnly"
-default: "Off"
-date: ""
-lastmod: "2023-01-26T20:49:29+01:00"
+title: SecRuleEngine
+description: Configures the rules engine.
+syntax: SecRuleEngine On|Off|DetectionOnly
+default: Off
+date: 
+lastmod: "2023-01-30T13:00:45+01:00"
 draft: false
 images: []
 weight: 100

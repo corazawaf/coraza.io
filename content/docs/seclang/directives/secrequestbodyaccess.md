@@ -1,10 +1,10 @@
 ---
-title: "SecRequestBodyAccess"
-description: "Configures whether request bodies will be buffered and processed by Coraza."
-syntax: "SecRequestBodyAccess On|Off"
-default: "Off"
-date: ""
-lastmod: "2023-01-26T20:49:29+01:00"
+title: SecRequestBodyAccess
+description: Configures whether request bodies will be buffered and processed by Coraza.
+syntax: SecRequestBodyAccess On|Off
+default: Off
+date: 
+lastmod: "2023-01-30T13:00:45+01:00"
 draft: false
 images: []
 weight: 100

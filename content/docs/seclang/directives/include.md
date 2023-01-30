@@ -1,10 +1,10 @@
 ---
-title: "Include"
-description: "Include and evaluate a file or file pattern."
-syntax: "Include /path/coreruleset/rules/*.conf"
-default: ""
-date: ""
-lastmod: "2023-01-26T20:49:29+01:00"
+title: Include
+description: Include and evaluate a file or file pattern.v2.1+
+syntax: Include /path/coreruleset/rules/*.conf
+default: 
+date: 
+lastmod: "2023-01-30T13:00:45+01:00"
 draft: false
 images: []
 weight: 100

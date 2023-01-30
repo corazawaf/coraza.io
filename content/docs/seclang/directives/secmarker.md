@@ -1,10 +1,10 @@
 ---
-title: "SecMarker"
-description: "Adds a fixed rule marker that can be used as a target in a skipAfter action. A SecMarker directive essentially creates a rule that does nothing and whose only purpose is to carry the given ID."
-syntax: "SecMarker [ID|TEXT]"
-default: ""
-date: ""
-lastmod: "2023-01-26T20:49:29+01:00"
+title: SecMarker
+description: Adds a fixed rule marker that can be used as a target in a skipAfter action. A SecMarker directive essentially creates a rule that does nothing and whose only purpose is to carry the given ID.
+syntax: SecMarker [ID|TEXT]
+default: 
+date: 
+lastmod: "2023-01-30T13:00:45+01:00"
 draft: false
 images: []
 weight: 100
