@@ -4,7 +4,7 @@ description: Configures whether response bodies are to be buffered.
 syntax: SecResponseBodyAccess On|Off
 default: Off
 date: 
-lastmod: "2023-01-30T14:30:05+01:00"
+lastmod: "2023-01-30T14:50:56+01:00"
 draft: false
 images: []
 versions: v3.0+
@@ -16,6 +16,6 @@ type: seclang/directives
 This directive is required if you plan to inspect HTML responses and implement
 response blocking. Possible values are:
 - On: buffer response bodies (but only if the response MIME type matches the list
-configured with SecResponseBodyMimeType).
+configured with `SecResponseBodyMimeType`).
 - Off: do not buffer response bodies.
 

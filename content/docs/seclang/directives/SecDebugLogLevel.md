@@ -4,7 +4,7 @@ description: Configures the verboseness of the debug log data.
 syntax: SecDebugLogLevel [LOG_LEVEL]
 default: 2
 date: 
-lastmod: "2023-01-30T14:30:05+01:00"
+lastmod: "2023-01-30T14:50:56+01:00"
 draft: false
 images: []
 versions: v3.0+

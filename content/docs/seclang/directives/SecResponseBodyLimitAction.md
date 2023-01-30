@@ -1,10 +1,10 @@
 ---
 title: SecResponseBodyLimitAction
-description: Controls what happens once a response body limit, configured with SecResponseBodyLimit, is encountered.
+description: Controls what happens once a response body limit, configured with `SecResponseBodyLimit`, is encountered.
 syntax: SecResponseBodyLimitAction Reject|ProcessPartial
 default: 
 date: 
-lastmod: "2023-01-30T14:30:05+01:00"
+lastmod: "2023-01-30T14:50:56+01:00"
 draft: false
 images: []
 versions: v3.0+

@@ -4,7 +4,7 @@ description: Configures the mode (permissions) of any directories created for th
 syntax: SecAuditLogDirMode octal_mode|"default"
 default: 0600
 date: 
-lastmod: "2023-01-30T14:30:05+01:00"
+lastmod: "2023-01-30T14:50:56+01:00"
 draft: false
 images: []
 versions: v3.0+

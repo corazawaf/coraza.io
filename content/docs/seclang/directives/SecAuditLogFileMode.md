@@ -1,10 +1,10 @@
 ---
 title: SecAuditLogFileMode
-description: Configures the mode (permissions) of any files created for concurrent audit logs using an octal mode (as used in chmod). See SecAuditLogDirMode for controlling the mode of created audit log directories.
+description: Configures the mode (permissions) of any files created for concurrent audit logs using an octal mode (as used in chmod). See `SecAuditLogDirMode` for controlling the mode of created audit log directories.
 syntax: SecAuditLogFileMode octal_mode|"default"
 default: 0600
 date: 
-lastmod: "2023-01-30T14:30:05+01:00"
+lastmod: "2023-01-30T14:50:56+01:00"
 draft: false
 images: []
 versions: v3.0+

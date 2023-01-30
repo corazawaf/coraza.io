@@ -4,7 +4,7 @@ description: Configures which response status code is to be considered relevant 
 syntax: SecAuditLogRelevantStatus [REGEX]
 default: 
 date: 
-lastmod: "2023-01-30T14:30:05+01:00"
+lastmod: "2023-01-30T14:50:56+01:00"
 draft: false
 images: []
 versions: v3.0+
@@ -23,11 +23,11 @@ SecAuditLogRelevantStatus "^(?:5|40[1235])"
 ```
 This example would log all 5xx and 4xx level status codes,
 except for 404s. Although you could achieve the same effect with a rule in phase 5,
-SecAuditLogRelevantStatus is sometimes better, because it continues to work even when SecRuleEngine
-is disabled.
+`SecAuditLogRelevantStatus` is sometimes better, because it continues to work even when
+`SecRuleEngine` is disabled.
 
-**Note:** Must have SecAuditEngine set to RelevantOnly. Additionally, the auditlog action
-is present by default in rules, this will make the engine bypass the SecAuditLogRelevantStatus
+**Note:** Must have `SecAuditEngine` set to `RelevantOnly`. Additionally, the auditlog action
+is present by default in rules, this will make the engine bypass the `SecAuditLogRelevantStatus`
 and send rule matches to the audit log regardless of status. You must specify noauditlog in the
-rules manually or set it in SecDefaultAction.
+rules manually or set it in `SecDefaultAction`.
 
