@@ -40,13 +40,12 @@ func main() {
 		log.Fatal(err)
 	}
 
-	fset := token.NewFileSet() // positions are relative to fset
-
 	src, err := os.ReadFile("./coraza/internal/seclang/directives.go")
 	if err != nil {
 		log.Fatal(err)
 	}
 
+	fset := token.NewFileSet()
 	f, err := parser.ParseFile(fset, "directives.go", src, parser.ParseComments)
 	if err != nil {
 		log.Fatal(err)
@@ -63,12 +62,11 @@ func main() {
 				return true
 			}
 
-			directiveName := fnName[9:]
-
 			if fn.Doc == nil {
 				return true
 			}
 
+			directiveName := fnName[9:]
 			f, err := os.Create(fmt.Sprintf("%s/%s.md", dstDir, directiveName))
 			if err != nil {
 				log.Fatal(err)
@@ -136,8 +134,12 @@ func parseDirective(name string, doc string) Directive {
 	}
 
 	for scanner.Scan() {
-		d.Content += scanner.Text() + "\n"
+		d.Content += decorateNote(scanner.Text()) + "\n"
 	}
 
 	return d
+}
+
+func decorateNote(s string) string {
+	return strings.Replace(s, "Note:", "**Note:**", -1)
 }

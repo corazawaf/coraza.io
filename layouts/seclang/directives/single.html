@@ -28,21 +28,21 @@
             </nav>
             {{ end }}
             <h1>{{ .Title }}</h1>
-                <p style="text-align: justify;"><strong>Description:</strong> {{.Params.description}}</p>
-                {{if ne .Params.default nil }}<p><strong>Default:</strong> {{.Params.default}}</p>{{end}}
-                {{if ne .Params.versions nil }}<p><strong>Version Compatibility:</strong> {{.Params.versions }}</p>{{end}}
-                <p><strong>Tinygo Compatibility:</strong> {{.Params.tinygo }}</p>
-                {{if ne .Params.syntax nil }}<p><strong>Syntax:</strong> <code>{{.Params.syntax}}</code></p>{{end}}
-                <p>
-                    {{if eq .Params.versions nil }}
-                <div class="alert alert-info d-flex" role="alert">
-                    <div class="flex-shrink-1 alert-icon">👉</div>
-                    <div class="w-100">This feature has not been implemented yet, but it might be implemented soon.</div>
-                </div>
-                {{end}}
-                <p style="text-align: justify;">{{ .Content }}</p>
-                </p>
-                <p>{{ .Params.lead | safeHTML }}</p>
+            <p style="text-align: justify;"><strong>Description:</strong> {{.Params.description}}</p>
+            {{if ne .Params.default nil }}<p><strong>Default:</strong> <code>{{.Params.default}}</code></p>{{end}}
+            {{if ne .Params.versions nil }}<p><strong>Version Compatibility:</strong> {{.Params.versions }}</p>{{end}}
+            <p><strong>Tinygo Compatibility:</strong> {{.Params.tinygo }}</p>
+            {{if ne .Params.syntax nil }}<p><strong>Syntax:</strong> <code>{{.Params.syntax}}</code></p>{{end}}
+            <p>
+                {{if eq .Params.versions nil }}
+            <div class="alert alert-info d-flex" role="alert">
+                <div class="flex-shrink-1 alert-icon">👉</div>
+                <div class="w-100">This feature has not been implemented yet, but it might be implemented soon.</div>
+            </div>
+            {{end}}
+            <p style="text-align: justify;">{{ .Content }}</p>
+            </p>
+            <p>{{ .Params.lead | safeHTML }}</p>
             <div class="page-footer-meta d-flex flex-column flex-md-row justify-content-between">
                 {{ if .Site.Params.lastMod -}}
                 {{ partial "main/last-modified.html" . }}
