@@ -1,0 +1,18 @@
+---
+title: SecRequestBodyLimitAction
+description: Controls what happens once a request body limit, configured with SecRequestBodyLimit, is encountered
+syntax: SecRequestBodyLimitAction Reject|ProcessPartial
+default: Reject
+date: 
+lastmod: "2023-01-30T14:25:50+01:00"
+draft: false
+images: []
+versions: v3.0+
+weight: 100
+toc: true
+type: seclang/directives
+---
+
+By default, Coraza will reject a request body that is longer than specified to
+avoid OOM issues while buffering the request body prior the inspection.
+
