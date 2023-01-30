@@ -12,5 +12,4 @@ weight: 100
 toc: true
 type: seclang/directives
 ---
-
 {{ .Content }}
