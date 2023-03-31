@@ -33,7 +33,7 @@ SecSampleDirective this \
 Rules are a special directive that must contain variables, operator and actions: ```SecRule VARIABLES "@OPERATOR OPERATOR_ARGUMENTS" "ACTIONS"```.
 
 * All rules **must** have a unique ID action, for example ```"id:1"```.
-* If there is no **phase** action, the phase will default to 2 (request headers).
+* If there is no **phase** action, the phase will default to 2 (request body).
 * Rules can contain only one disruptive action
 * More default actions can be set with [SecDefaultAction]({{< relref "directives/#SecDefaultAction" >}})
 
