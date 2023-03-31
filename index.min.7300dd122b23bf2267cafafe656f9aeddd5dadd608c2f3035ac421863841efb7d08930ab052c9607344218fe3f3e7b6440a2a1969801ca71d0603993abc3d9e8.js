@@ -6,15 +6,15 @@ Variable key
 Variables can be queried for a specific case insesitive key, for example:
 SecRule REQUEST_HEADERS:user-agent \u0026quot;@contains firefox\u0026quot; \u0026quot;id:1, pass, log, logdata:'someone used firefox to access'\u0026quot; Variable with regex
 (v2 Only): PCRE compatible regex can be used to query a mapped VARIABLE like ARGS, the following example will match all parameters (get and post) where the key begins with param and the value of this argument is someval.
-SecRule ARGS:/^param.*$/ \u0026quot;someval\u0026quot; \u0026quot;id:1\u0026quot; 👉 Only RE2 will be supported in v3. Variable exceptions
-You can remove specific taget keys from the variables list using the ! prefix, for example:
-# We want to apply some Sql Injection validations against the REQUEST_HEADERS SecRule REQUEST_HEADERS \u0026quot;@detectSQLi\u0026quot; \u0026quot;id:1,deny,status:403\u0026quot; # There is a false positive for some User-Agents so we want to ignore the # User-Agent header: SecRule REQUEST_HEADERS|!REQUEST_HEADERS:User-Agent \u0026quot;@detectSQLi\u0026quot; \u0026quot;id:2,deny,status:403\u0026quot; ## The second rule will be evaluated for each request header except User-Agent. XPATH variables # If the body processor is set to process JSON or XML, you may use the special variables XML and JSON, for example:
-SecAction \u0026quot;id:1, phase:1,ctl:setRequestBodyProcessor=XML,pass,nolog\u0026quot; # We are denying a book because we don't like it SecRule XML:/bookstore/book[last()] \u0026quot;name of the book\u0026quot; \u0026quot;id:2,phase:2,log,logdata:'We don´t like this book!',deny,status:403\u0026quot; See https://github.com/antchfx/xpath for more information about XPATH support.
-Variable count
-You can count the number of keys available for a collection using the \u0026amp; prefix, for example:
-# You want to block requests without host header SecRule \u0026amp;REQUEST_HEADERS:text \u0026quot;@eq 0\u0026quot; \u0026quot;id:1, deny, status:403\u0026quot; Multiple Variables
+SecRule ARGS:/^param.*$/ \u0026quot;someval\u0026quot; \u0026quot;id:1\u0026quot; 👉 Only RE2 will be supported in v3. Variable count
+You can count the number of values available for a collection using the \u0026amp; prefix, for example:
+# You want to block requests without host header SecRule \u0026amp;REQUEST_HEADERS:host \u0026quot;@eq 0\u0026quot; \u0026quot;id:1, deny, status:403\u0026quot; Variable exceptions
+You can remove specific target keys from the variables list using the ! prefix, for example:
+# We want to apply some Sql Injection validations against the REQUEST_HEADERS SecRule REQUEST_HEADERS \u0026quot;@detectSQLi\u0026quot; \u0026quot;id:1,deny,status:403\u0026quot; # There is a false positive for some User-Agents so we want to ignore the # User-Agent header: SecRule REQUEST_HEADERS|!REQUEST_HEADERS:User-Agent \u0026quot;@detectSQLi\u0026quot; \u0026quot;id:2,deny,status:403\u0026quot; ## The second rule will be evaluated for each request header except User-Agent. Multiple Variables
 You may evaluate multiple variables by separating them win pipe (|), for example:
-SecRule VARIABLE1|VARIABLE2|VARIABLE3:/some-regex/|\u0026amp;VARIABLE4|!VARIABLE3:id \u0026quot;!@rx \\w+\u0026quot; \u0026quot;id:1,pass\u0026quot; Operators # Operators are functions that returns true or false. Only one operator can be used per rule, unless you use chains. The syntax for an operator is: \u0026quot;@OPERATOR ARGUMENTS\u0026quot;, you can negate the result using \u0026quot;!@OPERATOR ARGUMENTS\u0026quot;.
+SecRule VARIABLE1|VARIABLE2|VARIABLE3:/some-regex/|!VARIABLE3:id \u0026quot;!@rx \\w+\u0026quot; \u0026quot;id:1,pass\u0026quot; XPATH variables # If the body processor is set to process JSON or XML, you may use the special variables XML and JSON, for example:
+SecAction \u0026quot;id:1, phase:1,ctl:setRequestBodyProcessor=XML,pass,nolog\u0026quot; # We are denying a book because we don't like it SecRule XML:/bookstore/book[last()] \u0026quot;name of the book\u0026quot; \u0026quot;id:2,phase:2,log,logdata:'We don´t like this book!',deny,status:403\u0026quot; See https://github.com/antchfx/xpath for more information about XPATH support.
+Operators # Operators are functions that returns true or false. Only one operator can be used per rule, unless you use chains. The syntax for an operator is: \u0026quot;@OPERATOR ARGUMENTS\u0026quot;, you can negate the result using \u0026quot;!@OPERATOR ARGUMENTS\u0026quot;.
 👉 If you don\u0026rsquo;t indicate any operator, the default used operator will be @rx.
 Operators must begin with @.
 Actions # Actions are key-value instructions for the rule that will be triggered per compilation, interruption or transaction depending on the action type.
