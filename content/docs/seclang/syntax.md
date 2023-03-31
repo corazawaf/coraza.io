@@ -63,9 +63,18 @@ SecRule ARGS:/^param.*$/ "someval" "id:1"
 
 {{< alert icon="👉" text="Only RE2 will be supported in v3." />}}
 
+**Variable count**
+
+You can count the number of values available for a collection using the **&** prefix, for example:
+
+```
+# You want to block requests without host header
+SecRule &REQUEST_HEADERS:host "@eq 0" "id:1, deny, status:403"
+```
+
 **Variable exceptions**
 
-You can remove specific taget keys from the variables list using the **!** prefix, for example:
+You can remove specific target keys from the variables list using the **!** prefix, for example:
 
 ```
 # We want to apply some Sql Injection validations against the REQUEST_HEADERS
@@ -76,6 +85,14 @@ SecRule REQUEST_HEADERS "@detectSQLi" "id:1,deny,status:403"
 SecRule REQUEST_HEADERS|!REQUEST_HEADERS:User-Agent "@detectSQLi" "id:2,deny,status:403"
 
 ## The second rule will be evaluated for each request header except User-Agent.
+```
+
+**Multiple Variables**
+
+You may evaluate multiple variables by separating them win pipe (|), for example:
+
+```
+SecRule VARIABLE1|VARIABLE2|VARIABLE3:/some-regex/|!VARIABLE3:id "!@rx \w+" "id:1,pass"
 ```
 
 #### XPATH variables
@@ -89,23 +106,6 @@ SecRule XML:/bookstore/book[last()] "name of the book" "id:2,phase:2,log,logdata
 ```
 
 See [https://github.com/antchfx/xpath](https://github.com/antchfx/xpath) for more information about XPATH support.
-
-**Variable count**
-
-You can count the number of keys available for a collection using the **&** prefix, for example:
-
-```
-# You want to block requests without host header
-SecRule &REQUEST_HEADERS:text "@eq 0" "id:1, deny, status:403"
-```
-
-**Multiple Variables**
-
-You may evaluate multiple variables by separating them win pipe (|), for example:
-
-```
-SecRule VARIABLE1|VARIABLE2|VARIABLE3:/some-regex/|&VARIABLE4|!VARIABLE3:id "!@rx \w+" "id:1,pass"
-```
 
 ### Operators
 
