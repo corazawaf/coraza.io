@@ -22,7 +22,7 @@ If you are not looking to use Coraza WAF as a library and you want a working WAF
 ## Add Coraza to your go project
 
 ```sh
-go get github.com/coraza-waf/coraza/v3@latest
+go get github.com/corazawaf/coraza/v3@latest
 ```
 
 ### Create a WAF instance
