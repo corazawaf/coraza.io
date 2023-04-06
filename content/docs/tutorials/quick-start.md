@@ -17,7 +17,7 @@ If you are not looking to use Coraza WAF as a library and you want a working WAF
 
 ## Requirements
 
-- Golang 1.17+
+- Golang 1.18+
 
 ## Add Coraza to your go project
 
@@ -35,46 +35,49 @@ import (
   "github.com/corazawaf/coraza/v3"
 )
 func initCoraza(){
-  coraza.NewWaf()
+  cfg := coraza.NewWafConfig()
+  waf, err := coraza.NewWaf(cfg)
 }
 ```
 
 ### Adding rules to a Waf Instance
 
-Seclang rules syntax is used to create Coraza Rules which will be evaluated by transactions and apply disruptive actions like deny(403) or just log the event. See the Seclang references.
+Seclang rules syntax is used to create Coraza rules, which will be evaluated by transactions and apply disruptive actions like deny(403) or just log the event. See the Seclang references.
 
-Rules are unmarshaled using the seclang package which provides functionalities to compile rules from files or strings.
-
+Rules can be added using the coraza.NewWAFConfig().WithDirectives() method:
 ```go
 package main
+
 import (
   "github.com/corazawaf/coraza/v3"
-  "github.com/corazawaf/coraza/v3/seclang"
 )
-func parseRules(waf *coraza.Waf){
-  parser := seclang.NewParser(waf)
-  if err := parser.FromString(`SecAction "id:1,phase:1,deny:403,log"`); err != nil {
+
+func createWAF() coraza.WAF {
+  waf, err := coraza.NewWAF(coraza.NewWAFConfig().WithDirectives(`SecAction "id:1,phase:1,deny:403,log"`))
+  if err != nil {
     panic(err)
   }
+  return waf
 }
 ```
 
 ### Creating a transaction
 
 Transactions are created for each http request, they are concurrent-safe and they handle [Phases](#) to evaluate rules and generate audit and interruptions. A transaction can be created using ```waf.NewTransaction()```.
+ID of the transaction can also be specified using ```waf.NewTransactionWithID(id)```.
 
 #### Handling an interruption
 
-Interruptions are created by Transactions to tell the web server or application what action is required, based on the rules actions. Interruptions can be retrieved using ```tx.Interruption```, a nil Interruption means there is no action needed (pass) and a non-nil interruption means the web server must do something like denying the request. For example:
+Interruptions are created by Transactions to tell the web server or application what action is required, based on the rules actions. Interruptions can be retrieved using ```tx.Interruption()```, a nil Interruption means there is no action needed (pass) and a non-nil interruption means the web server must do something like denying the request. For example:
 
 ```go
 //...
 tx := waf.NewTransaction()
 // Add some variables and process some phases
-if it := tx.Interruption;it != nil {
-  switch it.Action {
+if it := tx.Interruption();it != nil {
+  switch it.Action() {
     case "deny":
-      rw.WriteStatus(it.Status)
+      rw.WriteStatus(it.Status())
       rw.Write([]byte("Some error message"))
       return
   }
@@ -124,32 +127,7 @@ if it := tx.ProcessRequestBody();it != nil {
 Responses are harder to handler, that's why there is no helper to do that. Many integrations requires you to create "body interceptors" or other kind of functions.
 
 There is a special helper, ```IsProcessableResponseBody``` that returns **true** if the request can be intercepted by Coraza
-In the magical case that you are handling an http.Response or a bytes buffer, you can use:
-
-```go
-tx := waf.NewTransaction()
-//parse request...
-tx.AddResponseHeader("some", "header")
-if it := tx.ProcessResponseHeaders(200); it != nil {
-  return processInterruption(it)
-}
-if !tx.IsProcessableResponseBody() {
-  // We stream the response to the client
-  sw.WriteStatus(200)
-  sw.Write(res.Body)
-  sw.Close()
-  return
-}
-
-//Add response data from a string or bytes:
-tx.ResponseBodyBuffer.Write([]byte("some response data"))
-//Or dump a Response.Body buffer into Coraza
-io.Copy(tx.ResponseBodyBuffer, res.Body)
-
-sw.WriteStatus(200)
-sw.Write(tx.ResponseBodyBuffer.Reader())
-sw.Close()
-```
+A body interceptor must be created to buffer the body into the transaction, call ProcessResponseBody then send this buffer back to the server.
 
 #### Handling logging
 
@@ -160,4 +138,22 @@ Logging is a mandatory phase that has to be processed even if the transaction wa
 tx := waf.NewTransaction()
 defer tx.ProcessLogging()
 //Process phases
+```
+
+#### Handling full request and response
+Coraza http package contains a middleware that can be used to handle a full request and response. This middleware can be used with any web framework that supports http.Handler.
+
+```go
+package main
+
+import (
+  txhttp "github.com/corazawaf/coraza/v3/http"
+)
+
+func main() {
+	waf, _ := coraza.NewWAF(coraza.NewWAFConfig())
+	http.Handle("/", txhttp.WrapHandler(waf, http.HandlerFunc(exampleHandler)))
+	fmt.Println("Server is running. Listening port: 8090")
+	log.Fatal(http.ListenAndServe(":8090", nil))
+}
 ```

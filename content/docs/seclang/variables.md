@@ -13,12 +13,6 @@ weight: 100
 toc: true
 ---
 
-Variables are embedded in the core for performance reasons, which means they cannot be programmatically created. For that reason, there is a set of predefined variables that are available to plugin developers.
-
-- GRAPHQL
-- JWT
-- EXTRA
-
 ## ARGS
 
 **ARGS** is a collection and can be used on its own (means all arguments including the POST Payload), with a static parameter (matches arguments with that name), or with a regular expression (matches all arguments with name that matches the regular expression). To look at only the query string or body arguments, see the ARGS_GET and ARGS_POST collections.
@@ -88,6 +82,7 @@ SecRule ARGS_NAMES "!^(p|a)$" "id:13"
 **ARGS_POST_NAMES** is similar to **ARGS_NAMES**, but contains only the names of request body parameters.
 
 ## AUTH_TYPE
+**Not Implemented yet**
 
 This variable holds the authentication method used to validate a user, if any of the methods built into HTTP are used. In a reverse-proxy deployment, this information will not be available if the authentication is handled in the backend web server.
 
@@ -96,10 +91,12 @@ SecRule AUTH_TYPE "Basic" "id:14"
 ```
 
 ## DURATION
+**Not Implemented yet**
 
 Contains the number of microseconds elapsed since the beginning of the current transaction.
 
 ## ENV
+**Not Implemented yet**
 
 Collection that provides access to environment variables set by Coraza or other server modules. Requires a single parameter to specify the name of the desired variable.
 
@@ -142,16 +139,6 @@ Contains a list of form fields that were used for file upload. Available only on
 ```
 SecRule FILES_NAMES "^upfile$" "id:19"
 ```
-
-## FULL_REQUEST
-
-Contains the complete request: Request line, Request headers and Request body (if any). The last available only if SecRequestBodyAccess was set to On. Note that all properties of SecRequestBodyAccess will be respected here, such as: SecRequestBodyLimit.
-
-```
-SecRule FULL_REQUEST "User-Agent: Coraza Regression Tests" "id:21"
-```
-
-**Note :** This option is not implemented by default, it must be forced by the server with ```tx.SetFullRequest()```
 
 ## FULL_REQUEST_LENGTH
 
@@ -272,10 +259,6 @@ SecRule ARGS pattern "chain,deny,id:28"
   SecRule MATCHED_VARS_NAMES "@eq ARGS:param"
 ```
 
-## MULTIPART_CRLF_LF_LINES
-
-This flag variable will be set to 1 whenever a multi-part request uses mixed line terminators. The multipart/form-data RFC requires CRLF sequence to be used to terminate lines. Since some client implementations use only LF to terminate lines you might want to allow them to proceed under certain circumstances (if you want to do this you will need to stop using MULTIPART_STRICT_ERROR and check each multi-part flag variable individually, avoiding MULTIPART_LF_LINE). However, mixing CRLF and LF line terminators is dangerous as it can allow for evasion. Therefore, in such cases, you will have to add a check for MULTIPART_CRLF_LF_LINES.
-
 ## MULTIPART_FILENAME
 
 This variable contains the multipart data from field FILENAME.
@@ -283,46 +266,6 @@ This variable contains the multipart data from field FILENAME.
 ## MULTIPART_NAME
 
 This variable contains the multipart data from field NAME.
-
-## MULTIPART_STRICT_ERROR
-
-**MULTIPART_STRICT_ERROR** will be set to 1 when any of the following variables is also set to 1: REQBODY_PROCESSOR_ERROR, MULTIPART_BOUNDARY_QUOTED, MULTIPART_BOUNDARY_WHITESPACE, MULTIPART_DATA_BEFORE, MULTIPART_DATA_AFTER, MULTIPART_HEADER_FOLDING, MULTIPART_LF_LINE, MULTIPART_MISSING_SEMICOLON MULTIPART_INVALID_QUOTING MULTIPART_INVALID_HEADER_FOLDING MULTIPART_FILE_LIMIT_EXCEEDED. Each of these variables covers one unusual (although sometimes legal) aspect of the request body in multipart/form-data format. Your policies should always contain a rule to check either this variable (easier) or one or more individual variables (if you know exactly what you want to accomplish). Depending on the rate of false positives and your default policy you should decide whether to block or just warn when the rule is triggered.
-
-The best way to use this variable is as in the example below:
-
-```
-SecRule MULTIPART_STRICT_ERROR "!@eq 0" \
-"phase:2,id:30,t:none,log,deny,msg:'Multipart request body \
-failed strict validation: \
-PE %{REQBODY_PROCESSOR_ERROR}, \
-BQ %{MULTIPART_BOUNDARY_QUOTED}, \
-BW %{MULTIPART_BOUNDARY_WHITESPACE}, \
-DB %{MULTIPART_DATA_BEFORE}, \
-DA %{MULTIPART_DATA_AFTER}, \
-HF %{MULTIPART_HEADER_FOLDING}, \
-LF %{MULTIPART_LF_LINE}, \
-SM %{MULTIPART_MISSING_SEMICOLON}, \
-IQ %{MULTIPART_INVALID_QUOTING}, \
-IQ %{MULTIPART_INVALID_HEADER_FOLDING}, \
-FE %{MULTIPART_FILE_LIMIT_EXCEEDED}'"
-```
-
-Coraza uses the golang multipart parser, which fails for most evasion attempts and generates an exception.
-
-## MULTIPART_UNMATCHED_BOUNDARY
-
-Set to 1 when, during the parsing phase of a multipart/request-body, Coraza encounters what feels like a boundary but it is not. Such an event may occur when evasion of Coraza is attempted.
-
-**Supported:** TBI
-
-The best way to use this variable is as in the example below:
-
-```
-SecRule MULTIPART_UNMATCHED_BOUNDARY "!@eq 0" \
-"phase:2,id:31,t:none,log,deny,msg:'Multipart parser detected a possible unmatched boundary.'"
-```
-
-Change the rule from blocking to logging-only if many false positives are encountered.
 
 ## OUTBOUND_DATA_ERROR
 
@@ -343,12 +286,14 @@ SecRule PATH_INFO "^/(bin|etc|sbin|opt|usr)" "id:33"
 ```
 
 ## PERF_ALL
+**Not Implemented yet**
 
 This special variable contains a string that’s a combination of all other performance variables, arranged in the same order in which they appear in the Stopwatch2 audit log header. It’s intended for use in custom Apache logs
 
 **Supported on Coraza:** TBI
 
 ## PERF_COMBINED
+**Not Implemented yet**
 
 Contains the time, in microseconds, spent in Coraza during the current transaction. The value in this variable is arrived to by adding all the performance variables except PERF_SREAD (the time spent reading from persistent storage is already included in the phase measurements).
 
@@ -360,42 +305,49 @@ Contains the time, in microseconds, spent performing garbage collection.
 **Supported on Coraza:** TBI
 
 ## PERF_LOGGING
+**Not Implemented yet**
 
 Contains the time, in microseconds, spent in audit logging. This value is known only after the handling of a transaction is finalized, which means that it can only be logged using mod_log_config and the %{VARNAME}M syntax.
 
 **Supported on Coraza:** TBI
 
 ## PERF_PHASE1
+**Not Implemented yet**
 
 Contains the time, in microseconds, spent processing phase 1.
 
 **Supported on Coraza:** TBI
 
 ## PERF_PHASE2
+**Not Implemented yet**
 
 Contains the time, in microseconds, spent processing phase 2.
 
 **Supported on Coraza:** TBI
 
 ## PERF_PHASE3
+**Not Implemented yet**
 
 Contains the time, in microseconds, spent processing phase 3.
 
 **Supported on Coraza:** TBI
 
 ## PERF_PHASE4
+**Not Implemented yet**
 
 Contains the time, in microseconds, spent processing phase 4.
 
 **Supported on Coraza:** TBI
 
 ## PERF_PHASE5
+**Not Implemented yet**
 
 Contains the time, in microseconds, spent processing phase 5.
 
 **Supported on Coraza:** TBI
 
 ## PERF_RULES
+**Not Implemented yet**
 
 PERF_RULES is a collection, that is populated with the rules hitting the performance threshold defined with SecRulePerfTime. The collection contains the time, in microseconds, spent processing the individual rule. The various items in the collection can be accessed via the rule id.
 
@@ -417,12 +369,14 @@ SecAction "phase:5,id:95002,pass,log, msg:'File inspection took %{PERF_RULES.100
 The rule with id 10001 defines an external file inspection rule. The rule with id 95000 checks the size of the PERF_RULES collection. If the collection is empty, it writes a note in the logfile. Rule 95001 is executed for every item in the PERF_RULES collection. Every item is thus being checked against the limit of 1000 microseconds. If the rule spent at least that amount of time, then a note containing the rule id is being written to the logfile. The final rule 95002 notes the time spent in rule 10001 (the virus inspection).
 
 ## PERF_SREAD
+**Not Implemented yet**
 
 Contains the time, in microseconds, spent reading from persistent storage.
 
 **Supported on Coraza:** TBI
 
 ## PERF_SWRITE
+**Not Implemented yet**
 
 Contains the time, in microseconds, spent writing to persistent storage.
 

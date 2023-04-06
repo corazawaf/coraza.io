@@ -13,154 +13,166 @@ weight: 100
 toc: true
 ---
 
-# Coraza Web Application Firewall v2
+<h1>
+  <img src="https://coraza.io/images/logo_shield_only.png" align="left" height="46px" alt=""/>&nbsp;
+  <span>Coraza - Web Application Firewall</span>
+</h1>
 
-![Build Status](https://github.com/corazawaf/coraza/actions/workflows/regression.yml/badge.svg)
+[![Regression Tests](https://github.com/corazawaf/coraza/actions/workflows/regression.yml/badge.svg)](https://github.com/corazawaf/coraza/actions/workflows/regression.yml)
 [![Coreruleset Compatibility](https://img.shields.io/badge/Coreruleset%20Compatibility-100%25-brightgreen)](#)
-![CodeQL](https://github.com/corazawaf/coraza/workflows/CodeQL/badge.svg)
-[![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=coraza&metric=sqale_rating)](https://sonarcloud.io/dashboard?id=coraza)
-[![Coverage](https://sonarcloud.io/api/project_badges/measure?project=coraza&metric=coverage)](https://sonarcloud.io/project/overview?id=coraza)
-[![GoDoc](https://godoc.org/github.com/coraza-waf/coraza?status.svg)](https://godoc.org/github.com/coraza-waf/coraza)
+[![CodeQL](https://github.com/corazawaf/coraza/actions/workflows/codeql-analysis.yml/badge.svg)](https://github.com/corazawaf/coraza/actions/workflows/codeql-analysis.yml)
+[![codecov](https://codecov.io/gh/corazawaf/coraza/branch/v3/dev/graph/badge.svg?token=6570804ZC7)](https://codecov.io/gh/corazawaf/coraza)
 [![Project Status: Active – The project has reached a stable, usable state and is being actively developed.](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active)
+[![OWASP Lab Project](https://img.shields.io/badge/owasp-lab%20project-brightgreen)](https://owasp.org/www-project-coraza-web-application-firewall)
+[![GoDoc](https://godoc.org/github.com/corazawaf/coraza?status.svg)](https://godoc.org/github.com/corazawaf/coraza/v3)
 
-<div align="center">
- <img src="https://coraza.io/images/logo.png" width="50%">
-</div>
-Welcome to Coraza Web Application Firewall, this project is an enterprise grade, Golang port of ModSecurity, flexible and powerful enough to serve as the baseline for many projects.
+## Notice: Coraza v3 is on pre-alpha stage and APIs might change ! :warning:
+
+Coraza is an open source, enterprise-grade, high performance Web Application Firewall (WAF) ready to protect your beloved applications. It written in Go, supports ModSecurity SecLang rulesets and is 100% compatible with the OWASP Core Rule Set.
+
+* Website: https://coraza.io
+* Forum: [Github Discussions](https://github.com/corazawaf/coraza/discussions)
+* OWASP Slack Community (#coraza): https://owasp.org/slack/invite
+* Rule testing: [Coraza Playground](https://playground.coraza.io)
+* Planning: [Github Projects](https://github.com/orgs/corazawaf/projects?type=beta)
+
+<br/>
+
+Key Features:
+
+* ⇲ **Drop-in** - Coraza is a drop-in alternative to replace the soon to be abandoned Trustwave ModSecurity Engine and supports industry standard SecLang rule sets.
+
+* 🔥 **Security** -  Coraza runs the [OWASP Core Rule Set (CRS)](https://coreruleset.org) to protect your web applications from a wide range of attacks, including the OWASP Top Ten, with a minimum of false alerts. CRS protects from many common attack categories including: SQL Injection (SQLi), Cross Site Scripting (XSS), PHP & Java Code Injection, HTTPoxy, Shellshock, Scripting/Scanner/Bot Detection & Metadata & Error Leakages.
+
+* 🔌 **Extensible** - Coraza is a library at its core, with many integrations to deploy on-premise Web Application Firewall instances. Audit Loggers, persistence engines, operators, actions, create your own functionalities to extend Coraza as much as you want.
+
+* 🚀 **Performance** - From huge websites to small blogs, Coraza can handle the load with minimal performance impact. Check our [Benchmarks](https://coraza.io/docs/reference/benchmarks)
+
+* ﹡ **Simplicity** - Anyone is able to understand and modify the Coraza source code. It is easy to extend Coraza with new functionality.
+
+* 💬 **Community** - Coraza is a community project, contributions are accepted and all ideas will be considered. Find contributor guidance in the [CONTRIBUTION](https://github.com/corazawaf/coraza/blob/v2/master/CONTRIBUTING.md) document.
+
+<br/>
+
+## Integrations
+
+The Coraza Project maintains implementations and plugins for the following servers: 
+
+* [Caddy Reverse Proxy and Webserver Plugin](https://github.com/corazawaf/coraza-caddy) - stable, needs a maintainer
+* [Proxy WASM extension](https://github.com/corazawaf/coraza-proxy-wasm) for proxies with proxy-wasm support (e.g. Envoy) - stable, still under development
+* [HAProxy SPOE Plugin](https://github.com/corazawaf/coraza-spoa) - preview
+* [Traefik Proxy Plugin](https://github.com/jptosso/coraza-traefik) - preview, needs maintainer
+* [Gin Web Framework Middleware](https://github.com/jptosso/coraza-gin) - preview, needs maintainer
+* [Apache HTTP Server](https://github.com/corazawaf/coraza-server) - experimental
+* [Nginx](https://github.com/corazawaf/coraza-server) - experimental
+* [Coraza C Library](https://github.com/corazawaf/libcoraza) - experimental
+
+## Plugins
+
+* [Coraza GeoIP](https://github.com/corazawaf/coraza-geoip) (preview)
 
 ## Prerequisites
 
-* Linux distribution (Debian and Centos are recommended, Windows is not supported yet)
-* Golang compiler v1.16+
+* Golang compiler v1.18+
+* Linux distribution (Debian or Centos recommended) or Mac. Windows not supported yet.
 
-## Migrate from v1
 
-* Rollback SecAuditLog to the legacy syntax (serial/concurrent)
-* Attach an error log handler using ```waf.SetErrorLogCb(cb)``` (optional)
-* If you are using @detectXSS and @detectSQLi (CRS) install the plugin [github.com/jptosso/coraza-libinjection](https://github.com/jptosso/coraza-libinjection)
-* If you are using @rx with libpcre (CRS) install the plugin [github.com/jptosso/coraza-pcre](https://github.com/jptosso/coraza-pcre)
-* If you are using low level APIs check the complete changelog as most of them were removed
+## Coraza Core Usage
 
-## Running the tests
-
-Run the go tests:
-
-```sh
-go test ./...
-go test -race ./...
-```
-
-## Coraza v2 differences with v1
-
-* Full internal API refactor, public API has not changed
-* Full audit engine refactor with plugins support
-* New enhanced plugins interface for transformations, actions, body processors and operators
-* Now we are fully compliant with Seclang from modsecurity v2
-* Many features removed and transformed into plugins: XML processing, PCRE regex, Libinjection (@detectXSS and @detectSQLi)
-* Better debug logging
-* New error logging (like modsecurity)
-
-## Your first Coraza WAF project
+Coraza can be used as a library for your Go program to implement a security middleware or integrate it with existing application & webservers.
 
 ```go
 package main
-import(
- "fmt"
- "github.com/coraza-waf/coraza/v2"
- "github.com/coraza-waf/coraza/v2/seclang"
+
+import (
+	"fmt"
+	"github.com/corazawaf/coraza/v3"
 )
 
 func main() {
- // First we initialize our waf and our seclang parser
- waf := coraza.NewWaf()
- parser, _ := seclang.NewParser(waf)
+	// First we initialize our waf and our seclang parser
+	waf, err := coraza.NewWAF(coraza.NewWAFConfig().
+		WithDirectives(`SecRule REMOTE_ADDR "@rx .*" "id:1,phase:1,deny,status:403"`))
+	// Now we parse our rules
+	if err != nil {
+		fmt.Println(err)
+	}
 
- // Now we parse our rules
- if err := parser.FromString(`SecRule REMOTE_ADDR "@rx .*" "id:1,phase:1,deny,status:403"`); err != nil {
-  fmt.Println(err)
- }
+	// Then we create a transaction and assign some variables
+    tx := waf.NewTransaction()
+	defer func() {
+		tx.ProcessLogging()
+		tx.Close()
+	}()
+	tx.ProcessConnection("127.0.0.1", 8080, "127.0.0.1", 12345)
 
- // Then we create a transaction and assign some variables
- tx := waf.NewTransaction()
- tx.ProcessConnection("127.0.0.1", 8080, "127.0.0.1", 12345)
-
- // Finally we process the request headers phase, which may return an interruption
- if it := tx.ProcessRequestHeaders(); it != nil {
-  fmt.Printf("Transaction was interrupted with status %d\n", it.Status)
- }
+	// Finally we process the request headers phase, which may return an interruption
+	if it := tx.ProcessRequestHeaders(); it != nil {
+		fmt.Printf("Transaction was interrupted with status %d\n", it.Status)
+	}
 }
 ```
+[Examples/http-server](./examples/http-server/) provides an example to practice with Coraza.
 
-## Why Coraza WAF?
+### Build tags
 
-### Philosophy
+Go build tags can tweak certain functionality at compile-time. These are for advanced use cases only and do not
+have compatibility guarantees across minor versions - use with care.
 
-* **Simplicity:** Anyone should be able to understand and modify Coraza WAF's source code
-* **Extensibility:** It should be easy to extend Coraza WAF with new functionalities
-* **Innovation:** Coraza WAF isn't just a ModSecurity port, it must include awesome new functions (in the meantime it's just a port :sweat_smile:)
-* **Community:** Coraza WAF is a community project and everyone's idea will be heard
+- coraza.disabled_operators.* - excludes the specified operator from compilation. Particularly useful if overriding
+the operator with `operators.Register` to reduce binary size / startup overhead.
+- `coraza.rule.multiphase_valuation` - enables evaluation of rule variables in the phases that they are ready, not
+only the phase the rule is defined for.
 
-### Plugins roadmap
+## Tools
 
-* WASM scripts support
-* Lua script support
-* Integrated DDOS protection and directives with iptables(Or others) integration
-* Integrated bot detection with captcha
-* Open Policy Agent package (OPA)
-* Enhanced data signing features (cookies, forms, etc)
-* OpenAPI enforcement
-* JWT enforcement
-* XML request body processor
-* Libinjection integration (done)
-* Lib PCRE integration (done)
-* Bluemonday policies (maybe)
+* [Go FTW](https://github.com/coreruleset/go-ftw): Rule testing engine
+* [Coraza Playground](https://playground.coraza.io/): Sandbox rule testing web interface
+* [OWASP Core Ruleset](https://github.com/coreruleset/coreruleset/): Awesome rule set, compatible with Coraza
 
-## Coraza WAF implementations
+## Development
 
-* [Caddy Plugin (Reverse Proxy and Web Server)](https://github.com/jptosso/coraza-caddy) (Stable)
-* [Traefik Plugin (Reverse Proxy and Web Server)](https://github.com/jptosso/coraza-traefik) (preview)
-* [Gin Middleware (Web Framework)](https://github.com/jptosso/coraza-gin) (Preview)
-* [Buffalo Plugin (Web Framework)](#) (soon)
-* [Coraza Server (HAPROXY, REST and GRPC)](https://github.com/jptosso/coraza-server) (experimental)
-* [Apache httpd](https://github.com/jptosso/coraza-server) (experimental)
-* [Nginx](https://github.com/jptosso/coraza-server) (soon)
-* [Coraza C Exports](https://github.com/jptosso/coraza-cexport) (experimental)
+Coraza only requires Go for development. You can run `mage.go` to issue development commands.
 
-## Some useful tools
+See the list of commands
 
-* [Go FTW](https://github.com/fzipi/go-ftw): rule testing engine
-* [Coraza Playground](https://playground.coraza.io/): rule testing sandbox with web interface
-
-## Troubleshooting
-
-## How to contribute
-
-Contributions are welcome, there are so many TODOs, also functionalities, fixes, bug reports and any help you can provide. Just send your PR.
-
-```sh
-cd /path/to/coraza
-egrep -Rin "TODO|FIXME" -R --exclude-dir=vendor *
+```shell
+go run mage.go -l
 ```
 
-## Useful links
+For example, to format your code before submission, run
 
-## Special thanks
+```shell
+go run mage.go format
+```
+
+## Contribute
+
+Contributions are welcome! Please refer to [CONTRIBUTING.md](./CONTRIBUTING.md) for guidance.
+
+## Thanks
 
 * Modsecurity team for creating ModSecurity
 * OWASP Coreruleset team for the CRS and their help
-* @fzipi for his support and help
-* @dune73 for the Modsecurity Handbook (The bible for this project) and all of his support
 
 ### Companies using Coraza
 
 * [Babiel](https://babiel.com) (supporter)
 
-## About
+### Author on Twitter 
 
-The name **Coraza** is trademarked, **Coraza** is a registered trademark of Juan Pablo Tosso.
-
-* Author on Twitter [@jptosso](https://twitter.com/jptosso)
+- [@jptosso](https://twitter.com/jptosso)
 
 ## Donations
 
-For donations, see [Donations site](https://www.tosso.io/donate)
+For donations, see [Donations site](https://owasp.org/donate/?reponame=www-project-coraza-web-application-firewall&title=OWASP+Coraza+Web+Application+Firewall)
+
+## Thanks to all the people who have contributed
+
+We could not have done this without you!
+
+<a href="https://github.com/corazawaf/coraza/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=corazawaf/coraza" />
+</a>
+
+Made with [contrib.rocks](https://contrib.rocks).
