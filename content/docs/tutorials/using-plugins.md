@@ -13,15 +13,21 @@ weight: 999
 toc: true
 ---
 
-Plugins must be included in your project's main package, for example:
+Plugins are imported by calling the respective helpers:
+- `plugins.RegisterOperator(...)`
+- `plugins.RegisterAction(...)`
+- `plugins.RegisterBodyProcessor(...)`
+- `plugins.RegisterTransformation(...)`
+
+Most plugins will register themselves automatically, but some will require you to call the respective helper.
+
+Self-registering plugins will use init() to call the respective registration helper, and they can be imported like this:
 
 ```go
 package main
 
 include(
-  "github.com/coraza-waf/coraza/v2"
-  _ "github.com/jptosso/coraza-libinjection"
+  "github.com/coraza-waf/coraza/3"
+  _ "github.com/someorg/my-awesome-plugin
 )
 ```
-
-The previous code will automatically add the @detectXSS and @detectSQLi operators. (Please note this plugin requires libinjection)

@@ -13,14 +13,12 @@ weight: 130
 toc: true
 ---
 
-**Important:** OWASP Core Ruleset requires [coraza-libinjection](https://github.com/jptosso/coraza-libinjection) and [coraza-pcre](https://github.com/jptosso/coraza-pcre) plugins to work. There is an upcoming fork that removes the need for the plugins by removing a few features and rewriting some @rx operators to RE2 instead of PCRE.
-
 ## Installation
 
 Core Ruleset can be normally installed by importing each required file in the following order:
 
 ```sh
-wget https://raw.githubusercontent.com/jptosso/coraza-waf/v2/master/coraza.conf-recommended -O coraza.conf
+wget https://raw.githubusercontent.com/corazawaf/coraza/v3/dev/coraza.conf-recommended -O coraza.conf
 git clone https://github.com/coreruleset/coreruleset
 ```
 
@@ -32,17 +30,13 @@ For example:
 
 ```go
 func initCoraza(){
-  waf := coraza.NewWaf()
-  parser, _ := seclang.NewParser(waf)
-  files := []string{
-    "coraza.conf",
-    "coreruleset/crs-setup.conf.example",
-    "coreruleset/rules/*.conf",
-  }
-  for _, f := range files {
-    if err := parser.FromFile(f); err != nil {
-      panic(err)
-    }
+  cfg := coraza.NewWafConfig()
+    .WithDirectivesFromFile("coraza.conf")
+    .WithDirectivesFromFile("coreruleset/crs-setup.conf.example")
+    .WithDirectivesFromFile("coreruleset/rules/*.conf")
+  waf, err := coraza.NewWaf(cfg)
+  if err != nil {
+    panic(err)
   }
 }
 ```
