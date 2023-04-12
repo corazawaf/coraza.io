@@ -1,5 +1,5 @@
 ---
-title: "Upgrave to v3 🆕"
+title: "Upgrade to v3 🆕"
 description: "This tutorial details the steps requiring to upgrade your Coraza v2 application to Coraza v3."
 date: 2020-11-16T13:59:39+01:00
 lastmod: 2020-11-16T13:59:39+01:00
