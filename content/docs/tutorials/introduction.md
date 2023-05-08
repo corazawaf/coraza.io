@@ -1,6 +1,6 @@
 ---
 title: "Introduction"
-description: "Introduction to Coraza Web Application Firewall. Start protecting your web applications in few steps."
+description: "Introduction to Coraza Web Application Firewall. Start protecting your web applications in a few steps."
 lead: "Welcome to Coraza Web Application Firewall, this project is a Golang port of ModSecurity with the goal to become the first enterprise-grade Open Source Web Application Firewall, flexible and powerful enough to serve as the baseline for many projects."
 date: 2020-10-06T08:48:57+00:00
 lastmod: 2020-10-06T08:48:57+00:00
@@ -40,15 +40,15 @@ Coraza is an open source, enterprise-grade, high performance Web Application Fir
 
 Key Features:
 
-* ⇲ **Drop-in** - Coraza is a drop-in alternative to replace the soon to be abandoned Trustwave ModSecurity Engine and supports industry standard SecLang rule sets.
+* ⇲ **Drop-in** - Coraza is a drop-in alternative to replace Trustwave ModSecurity Engine [(planned to be deprecated on July 1, 2024)](https://www.modsecurity.org/) and supports industry-standard SecLang rule sets.
 
-* 🔥 **Security** -  Coraza runs the [OWASP Core Rule Set (CRS)](https://coreruleset.org) to protect your web applications from a wide range of attacks, including the OWASP Top Ten, with a minimum of false alerts. CRS protects from many common attack categories including: SQL Injection (SQLi), Cross Site Scripting (XSS), PHP & Java Code Injection, HTTPoxy, Shellshock, Scripting/Scanner/Bot Detection & Metadata & Error Leakages.
+* 🔥 **Security** -  Coraza runs the [OWASP Core Rule Set (CRS)](https://coreruleset.org) to protect your web applications from a wide range of attacks, including the OWASP Top Ten, with a minimum of false alerts. CRS protects from many common attack categories including SQL Injection (SQLi), Cross Site Scripting (XSS), PHP & Java Code Injection, HTTPoxy, Shellshock, Scripting/Scanner/Bot Detection & Metadata & Error Leakages.
 
 * 🔌 **Extensible** - Coraza is a library at its core, with many integrations to deploy on-premise Web Application Firewall instances. Audit Loggers, persistence engines, operators, actions, create your own functionalities to extend Coraza as much as you want.
 
 * 🚀 **Performance** - From huge websites to small blogs, Coraza can handle the load with minimal performance impact. Check our [Benchmarks](https://coraza.io/docs/reference/benchmarks)
 
-* ﹡ **Simplicity** - Anyone is able to understand and modify the Coraza source code. It is easy to extend Coraza with new functionality.
+* ﹡ **Simplicity** - Anyone can understand and modify the Coraza source code. It is easy to extend Coraza with new functionality.
 
 * 💬 **Community** - Coraza is a community project, contributions are accepted and all ideas will be considered. Find contributor guidance in the [CONTRIBUTION](https://github.com/corazawaf/coraza/blob/v2/master/CONTRIBUTING.md) document.
 
@@ -74,12 +74,12 @@ The Coraza Project maintains implementations and plugins for the following serve
 ## Prerequisites
 
 * Golang compiler v1.18+
-* Linux distribution (Debian or Centos recommended) or Mac. Windows not supported yet.
+* Linux distribution (Debian or Centos recommended) or Mac. Windows is not supported yet.
 
 
 ## Coraza Core Usage
 
-Coraza can be used as a library for your Go program to implement a security middleware or integrate it with existing application & webservers.
+Coraza can be used as a library for your Go program to implement a security middleware or integrate it with existing applications & webservers.
 
 ```go
 package main
@@ -149,6 +149,7 @@ go run mage.go format
 ## Contribute
 
 Contributions are welcome! Please refer to [CONTRIBUTING.md](./CONTRIBUTING.md) for guidance.
+<!-- @TODO: Add CONTRIBUTING.md -->
 
 ## Thanks
 
@@ -172,7 +173,7 @@ For donations, see [Donations site](https://owasp.org/donate/?reponame=www-proje
 We could not have done this without you!
 
 <a href="https://github.com/corazawaf/coraza/graphs/contributors">
-  <img src="https://contrib.rocks/image?repo=corazawaf/coraza" />
+<img src="https://contrib.rocks/image?repo=corazawaf/coraza" />
 </a>
 
 Made with [contrib.rocks](https://contrib.rocks).

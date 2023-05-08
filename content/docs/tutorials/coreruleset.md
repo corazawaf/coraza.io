@@ -15,7 +15,7 @@ toc: true
 
 ## Installation
 
-Core Ruleset can be normally installed by importing each required file in the following order:
+Core Ruleset can be installed by importing each required file in the following order:
 
 ```sh
 wget https://raw.githubusercontent.com/corazawaf/coraza/v3/dev/coraza.conf-recommended -O coraza.conf
