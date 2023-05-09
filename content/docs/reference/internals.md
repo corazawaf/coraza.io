@@ -60,7 +60,7 @@ The return of this function contains each ``MatchData``, which will tell the tra
 
 ### Operators
 
-Operators are stored in ``github.com/coraza-waf/coraza/v2/operators`` and contain an initializer and an evaluation function. Initializers are used to apply arguments during compilation, for example, ``"@rx /\d+/"`` will run ``op.Init("/\\d+")``. ``op.Evaluate(tx, "args")`` is applied for each compiled variable and will return if the condition matches. Operators uses ``Transaction`` to create logs, capture fields and access additional variables from the transaction.
+Operators are stored in ``github.com/corazawaf/coraza/tree/v3/dev/internal/operators`` and contain an initializer and an evaluation function. Initializers are used to apply arguments during compilation, for example, ``"@rx /\d+/"`` will run ``op.Init("/\\d+")``. ``op.Evaluate(tx, "args")`` is applied for each compiled variable and will return if the condition matches. Operators uses ``Transaction`` to create logs, capture fields and access additional variables from the transaction.
 
 **Note:** Operators must be concurrent-friendly
 
