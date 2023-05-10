@@ -27,7 +27,7 @@ Self-registering plugins will use init() to call the respective registration hel
 package main
 
 include(
-  "github.com/coraza-waf/coraza/3"
+  "github.com/corazawaf/coraza/v3"
   _ "github.com/someorg/my-awesome-plugin
 )
 ```
