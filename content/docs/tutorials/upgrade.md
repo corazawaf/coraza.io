@@ -18,7 +18,7 @@ In this guide, we will outline the necessary steps to upgrade from Coraza v2 to 
 First, update your project's dependencies to use Coraza v3:
 
 ```sh
-go get -u github.com/corazawaf/coraza/v3
+go install -u github.com/corazawaf/coraza/v3
 ```
 
 Make sure to replace any import statements in your project with the new import path:
@@ -58,4 +58,4 @@ The transaction processing methods in v3 remain mostly the same, with minor chan
 - AddArguments was separated into AddPostArgument, AddGetArgument, AddPathArgument
 
 ### 5. Plugins
-The plugins interface were moved into the experimental package. See the plugins documentation.
+The plugin interfaces have moved into the experimental package. See the [plugin documentation]({{< relref "using-plugins" >}}).

@@ -19,11 +19,11 @@ Waf is the main interface used to store settings, rules and create transactions,
 
 ## Transactions
 
-Transactions are an instance of an url call for a Waf instance, transactions are created with ``wafinstance.NewTransaction()``. Transactions holds collections and configurations that may be updated using rules.
+Transactions are an instance of an url call for a Waf instance, transactions are created with ``wafinstance.NewTransaction()``. Transactions hold collections and configurations that may be updated using rules.
 
 ## Macro Expansion
 
-Macro expansions are a function available for ``transactions``, a macro expansion will compile a string and provide variables data to the current context. Macro expansion is performed by running a regular expresion that will find ``%{request_headers.test}`` and replace it with it's value using:
+Macro expansions are a function available for ``transactions``, a macro expansion will compile a string and provide variables data to the current context. Macro expansion is performed by running a regular expression that will find ``%{request_headers.test}`` and replace the value using:
 
 ```go
 v1 := tx.GetCollection(variables.RequestHeaders).GetFirstString("test")
@@ -43,10 +43,10 @@ Different from ModSecurity, each rule is a unique struct in Coraza and is shared
 Once a rule is triggered, it will follow the following flow:
 
 1. Skip if this rule is removed for the current transaction
-2. Fill the ``RULE`` variable data which contain fields from the current rule
+2. Fill the ``RULE`` variable data which contains fields from the current rule
 3. Apply removed targets for this transaction
 4. Compile each ``variable``, normal, counters, negations and "always match"
-5. Apply transformations for each variable, match or multimatch
+5. Apply transformations for each variable, match or multi-match
 6. Execute the current operator for each variable
 7. Continue if there was any match
 8. Evaluate all non-disruptive actions
@@ -60,7 +60,7 @@ The return of this function contains each ``MatchData``, which will tell the tra
 
 ### Operators
 
-Operators are stored in ``github.com/coraza-waf/coraza/v2/operators`` and contains an initializer and an evaluation function. Initializers are used to apply arguments during compilation, for example, ``"@rx /\d+/"`` will run ``op.Init("/\\d+")``. ``op.Evaluate(tx, "args")`` is applied for each compiled variable and will return if the condition matches. Operators uses ``Transaction`` to create logs, capture fields and access additional variables from the transaction.
+Operators are stored in ``github.com/corazawaf/coraza/tree/v3/dev/internal/operators`` and contain an initializer and an evaluation function. Initializers are used to apply arguments during compilation, for example, ``"@rx /\d+/"`` will run ``op.Init("/\\d+")``. ``op.Evaluate(tx, "args")`` is applied for each compiled variable and will return if the condition matches. Operators uses ``Transaction`` to create logs, capture fields and access additional variables from the transaction.
 
 **Note:** Operators must be concurrent-friendly
 

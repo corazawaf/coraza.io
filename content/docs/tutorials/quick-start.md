@@ -15,6 +15,8 @@ toc: true
 
 If you are not looking to use Coraza WAF as a library and you want a working WAF implementation or integration, check the integrations page.
 
+<!-- @TODO: Update links for integration page -->
+
 ## Requirements
 
 - Golang 1.18+
@@ -22,7 +24,7 @@ If you are not looking to use Coraza WAF as a library and you want a working WAF
 ## Add Coraza to your go project
 
 ```sh
-go get github.com/corazawaf/coraza/v3@latest
+go install github.com/corazawaf/coraza/v3@latest
 ```
 
 ### Create a WAF instance
@@ -44,7 +46,7 @@ func initCoraza(){
 
 Seclang rules syntax is used to create Coraza rules, which will be evaluated by transactions and apply disruptive actions like deny(403) or just log the event. See the Seclang references.
 
-Rules can be added using the coraza.NewWAFConfig().WithDirectives() method:
+Rules can be added using the ```coraza.NewWAFConfig().WithDirectives()``` method:
 ```go
 package main
 
@@ -63,12 +65,12 @@ func createWAF() coraza.WAF {
 
 ### Creating a transaction
 
-Transactions are created for each http request, they are concurrent-safe and they handle [Phases](#) to evaluate rules and generate audit and interruptions. A transaction can be created using ```waf.NewTransaction()```.
+Transactions are created for each http request, they are concurrent-safe and they handle [Phases](#) to evaluate rules and generate audits and interruptions. A transaction can be created using ```waf.NewTransaction()```.
 ID of the transaction can also be specified using ```waf.NewTransactionWithID(id)```.
 
 #### Handling an interruption
 
-Interruptions are created by Transactions to tell the web server or application what action is required, based on the rules actions. Interruptions can be retrieved using ```tx.Interruption()```, a nil Interruption means there is no action needed (pass) and a non-nil interruption means the web server must do something like denying the request. For example:
+Interruptions are created by Transactions to tell the web server or application what action is required based on the rules of action. Interruptions can be retrieved using ```tx.Interruption()```, a nil Interruption means there is no action needed (pass) and a non-nil interruption means the web server must do something like denying the request. For example:
 
 ```go
 //...
@@ -94,8 +96,8 @@ To manually process a request we must run 5 functions in the following order:
 
 - **ProcessConnection**: Creates variables with connection information like IP addresses and ports.
 - **ProcessUri**: Creates variables from strings extracted from the Request Line, these are method, url and protocol.
-- **AddRequestHeader**: Must be run for each HTTP header, it will create headers variables and cookies.
-- **ProcessRequestHeaders**: Evaluates phase 1 rules with all the variables felt before. This functions is disruptive.
+- **AddRequestHeader**: Must be run for each HTTP header, it will create headers, variables and cookies.
+- **ProcessRequestHeaders**: Evaluates phase 1 rules with all the variables felt before. This function is disruptive.
 - **RequestBodyBuffer.Write**: Writes to the request body buffer, you can just ```io.Copy(tx.RequestBodyBuffer, someReader)```
 - **ProcessRequestBody**: Evaluates phase 2 rules with the ```REQUEST_BODY``` and POST variables. There are other cases like MULTIPART, JSON and XML
 
@@ -124,10 +126,10 @@ if it := tx.ProcessRequestBody();it != nil {
 
 #### Handling a response
 
-Responses are harder to handler, that's why there is no helper to do that. Many integrations requires you to create "body interceptors" or other kind of functions.
+Responses are harder to handle, that's why there is no helper to do that. Many integrations require you to create "body interceptors" or other kinds of functions.
 
-There is a special helper, ```IsProcessableResponseBody``` that returns **true** if the request can be intercepted by Coraza
-A body interceptor must be created to buffer the body into the transaction, call ProcessResponseBody then send this buffer back to the server.
+There is a special helper, ```IsProcessableResponseBody``` that returns **true** if the request can be intercepted by Coraza.
+A body interceptor must be created to buffer the body into the transaction, call ```ProcessResponseBody``` then send this buffer back to the server.
 
 #### Handling logging
 
@@ -140,7 +142,7 @@ defer tx.ProcessLogging()
 //Process phases
 ```
 
-#### Handling full request and response
+#### Handling full requests and response
 Coraza http package contains a middleware that can be used to handle a full request and response. This middleware can be used with any web framework that supports http.Handler.
 
 ```go
