@@ -4,7 +4,7 @@ description: Adds a fixed rule marker that can be used as a target in a `skipAft
 syntax: SecMarker [ID|TEXT]
 default: 
 date: 
-lastmod: "2023-01-30T14:50:56+01:00"
+lastmod: "2023-05-24T21:08:47+02:00"
 draft: false
 images: []
 versions: v3.0+

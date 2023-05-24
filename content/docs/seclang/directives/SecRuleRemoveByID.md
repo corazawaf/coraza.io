@@ -1,8 +1,8 @@
 ---
-title: SecAuditLogFormat
-description: Select the output format of the AuditLogs. The format can be either the native AuditLogs format or JSON.
-syntax: SecAuditLogFormat JSON|Native
-default: Native
+title: SecRuleRemoveByID
+description: Removes the matching rules from the current configuration context.
+syntax: SecRuleRemoveById ...[ID OR RANGE]
+default: 
 date: 
 lastmod: "2023-05-24T21:08:47+02:00"
 draft: false

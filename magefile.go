@@ -11,7 +11,11 @@ import (
 )
 
 func Generate() error {
-	if err := sh.RunV("go", "run", "tools/directivesgen/main.go"); err != nil {
+	if err := sh.RunV("go", "mod", "vendor", "-o", ".vendor"); err != nil {
+		return err
+	}
+
+	if err := sh.RunV("go", "run", "tools/directivesgen/main.go", ".vendor/github.com/corazawaf/coraza/v3"); err != nil {
 		return err
 	}
 

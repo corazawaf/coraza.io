@@ -15,6 +15,7 @@ import (
 	"html/template"
 	"log"
 	"os"
+	"path"
 	"strings"
 	"time"
 )
@@ -40,7 +41,8 @@ func main() {
 		log.Fatal(err)
 	}
 
-	src, err := os.ReadFile("./coraza/internal/seclang/directives.go")
+	filepath := path.Join(os.Args[1], "internal/seclang/directives.go")
+	src, err := os.ReadFile(filepath)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -67,7 +69,8 @@ func main() {
 			}
 
 			directiveName := fnName[9:]
-			f, err := os.Create(fmt.Sprintf("%s/%s.md", dstDir, directiveName))
+			directiveFilename := fmt.Sprintf("%s/%s.md", dstDir, directiveName)
+			f, err := os.Create(directiveFilename)
 			if err != nil {
 				log.Fatal(err)
 			}

@@ -1,3 +1,0 @@
-[submodule "coraza"]
-	path = coraza
-	url = git@github.com:corazawaf/coraza.git

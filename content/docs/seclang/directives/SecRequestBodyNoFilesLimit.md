@@ -4,7 +4,7 @@ description: Configures the maximum request body size Coraza will accept for buf
 syntax: SecRequestBodyNoFilesLimit 131072
 default: 1048576 (1 MB)
 date: 
-lastmod: "2023-01-30T14:50:56+01:00"
+lastmod: "2023-05-24T21:08:47+02:00"
 draft: false
 images: []
 versions: v3.0+

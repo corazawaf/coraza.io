@@ -4,7 +4,7 @@ description: Defines the path to the main audit log file (serial logging format)
 syntax: SecAuditLog [ABSOLUTE_PATH_TO_LOG_FILE]
 default: 
 date: 
-lastmod: "2023-01-30T14:50:56+01:00"
+lastmod: "2023-05-24T21:08:47+02:00"
 draft: false
 images: []
 versions: v3.0+

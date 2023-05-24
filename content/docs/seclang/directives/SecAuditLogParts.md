@@ -4,7 +4,7 @@ description: Defines which parts of each transaction are going to be recorded in
 syntax: SecAuditLogParts [PARTLETTERS]
 default: ABCFHZ
 date: 
-lastmod: "2023-01-30T14:50:56+01:00"
+lastmod: "2023-05-24T21:08:47+02:00"
 draft: false
 images: []
 versions: v3.0+

@@ -4,7 +4,7 @@ description: Defines the default list of actions, which will be inherited by the
 syntax: SecDefaultAction "phase:2,log,auditlog,deny,status:403,tag:'SLA 24/7'"
 default: phase:2,log,auditlog,pass
 date: 
-lastmod: "2023-01-30T14:50:56+01:00"
+lastmod: "2023-05-24T21:08:47+02:00"
 draft: false
 images: []
 versions: v3.0+
