@@ -4,7 +4,7 @@ description: Include and evaluate a file or file pattern.
 syntax: Include [PATH_TO_CONF_FILES]
 default: 
 date: 
-lastmod: "2023-05-24T21:08:47+02:00"
+lastmod: "2023-05-24T23:18:50+02:00"
 draft: false
 images: []
 versions: v3.0+
