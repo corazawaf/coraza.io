@@ -153,7 +153,7 @@ SecActions are used to create rules that will always match, they don´t contain 
 
 ## Macro Expansion
 
-Macro expansions are special messages that can be transformed into it's evaluated value, the syntax is: ```%{VARIABLE.KEY}```, for example ```%{REQUEST_HEADERS:host}``` will return the content of the request header "Host".
+Macro expansions are special messages that can be transformed into it's evaluated value, the syntax is: ```%{VARIABLE.KEY}```, for example ```%{REQUEST_HEADERS.host}``` will return the content of the request header "Host".
 
 ```
 SecAction "id:1, log, logdata:'Transaction %{unique_id}'"
