@@ -1,0 +1,50 @@
+name: Tests
+
+on:
+  push:
+    branches:
+      - "main"
+    paths-ignore:
+      - "**/*.md"
+      - "LICENSE"
+  pull_request:
+    paths-ignore:
+      - "**/*.md"
+      - "LICENSE"
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Install Go
+        uses: actions/setup-go@v2
+        with:
+          go-version: 1.19.x
+
+      - name: Checkout code
+        uses: actions/checkout@v2
+        with:
+          lfs: true
+          fetch-depth: 0 #for better blame info
+
+      - name: Tests and coverage
+        run: go run mage.go test
+
+      - name: Tests and coverage
+        run: go run mage.go generate
+
+      - name: Verifies differences
+        run: git diff --exit-code
+
+      - name: Setup Hugo
+        uses: peaceiris/actions-hugo@v2
+        with:
+          hugo-version: 'latest'
+          extended: true
+          # extended: true
+
+      - name: Build
+        run: npm install
+
+      - name: Build
+        run: hugo --minify
