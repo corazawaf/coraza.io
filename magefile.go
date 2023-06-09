@@ -96,3 +96,7 @@ func diff(list1 []string, list2 []string) []string {
 
 	return diff
 }
+
+func Test() error {
+	return sh.RunV("go", "test", "./...")
+}
