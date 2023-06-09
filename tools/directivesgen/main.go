@@ -150,7 +150,7 @@ func parseDirective(name string, doc string) Directive {
 	}
 
 	for scanner.Scan() {
-		d.Content += decorateNote(scanner.Text()) + "\n"
+		d.Content += decorateExample(decorateNote(scanner.Text())) + "\n"
 	}
 
 	d.Description = addsLinksToDirectives(d.Description)
@@ -163,7 +163,14 @@ func decorateNote(s string) string {
 	return strings.Replace(s, "Note:", "**Note:**", -1)
 }
 
+func decorateExample(s string) string {
+	return strings.Replace(s, "Example:", "**Example:**", -1)
+}
+
+var directivesRegex = regexp.MustCompile("(`Sec[a-zA-Z0-9]+`)")
+
 func addsLinksToDirectives(s string) string {
-	var re = regexp.MustCompile("(`Sec[a-zA-Z0-9]+`)")
-	return re.ReplaceAllString(s, `[$1](#$1)`)
+	return directivesRegex.ReplaceAllStringFunc(s, func(s string) string {
+		return "[" + s + "](#" + strings.ToLower(s[1:len(s)-1]) + ")"
+	})
 }
