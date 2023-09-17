@@ -67,9 +67,9 @@ SecRule ARGS_COMBINED_SIZE "@gt 2500" "id:12"
 
 ## ARGS_NAMES
 
-Contains all request parameter names. You can search for specific parameter names that you want to inspect. In a positive policy scenario, you can also whitelist (using an inverted rule with the exclamation mark) only the authorized argument names. This example rule allows only two argument names: p and a:
+Contains all request parameter names. You can search for specific parameter names that you want to inspect. In a positive policy scenario, you can also allowlist (using an inverted rule with the exclamation mark) only the authorized argument names. This example rule allows only two argument names: p and a:
 
-```
+```seclang
 SecRule ARGS_NAMES "!^(p|a)$" "id:13"
 ```
 
@@ -82,6 +82,7 @@ SecRule ARGS_NAMES "!^(p|a)$" "id:13"
 **ARGS_POST_NAMES** is similar to **ARGS_NAMES**, but contains only the names of request body parameters.
 
 ## AUTH_TYPE
+
 **Not Implemented yet**
 
 This variable holds the authentication method used to validate a user, if any of the methods built into HTTP are used. In a reverse-proxy deployment, this information will not be available if the authentication is handled in the backend web server.
@@ -91,11 +92,13 @@ SecRule AUTH_TYPE "Basic" "id:14"
 ```
 
 ## DURATION
+
 **Not Implemented yet**
 
 Contains the number of microseconds elapsed since the beginning of the current transaction.
 
 ## ENV
+
 **Not Implemented yet**
 
 Collection that provides access to environment variables set by Coraza or other server modules. Requires a single parameter to specify the name of the desired variable.
@@ -286,6 +289,7 @@ SecRule PATH_INFO "^/(bin|etc|sbin|opt|usr)" "id:33"
 ```
 
 ## PERF_ALL
+
 **Not Implemented yet**
 
 This special variable contains a string that’s a combination of all other performance variables, arranged in the same order in which they appear in the Stopwatch2 audit log header. It’s intended for use in custom Apache logs
@@ -293,6 +297,7 @@ This special variable contains a string that’s a combination of all other perf
 **Supported on Coraza:** TBI
 
 ## PERF_COMBINED
+
 **Not Implemented yet**
 
 Contains the time, in microseconds, spent in Coraza during the current transaction. The value in this variable is arrived to by adding all the performance variables except PERF_SREAD (the time spent reading from persistent storage is already included in the phase measurements).
@@ -305,6 +310,7 @@ Contains the time, in microseconds, spent performing garbage collection.
 **Supported on Coraza:** TBI
 
 ## PERF_LOGGING
+
 **Not Implemented yet**
 
 Contains the time, in microseconds, spent in audit logging. This value is known only after the handling of a transaction is finalized, which means that it can only be logged using mod_log_config and the %{VARNAME}M syntax.
@@ -312,6 +318,7 @@ Contains the time, in microseconds, spent in audit logging. This value is known 
 **Supported on Coraza:** TBI
 
 ## PERF_PHASE1
+
 **Not Implemented yet**
 
 Contains the time, in microseconds, spent processing phase 1.
@@ -319,6 +326,7 @@ Contains the time, in microseconds, spent processing phase 1.
 **Supported on Coraza:** TBI
 
 ## PERF_PHASE2
+
 **Not Implemented yet**
 
 Contains the time, in microseconds, spent processing phase 2.
@@ -326,6 +334,7 @@ Contains the time, in microseconds, spent processing phase 2.
 **Supported on Coraza:** TBI
 
 ## PERF_PHASE3
+
 **Not Implemented yet**
 
 Contains the time, in microseconds, spent processing phase 3.
@@ -333,6 +342,7 @@ Contains the time, in microseconds, spent processing phase 3.
 **Supported on Coraza:** TBI
 
 ## PERF_PHASE4
+
 **Not Implemented yet**
 
 Contains the time, in microseconds, spent processing phase 4.
@@ -340,6 +350,7 @@ Contains the time, in microseconds, spent processing phase 4.
 **Supported on Coraza:** TBI
 
 ## PERF_PHASE5
+
 **Not Implemented yet**
 
 Contains the time, in microseconds, spent processing phase 5.
@@ -347,6 +358,7 @@ Contains the time, in microseconds, spent processing phase 5.
 **Supported on Coraza:** TBI
 
 ## PERF_RULES
+
 **Not Implemented yet**
 
 PERF_RULES is a collection, that is populated with the rules hitting the performance threshold defined with SecRulePerfTime. The collection contains the time, in microseconds, spent processing the individual rule. The various items in the collection can be accessed via the rule id.
@@ -369,6 +381,7 @@ SecAction "phase:5,id:95002,pass,log, msg:'File inspection took %{PERF_RULES.100
 The rule with id 10001 defines an external file inspection rule. The rule with id 95000 checks the size of the PERF_RULES collection. If the collection is empty, it writes a note in the logfile. Rule 95001 is executed for every item in the PERF_RULES collection. Every item is thus being checked against the limit of 1000 microseconds. If the rule spent at least that amount of time, then a note containing the rule id is being written to the logfile. The final rule 95002 notes the time spent in rule 10001 (the virus inspection).
 
 ## PERF_SREAD
+
 **Not Implemented yet**
 
 Contains the time, in microseconds, spent reading from persistent storage.
@@ -376,6 +389,7 @@ Contains the time, in microseconds, spent reading from persistent storage.
 **Supported on Coraza:** TBI
 
 ## PERF_SWRITE
+
 **Not Implemented yet**
 
 Contains the time, in microseconds, spent writing to persistent storage.
@@ -383,6 +397,7 @@ Contains the time, in microseconds, spent writing to persistent storage.
 **Supported on Coraza:** TBI
 
 ## QUERY_STRING
+
 Contains the query string part of a request URI. The value in QUERY_STRING is always provided raw, without URL decoding taking place.
 
 ```
@@ -390,6 +405,7 @@ SecRule QUERY_STRING "attack" "id:34"
 ```
 
 ## REMOTE_ADDR
+
 This variable holds the IP address of the remote client.
 
 ```
@@ -545,7 +561,7 @@ This variable holds the request protocol version information.
 SecRule REQUEST_PROTOCOL "!^HTTP/(0\.9|1\.0|1\.1)$" "id:51"
 ```
 
-## REQUEST_URI
+##  REQUEST_URI
 
 This variable holds the full request URL including the query string data (e.g., /index.php? p=X). However, it will never contain a domain name, even if it was provided on the request line.
 

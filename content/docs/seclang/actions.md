@@ -19,7 +19,7 @@ Actions can be categorized by how they affect overall processing:
 
 * **Disruptive actions** - Cause Coraza to do something. In many cases something means block transaction, but not in all. For example, the allow action is classified as a disruptive action, but it does the opposite of blocking. There can only be one disruptive action per rule (if there are multiple disruptive actions present, or inherited, only the last one will take effect), or rule chain (in a chain, a disruptive action can only appear in the first rule).
 {{< alert icon="👉" >}}
-Disruptive actions will NOT be executed if the `SecRuleEngine` is set to `DetectionOnly`. If you are creating exception/whitelisting rules that use the allow action, you should also add the `ctl:ruleEngine=On` action to execute the action.
+Disruptive actions will NOT be executed if the `SecRuleEngine` is set to `DetectionOnly`. If you are creating exception/ing rules that use the allow action, you should also add the `ctl:ruleEngine=On` action to execute the action.
 {{< /alert >}}
 * **Non-disruptive actions** - Do something, but that something does not and cannot affect the rule processing flow. Setting a variable, or changing its value is an example of a non-disruptive action. Non-disruptive action can appear in any rule, including each rule belonging to a chain.
 * **Flow actions** - These actions affect the rule flow (for example skip or skipAfter).
@@ -246,7 +246,8 @@ Request body processors will not interrupt a transaction if an error occurs duri
 
 **Action Group:** Disruptive
 
-**Example:** 
+**Example:**
+
 ```
 SecRule REQUEST_HEADERS:User-Agent "nikto" "log,deny,id:107,msg:'Nikto Scanners Identified'"
 ```
