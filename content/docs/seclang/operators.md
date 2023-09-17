@@ -137,6 +137,7 @@ SecRule &REQUEST_HEADERS_NAMES "@gt 15" "id:158"
 **Note:** If a value is provided that cannot be converted to an integer (i.e a string) this operator will treat that value as 0.
 
 ## inspectFile
+
 **Description:** Executes an external program for every variable in the target list. The contents of the variable is provided to the script as the first parameter on the command line. The program must be specified as the first parameter to the operator. As of version 2.5.0, if the supplied program filename is not absolute, it is treated as relative to the directory in which the configuration file resides. Also as of version 2.5.0, if the filename is determined to be a Lua script (based on its .lua extension), the script will be processed by the internal Lua engine. Internally processed scripts will often run faster (there is no process creation overhead) and have full access to the transaction context of Coraza.
 
 The `inspectFile` operator was initially designed for file inspection (hence the name), but it can also be used in any situation that requires decision making using external logic.
@@ -305,11 +306,11 @@ This operator is the same as @pm, except that it takes a list of files as argume
 
 **Example:**
 
-```
+```seclang
 # Detect suspicious user agents using the keywords in 
-# the files /path/to/blacklist1 and blacklist2 (the latter 
+# the files /path/to/denylist1 and 2 (the latter 
 # must be placed in the same folder as the configuration file) 
-SecRule REQUEST_HEADERS:User-Agent "@pmFromFile /path/to/blacklist1 blacklist2" "id:167"
+SecRule REQUEST_HEADERS:User-Agent "@pmFromFile /path/to/denylist1 denylist2" "id:167"
 ```
 
 **Notes:**
@@ -319,18 +320,18 @@ To allow easier inclusion of phrase files with rule sets, relative paths may be 
 The @pm operator phrases do not support metacharacters.
 Because this operator does not check for boundaries when matching, false positives are possible in some cases. For example, if you want to use @pm for IP address matching, the phrase 1.2.3.4 will potentially match more than one IP address (e.g., it will also match 1.2.3.40 or 1.2.3.41). To avoid the false positives, you can use your own boundaries in phrases. For example, use /1.2.3.4/ instead of just 1.2.3.4. Then, in your rules, also add the boundaries where appropriate. You will find a complete example in the example.
 
-```
+```seclang
 # Prepare custom REMOTE_ADDR variable 
 SecAction "phase:1,id:168,nolog,pass,setvar:tx.REMOTE_ADDR=/%{REMOTE_ADDR}/"
 
-# Check if REMOTE_ADDR is blacklisted 
-SecRule TX:REMOTE_ADDR "@pmFromFile blacklist.txt" "phase:1,id:169,deny,msg:'Blacklisted IP address'" 
+# Check if REMOTE_ADDR is denylisted 
+SecRule TX:REMOTE_ADDR "@pmFromFile denylist.txt" "phase:1,id:169,deny,msg:'Denylisted IP address'" 
 ```
 
-The file blacklist.txt may contain:
+The file denylist.txt may contain:
 
-```
-# ip-blacklist.txt contents:
+```seclang
+# ip-denylist.txt contents:
 # Note: All IPs must be prefixed/suffixed with "/" as the rules
 #   will add in this character as a boundary to ensure
 #   the entire IP is matched.
