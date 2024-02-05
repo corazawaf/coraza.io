@@ -3,7 +3,7 @@ title: "Directives"
 Description: "The following section outlines all of the Coraza directives. "
 lead: "The following section outlines all of the Coraza directives. "
 date: 2020-10-06T08:48:57+00:00
-lastmod: "2023-06-09T11:28:40+02:00"
+lastmod: "2024-02-05T09:55:41+01:00"
 draft: false
 images: []
 menu:
@@ -44,6 +44,21 @@ This directive is commonly used to set variables and initialize persistent colle
 **Example:**
 ```apache
 SecAction "nolog,phase:1,initcol:RESOURCE=%{REQUEST_FILENAME}"
+```
+
+## SecArgumentsLimit
+
+**Description:** Configures the maximum number of ARGS that will be accepted for processing.
+
+**Syntax:** `SecArgumentsLimit [LIMIT]`
+
+**Default:** `1000`
+
+Exceeding the limit will not be included.
+With JSON body processing, there is nothing to do when exceed the limit.
+**Example:**
+```apache
+SecArgumentsLimit 1000
 ```
 
 ## SecAuditEngine
@@ -426,5 +441,22 @@ The possible values are:
 
 **Syntax:** `SecRuleRemoveById ...[ID OR RANGE]`
 
+
+## SecRuleRemoveByTag
+
+**Description:** Removes the matching rules from the current configuration context.
+
+**Syntax:** `SecRuleRemoveByTag [TAG]`
+
+Normally, you would use [`SecRuleRemoveById`](#secruleremovebyid) to remove rules, but it may occasionally
+be easier to disable an entire group of rules with [`SecRuleRemoveByTag`](#secruleremovebytag). Matching is
+by case-sensitive string equality.
+
+**Example:**
+```apache
+SecRuleRemoveByTag attack-dos
+```
+
+**Note:** OWASP CRS has a list of supported tags https://coreruleset.org/docs/rules/metadata/
 
 
