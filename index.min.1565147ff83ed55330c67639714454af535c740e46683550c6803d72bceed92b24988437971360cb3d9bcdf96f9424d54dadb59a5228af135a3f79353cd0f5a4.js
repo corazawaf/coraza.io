@@ -8,7 +8,11 @@ SecAction # Description: Unconditionally processes the action list it receives a
 Syntax: SecAction &quot;action1,action2,action3,...&quot;
 This directive is commonly used to set variables and initialize persistent collections using the initcol action. The syntax of the parameter is identical to that of the third parameter of SecRule.
 Example:
-SecAction &quot;nolog,phase:1,initcol:RESOURCE=%{REQUEST_FILENAME}&quot; SecAuditEngine # Description: Configures the audit logging engine.
+SecAction &quot;nolog,phase:1,initcol:RESOURCE=%{REQUEST_FILENAME}&quot; SecArgumentsLimit # Description: Configures the maximum number of ARGS that will be accepted for processing.
+Syntax: SecArgumentsLimit [LIMIT]
+Default: 1000
+Exceeding the limit will not be included. With JSON body processing, there is nothing to do when exceed the limit. Example:
+SecArgumentsLimit 1000 SecAuditEngine # Description: Configures the audit logging engine.
 Syntax: SecAuditEngine RelevantOnly
 Default: Off
 The SecAuditEngine directive is used to configure the audit engine, which logs complete transactions.
@@ -102,6 +106,11 @@ Default: Off
 The possible values are:
 On: process rules Off: do not process rules DetectionOnly: process rules but never executes any disruptive actions (block, deny, drop, allow, proxy and redirect) SecRuleRemoveByID # Description: Removes the matching rules from the current configuration context.
 Syntax: SecRuleRemoveById ...[ID OR RANGE]
+SecRuleRemoveByTag # Description: Removes the matching rules from the current configuration context.
+Syntax: SecRuleRemoveByTag [TAG]
+Normally, you would use SecRuleRemoveById to remove rules, but it may occasionally be easier to disable an entire group of rules with SecRuleRemoveByTag. Matching is by case-sensitive string equality.
+Example:
+SecRuleRemoveByTag attack-dos Note: OWASP CRS has a list of supported tags https://coreruleset.org/docs/rules/metadata/
 `}),e.add({id:1,href:"/docs/seclang/syntax/",title:"Syntax",description:`The original language for configuring the ModSecurity Apache module was a set of extension directives to the Apache config language. This extension allows you to generate your Security Policy where you take an access control decision based on a set of parameters. Directives can be used to configure the engine itself, but also to send directives to the engine for access control. Directives look like the examples below:
 SecDirective1 some options SecDirective2 &quot;some option between brackets \\&quot; and escaped&quot; SecSampleDirective this \\ directive \\ is splitted \\ in lines Rule syntax # Rules are a special directive that must contain variables, operator and actions: SecRule VARIABLES &quot;@OPERATOR OPERATOR_ARGUMENTS&quot; &quot;ACTIONS&quot;.`,content:`The original language for configuring the ModSecurity Apache module was a set of extension directives to the Apache config language. This extension allows you to generate your Security Policy where you take an access control decision based on a set of parameters. Directives can be used to configure the engine itself, but also to send directives to the engine for access control. Directives look like the examples below:
 SecDirective1 some options SecDirective2 &quot;some option between brackets \\&quot; and escaped&quot; SecSampleDirective this \\ directive \\ is splitted \\ in lines Rule syntax # Rules are a special directive that must contain variables, operator and actions: SecRule VARIABLES &quot;@OPERATOR OPERATOR_ARGUMENTS&quot; &quot;ACTIONS&quot;.
