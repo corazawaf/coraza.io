@@ -30,9 +30,6 @@ jobs:
         id: pages
         uses: actions/configure-pages@v4
 
-      - name: Install Node.js dependencies
-        run: "[[ -f package-lock.json || -f npm-shrinkwrap.json ]] && npm install || true"
-
       - name: Install Go
         uses: actions/setup-go@v5
         with:
