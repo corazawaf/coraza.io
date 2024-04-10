@@ -38,9 +38,9 @@ Coraza is an open source, enterprise-grade, high performance Web Application Fir
 
 Key Features:
 
-* ⇲ **Drop-in** - Coraza is a drop-in alternative to replace Trustwave ModSecurity Engine [(planned to be deprecated on July 1, 2024)](https://www.modsecurity.org/) and supports industry-standard SecLang rule sets.
+* ⇲ **Drop-in** - Coraza is an alternative engine that has partial compatibility with ~Trustwave~[OWASP ModSecurity Engine](https://github.com/owasp-modsecurity/modsecurity/) and supports industry-standard SecLang rule sets.
 
-* 🔥 **Security** -  Coraza runs the [OWASP Core Rule Set (CRS)](https://coreruleset.org) to protect your web applications from a wide range of attacks, including the OWASP Top Ten, with a minimum of false alerts. CRS protects from many common attack categories including SQL Injection (SQLi), Cross Site Scripting (XSS), PHP & Java Code Injection, HTTPoxy, Shellshock, Scripting/Scanner/Bot Detection & Metadata & Error Leakages.
+* 🔥 **Security** -  Coraza runs the [OWASP CRS](https://coreruleset.org) to protect your web applications from a wide range of attacks, including the OWASP Top Ten, with a minimum of false alerts. CRS protects from many common attack categories including SQL Injection (SQLi), Cross Site Scripting (XSS), PHP & Java Code Injection, HTTPoxy, Shellshock, Scripting/Scanner/Bot Detection & Metadata & Error Leakages.
 
 * 🔌 **Extensible** - Coraza is a library at its core, with many integrations to deploy on-premise Web Application Firewall instances. Audit Loggers, persistence engines, operators, actions, create your own functionalities to extend Coraza as much as you want.
 
@@ -48,13 +48,13 @@ Key Features:
 
 * ﹡ **Simplicity** - Anyone can understand and modify the Coraza source code. It is easy to extend Coraza with new functionality.
 
-* 💬 **Community** - Coraza is a community project, contributions are accepted and all ideas will be considered. Find contributor guidance in the [CONTRIBUTION](https://github.com/corazawaf/coraza/blob/v2/master/CONTRIBUTING.md) document.
+* 💬 **Community** - Coraza is a community project, contributions are accepted and all ideas will be considered. Find contributor guidance in the [CONTRIBUTION](https://github.com/corazawaf/coraza/blob/main/CONTRIBUTING.md) document.
 
 <br/>
 
 ## Integrations
 
-The Coraza Project maintains implementations and plugins for the following servers: 
+The Coraza Project maintains implementations and plugins for the following servers:
 
 * [Caddy Reverse Proxy and Webserver Plugin](https://github.com/corazawaf/coraza-caddy) - stable, needs a maintainer
 * [Proxy WASM extension](https://github.com/corazawaf/coraza-proxy-wasm) for proxies with proxy-wasm support (e.g. Envoy) - stable, still under development
@@ -158,7 +158,7 @@ Contributions are welcome! Please refer to [CONTRIBUTING.md](./CONTRIBUTING.md) 
 
 * [Babiel](https://babiel.com) (supporter)
 
-### Author on Twitter 
+### Author on Twitter
 
 - [@jptosso](https://twitter.com/jptosso)
 

@@ -97,8 +97,8 @@ Once the action is created, it must be wrapper inside a ```type PluginActionWrap
 
 ```go
 import(
-    "github.com/corazawaf/coraza/v3/actions"
-    "github.com/corazawaf/coraza/v3/types"
+    "github.com/corazawaf/coraza/v3/experimental/plugins/actions"
+    "github.com/corazawaf/coraza/v3/experimental/plugins/types"
 )
 
 func init() {
@@ -130,7 +130,7 @@ type Transformation = func(input string, tools *Tools) string
 
 ```go
 import (
-  "github.com/corazawaf/coraza/v3/transformations"
+  "github.com/corazawaf/coraza/v3/experimental/plugins/transformations"
   "strings"
 )
 
@@ -184,8 +184,8 @@ Once the operator is created, it must be wrapper inside a ```type PluginOperator
 
 ```go
 import(
-    "github.com/corazawaf/coraza/v3/operators"
-    "github.com/corazawaf/coraza/v3/types"
+    "github.com/corazawaf/coraza/v3/experimental/plugins/operators"
+    "github.com/corazawaf/coraza/v3/experimental/plugins/types"
 )
 
 func init() {
@@ -207,9 +207,9 @@ There are no special helpers to test plugins but you may use the seclang compile
 
 ```go
 import(
-    "github.com/jptosso/coraza-waf/v2/seclang"
-    "github.com/jptosso/coraza-waf/v2/types"
-    "github.com/jptosso/coraza-waf/v2/transformations"
+    "github.com/corazawaf/coraza/v3/experimental/plugins/seclang"
+    "github.com/corazawaf/coraza/v3/experimental/plugins/types"
+    "github.com/corazawaf/coraza/v3/experimental/plugins/transformations"
     "strings"
     "testing"
 )
@@ -259,7 +259,7 @@ license: apache2
 description: Short description to display in plugins.coraza.io
 # We are using Ruby Gem version syntax: https://guides.rubygems.org/patterns/#pessimistic-version-constraint
 # The min supported Coraza version, each item represents an AND operator
-version: 
+version:
   - ">= v1.1"
   - "< v2"
   # or ~> that is identical to the previous statements
