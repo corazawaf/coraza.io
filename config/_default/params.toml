@@ -7,7 +7,7 @@ titleAddition = "Enterprise-grade open source web application firewall library"
 description = "OWASP Coraza is an enterprise-grade, open-source, and high-performance Web Application Firewall library ready to protect your beloved applications."
 
 # Alert
-alert = true
+alert = false
 alertDismissable = true
 alertText = "Coraza v3 <a class=\"alert-link\" href=\"https://github.com/corazawaf/coraza/releases\">available here!</a>"
 
