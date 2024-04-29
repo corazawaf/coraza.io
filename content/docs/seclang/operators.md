@@ -20,7 +20,7 @@ toc: true
 **Example:**
 
 ```
-# Detect request line that does not begin with "GET" 
+# Detect request line that does not begin with "GET"
 SecRule REQUEST_LINE "!@beginsWith GET" "id:149"
 ```
 
@@ -31,7 +31,7 @@ SecRule REQUEST_LINE "!@beginsWith GET" "id:149"
 **Example:**
 
 ```
-# Detect ".php" anywhere in the request line 
+# Detect ".php" anywhere in the request line
 SecRule REQUEST_LINE "@contains .php" "id:150"
 ```
 
@@ -42,7 +42,7 @@ SecRule REQUEST_LINE "@contains .php" "id:150"
 **Example:**
 
 ```
-# Detect "select" anywhere in ARGS 
+# Detect "select" anywhere in ARGS
 SecRule ARGS "@containsWord select" "id:151"
 ```
 
@@ -52,6 +52,32 @@ Would match on -
 But not on -
 Your site has a wide selection of computers.
 
+## detectSQLi
+
+**Description:** Returns true if SQL injection payload is found. This operator uses LibInjection to detect SQLi attacks.
+
+**Example**:
+
+```seclang
+# Detect SQL Injection inside request uri data"
+SecRule REQUEST_URI "@detectSQLi" "id:152"
+```
+
+**Note:** This operator supports the "capture" action.
+
+## detectXSS
+
+**Description:** Returns true if XSS injection is found. This operator uses LibInjection to detect XSS attacks.
+
+**Example:**
+
+```seclang
+# Detect XSS Injection inside request body
+SecRule REQUEST_BODY "@detectXSS" "id:12345,log,deny"
+```
+
+**Note:** This operator supports the "capture" action.
+
 ## endsWith
 
 **Description:** Returns _true_ if the parameter string is found at the end of the input. Macro expansion is performed on the parameter string before comparison.
@@ -59,9 +85,22 @@ Your site has a wide selection of computers.
 **Example:**
 
 ```
-# Detect request line that does not end with "HTTP/1.1" 
+# Detect request line that does not end with "HTTP/1.1"
 SecRule REQUEST_LINE "!@endsWith HTTP/1.1" "id:152"
 ```
+
+## eq
+
+**Description:** Performs numerical comparison and returns true if the input value is equal to the provided parameter. Macro expansion is performed on the parameter string before comparison.
+
+**Example:**
+
+```
+# Detect exactly 15 request headers
+SecRule &REQUEST_HEADERS_NAMES "@eq 15" "id:153"
+```
+
+**Note:** If a value is provided that cannot be converted to an integer (i.e a string) this operator will treat that value as 0.
 
 ## fuzzyHash
 
@@ -77,19 +116,6 @@ For further information on ssdeep, visit its site: http://ssdeep.sourceforge.net
 SecRule REQUEST_BODY "\@fuzzyHash /path/to/ssdeep/hashes.txt 6" "id:192372,log,deny"
 ```
 
-## eq
-
-**Description:** Performs numerical comparison and returns true if the input value is equal to the provided parameter. Macro expansion is performed on the parameter string before comparison.
-
-**Example:**
-
-```
-# Detect exactly 15 request headers 
-SecRule &REQUEST_HEADERS_NAMES "@eq 15" "id:153"
-```
-
-**Note:** If a value is provided that cannot be converted to an integer (i.e a string) this operator will treat that value as 0.
-
 ## ge
 
 **Description:** Performs numerical comparison and returns true if the input value is greater than or equal to the provided parameter. Macro expansion is performed on the parameter string before comparison.
@@ -97,7 +123,7 @@ SecRule &REQUEST_HEADERS_NAMES "@eq 15" "id:153"
 **Example:**
 
 ```
-# Detect 15 or more request headers 
+# Detect 15 or more request headers
 SecRule &REQUEST_HEADERS_NAMES "@ge 15" "id:154"
 ```
 
@@ -110,10 +136,10 @@ SecRule &REQUEST_HEADERS_NAMES "@ge 15" "id:154"
 **Example:** The geoLookup operator matches on success and is thus best used in combination with nolog,pass. If you wish to block on a failed lookup (which may be over the top, depending on how accurate the geolocation database is), the following example demonstrates how best to do it:
 
 ```
-# Configure geolocation database 
-SecGeoLookupDb /path/to/GeoLiteCity.dat 
-... 
-# Lookup IP address 
+# Configure geolocation database
+SecGeoLookupDb /path/to/GeoLiteCity.dat
+...
+# Lookup IP address
 SecRule REMOTE_ADDR "@geoLookup" "phase:1,id:155,nolog,pass"
 
 # Block IP address for which geolocation failed
@@ -130,7 +156,7 @@ See the GEO variable for an example and more information on various fields avail
 **Example:**
 
 ```
-# Detect more than 15 headers in a request 
+# Detect more than 15 headers in a request
 SecRule &REQUEST_HEADERS_NAMES "@gt 15" "id:158"
 ```
 
@@ -188,7 +214,7 @@ print "$output\n";
 **Example:** Using the runav.pl script:
 
 ```
-# Execute external program to validate uploaded files 
+# Execute external program to validate uploaded files
 SecRule FILES_TMPNAMES "@inspectFile /path/to/util/runav.pl" "id:159"
 ```
 
@@ -223,6 +249,23 @@ SecRule REMOTE_ADDR "@ipMatch 192.168.1.100,192.168.1.50,10.10.50.0/24" "id:162"
 
 short alias for `ipMatchFromFile`
 
+## ipMatchFromDataSet
+
+**Description:** This operator is the same as @ipFromFile below, except that it uses a memory dataset instead of a file as argument. It will match any one of the IPs listed in the dataset anywhere in the target value.
+
+**Example:**
+
+```seclang
+SecDataset ip_dataset "
+127.0.0.1
+8.8.8.8
+"
+SecRule REQUEST_ADDR "@ipFromDataset ip_dataset" "id:1,log,phase:1,pass,msg:'Match ip_dataset'"
+```
+
+**Note:** SecDatasets are added as replacement for `.data` files. WASM support is an essential feature of Coraza v3, but users cannot fully enjoy its potential because of file reading limitations. For this reason, SecDataset is a decent replacement for .data files.
+
+
 ## ipMatchFromFile
 
 **Description:** Performs a fast ipv4 or ipv6 match of REMOTE_ADDR variable, loading data from a file. Can handle the following formats:
@@ -255,7 +298,7 @@ The file ips.txt may contain:
 **Example:**
 
 ```
-# Detect 15 or fewer headers in a request 
+# Detect 15 or fewer headers in a request
 SecRule &REQUEST_HEADERS_NAMES "@le 15" "id:164"
 ```
 
@@ -268,7 +311,7 @@ SecRule &REQUEST_HEADERS_NAMES "@le 15" "id:164"
 **Example:**
 
 ```
-# Detect fewer than 15 headers in a request 
+# Detect fewer than 15 headers in a request
 SecRule &REQUEST_HEADERS_NAMES "@lt 15" "id:165"
 ```
 
@@ -285,7 +328,7 @@ SecRule &REQUEST_HEADERS_NAMES "@lt 15" "id:165"
 **Example:**
 
 ```
-# Detect suspicious client by looking at the user agent identification 
+# Detect suspicious client by looking at the user agent identification
 SecRule REQUEST_HEADERS:User-Agent "@pm WebZIP WebCopier Webster WebStripper ... SiteSnagger ProWebWalker CheeseBot" "id:166"
 ```
 
@@ -298,6 +341,22 @@ SecRule REQUEST_HEADERS:User-Agent "@pm WebZIP WebCopier Webster WebStripper ...
 
 Short alias for pmFromFile.
 
+## pmFromDataset
+
+**Description:** This operator is the same as @pmFromFile below, except that it uses a memory dataset instead of a file as argument. It will match any one of the phrases listed in the dataset anywhere in the target value.
+
+**Example:**
+
+```seclang
+SecDataset pm_dataset "
+uri1
+uri2
+"
+SecRule REQUEST_URI "@pmFromDataset pm_dataset" "id:1,log,phase:1,pass,msg:'Match pm_dataset'"
+```
+
+**Note:** SecDatasets are added as replacement for `.data` files. WASM support is an essential feature of Coraza v3, but users cannot fully enjoy its potential because of file reading limitations. For this reason, SecDataset is a decent replacement for .data files.
+
 ## pmFromFile
 
 **Description:** Performs a case-insensitive match of the provided phrases against the desired input value. The operator uses a set-based matching algorithm (Aho-Corasick), which means that it will match any number of keywords in parallel. When matching of a large number of keywords is needed, this operator performs much better than a regular expression.
@@ -307,9 +366,9 @@ This operator is the same as @pm, except that it takes a list of files as argume
 **Example:**
 
 ```seclang
-# Detect suspicious user agents using the keywords in 
-# the files /path/to/denylist1 and 2 (the latter 
-# must be placed in the same folder as the configuration file) 
+# Detect suspicious user agents using the keywords in
+# the files /path/to/denylist1 and 2 (the latter
+# must be placed in the same folder as the configuration file)
 SecRule REQUEST_HEADERS:User-Agent "@pmFromFile /path/to/denylist1 denylist2" "id:167"
 ```
 
@@ -321,11 +380,11 @@ The @pm operator phrases do not support metacharacters.
 Because this operator does not check for boundaries when matching, false positives are possible in some cases. For example, if you want to use @pm for IP address matching, the phrase 1.2.3.4 will potentially match more than one IP address (e.g., it will also match 1.2.3.40 or 1.2.3.41). To avoid the false positives, you can use your own boundaries in phrases. For example, use /1.2.3.4/ instead of just 1.2.3.4. Then, in your rules, also add the boundaries where appropriate. You will find a complete example in the example.
 
 ```seclang
-# Prepare custom REMOTE_ADDR variable 
+# Prepare custom REMOTE_ADDR variable
 SecAction "phase:1,id:168,nolog,pass,setvar:tx.REMOTE_ADDR=/%{REMOTE_ADDR}/"
 
-# Check if REMOTE_ADDR is denylisted 
-SecRule TX:REMOTE_ADDR "@pmFromFile denylist.txt" "phase:1,id:169,deny,msg:'Denylisted IP address'" 
+# Check if REMOTE_ADDR is denylisted
+SecRule TX:REMOTE_ADDR "@pmFromFile denylist.txt" "phase:1,id:169,deny,msg:'Denylisted IP address'"
 ```
 
 The file denylist.txt may contain:
@@ -336,7 +395,7 @@ The file denylist.txt may contain:
 #   will add in this character as a boundary to ensure
 #   the entire IP is matched.
 # SecAction "phase:1,id:170,pass,nolog,setvar:tx.remote_addr='/%{REMOTE_ADDR}/'"
-/1.2.3.4/ 
+/1.2.3.4/
 /5.6.7.8/
 ```
 
@@ -360,6 +419,20 @@ setvar:tx.%{rule.id}-AUTOMATION/MALICIOUS-%{matched_var_name}=%{matched_var},set
 **Note:** If the RBL used is either multi.uribl.com or zen.spamhaus.org combined RBLs, it is possible to also parse the return codes in the last octet of the DNS response to identify which specific RBL the IP was found in.
 
 **Note:** This operator supports the "capture" action.
+
+## restpath
+
+**Description:** takes as argument a path expression in the format `/path/to/resource/{id}/{name}/{age}` and helps evaluation of application urls. The path will be transformed to a regex and assigned to variables in `ARGS_PATH`, `ARGS_NAMES`, and `ARGS`
+
+**Syntax:** `"/some-random/url-{id}/{name}"`
+
+**Examples:**
+
+```seclang
+SecRule REQUEST_URI "@restpath /some/random/url/{id}/{name}" \
+  "deny,chain"
+  SecRule ARGS_PATH:id "!@eq %{user:session_id}" "t:none"
+```
 
 ## rsub
 
@@ -393,13 +466,13 @@ Regular expressions are a very powerful tool. You are strongly advised to read t
 **Examples:**
 
 ```
-# Detect Nikto 
+# Detect Nikto
 SecRule REQUEST_HEADERS:User-Agent "@rx nikto" phase:1,id:173,t:lowercase
 
 SecRule REQUEST_HEADERS:User-Agent "@rx (?i)nikto" phase:1,id:174,t:none
-# Detect Nikto with a case-insensitive pattern 
+# Detect Nikto with a case-insensitive pattern
 
-# Detect Nikto with a case-insensitive pattern 
+# Detect Nikto with a case-insensitive pattern
 SecRule REQUEST_HEADERS:User-Agent "(?i)nikto" "id:175"
 ```
 
@@ -419,7 +492,7 @@ Regular expressions are a very powerful tool. You are strongly advised to read t
 **Example:**
 
 ```
-# Detect request parameters "foo" that do not # contain "bar", exactly. 
+# Detect request parameters "foo" that do not # contain "bar", exactly.
 SecRule ARGS:foo "!@streq bar" "id:176"
 ```
 
@@ -430,7 +503,7 @@ SecRule ARGS:foo "!@streq bar" "id:176"
 **Example:**
 
 ```
-# Detect suspicious client by looking at the user agent identification 
+# Detect suspicious client by looking at the user agent identification
 SecRule REQUEST_HEADERS:User-Agent "@strmatch WebZIP" "id:177"
 ```
 
@@ -445,6 +518,16 @@ unconditionalMatch
 SecRule REMOTE_ADDR "@unconditionalMatch" "id:1000,phase:1,pass,nolog,t:hexEncode,setvar:TX.ip_hash=%{MATCHED_VAR}"
 ```
 
+## unconditionalMatch
+
+**Description:** Will force the rule to always return true. This is similar to SecAction however all actions that occur as a result of a rule matching will fire such as the setting of MATCHED_VAR. This can also be part a chained rule.
+
+**Example:**
+
+```seclang
+SecRule REMOTE_ADDR "@unconditionalMatch" "id:1000,phase:1,pass,nolog,t:hexEncode,setvar:TX.ip_hash=%{MATCHED_VAR}"
+```
+
 ## validateByteRange
 
 **Description:** Validates that the byte values used in input fall into the range specified by the operator parameter. This operator matches on an input value that contains bytes that are not in the specified range.
@@ -452,16 +535,16 @@ SecRule REMOTE_ADDR "@unconditionalMatch" "id:1000,phase:1,pass,nolog,t:hexEncod
 **Example:**
 
 ```
-# Enforce very strict byte range for request parameters (only 
-# works for the applications that do not use the languages other 
-# than English). 
+# Enforce very strict byte range for request parameters (only
+# works for the applications that do not use the languages other
+# than English).
 SecRule ARGS "@validateByteRange 10, 13, 32-126" "id:178"
 ```
 
 The validateByteRange is most useful when used to detect the presence of NUL bytes, which don’t have a legitimate use, but which are often used as an evasion technique.
 
 ```
-# Do not allow NUL bytes 
+# Do not allow NUL bytes
 SecRule ARGS "@validateByteRange 1-255" "id:179"
 ```
 
@@ -480,6 +563,18 @@ SecRule ARGS "@validateByteRange 1-255" "id:179"
 SecRule REQUEST_URI "@validatehash "product_info|product_list" "phase:1,deny,id:123456"
 ```
 
+## validateNid
+
+**Description:** Validates the matched argument contains a valid `National IDentifier`
+
+**Syntax:** `@validatenid cl|us`
+
+**Example:**
+
+```seclang
+SecRule ARGS:nid "!@validatenid cl" "id:100,nolog,noauditlog,phase:2,deny"
+```
+
 ## validateUrlEncoding
 
 **Description:** Validates the URL-encoded characters in the provided input string.
@@ -487,7 +582,7 @@ SecRule REQUEST_URI "@validatehash "product_info|product_list" "phase:1,deny,id:
 **Example:**
 
 ```
-# Validate URL-encoded characters in the request URI 
+# Validate URL-encoded characters in the request URI
 SecRule REQUEST_URI_RAW "@validateUrlEncoding" "id:192"
 ```
 
@@ -500,7 +595,7 @@ Coraza will automatically decode the URL-encoded characters in request parameter
 **Example:**
 
 ```
-# Make sure all request parameters contain only valid UTF-8 
+# Make sure all request parameters contain only valid UTF-8
 SecRule ARGS "@validateUtf8Encoding" "id:193"
 ```
 
@@ -524,8 +619,8 @@ The @validateUtf8Encoding operator detects the following problems:
 **Example:**
 
 ```
-# Detect credit card numbers in parameters and 
-# prevent them from being logged to audit log 
+# Detect credit card numbers in parameters and
+# prevent them from being logged to audit log
 SecRule ARGS "@verifyCC \d{13,16}" "phase:2,id:194,nolog,pass,msg:'Potential credit card number',sanitiseMatched"
 ```
 
@@ -538,7 +633,7 @@ SecRule ARGS "@verifyCC \d{13,16}" "phase:2,id:194,nolog,pass,msg:'Potential cre
 **Example:**
 
 ```
-# Detect request methods other than GET, POST and HEAD 
+# Detect request methods other than GET, POST and HEAD
 SecRule REQUEST_METHOD "!@within GET,POST,HEAD"
 ```
 
@@ -553,3 +648,4 @@ t:lowercase,\
 setvar:'tx.header_name=/%{tx.0}/'"
    SecRule TX:header_name "@within /proxy/ /lock-token/ /content-range/ /translate/ /if/" "t:none"
 ```
+
