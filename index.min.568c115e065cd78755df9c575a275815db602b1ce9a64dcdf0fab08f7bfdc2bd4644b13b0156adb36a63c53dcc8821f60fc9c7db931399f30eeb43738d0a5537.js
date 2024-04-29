@@ -386,16 +386,22 @@ Example:
 Example:
 # Detect &quot;select&quot; anywhere in ARGS SecRule ARGS &quot;@containsWord select&quot; &quot;id:151&quot; Would match on - -1 union select BENCHMARK(2142500,MD5(CHAR(115,113,108,109,97,112))) FROM wp_users WHERE ID=1 and (ascii(substr(user_login,1,1))&amp;0x01=0) from wp_users where ID=1&ndash;
 But not on - Your site has a wide selection of computers.
+detectSQLi # Description: Returns true if SQL injection payload is found. This operator uses LibInjection to detect SQLi attacks.
+Example:
+# Detect SQL Injection inside request uri data&quot; SecRule REQUEST_URI &quot;@detectSQLi&quot; &quot;id:152&quot; Note: This operator supports the &ldquo;capture&rdquo; action.
+detectXSS # Description: Returns true if XSS injection is found. This operator uses LibInjection to detect XSS attacks.
+Example:
+# Detect XSS Injection inside request body SecRule REQUEST_BODY &quot;@detectXSS&quot; &quot;id:12345,log,deny&quot; Note: This operator supports the &ldquo;capture&rdquo; action.
 endsWith # Description: Returns true if the parameter string is found at the end of the input. Macro expansion is performed on the parameter string before comparison.
 Example:
-# Detect request line that does not end with &quot;HTTP/1.1&quot; SecRule REQUEST_LINE &quot;!@endsWith HTTP/1.1&quot; &quot;id:152&quot; fuzzyHash # Description: The fuzzyHash operator uses the ssdeep, which is a program for computing context triggered piecewise hashes (CTPH). Also called fuzzy hashes, CTPH can match inputs that have homologies. Such inputs have sequences of identical bytes in the same order, although bytes in between these sequences may be different in both content and length.
+# Detect request line that does not end with &quot;HTTP/1.1&quot; SecRule REQUEST_LINE &quot;!@endsWith HTTP/1.1&quot; &quot;id:152&quot; eq # Description: Performs numerical comparison and returns true if the input value is equal to the provided parameter. Macro expansion is performed on the parameter string before comparison.
+Example:
+# Detect exactly 15 request headers SecRule &amp;REQUEST_HEADERS_NAMES &quot;@eq 15&quot; &quot;id:153&quot; Note: If a value is provided that cannot be converted to an integer (i.e a string) this operator will treat that value as 0.
+fuzzyHash # Description: The fuzzyHash operator uses the ssdeep, which is a program for computing context triggered piecewise hashes (CTPH). Also called fuzzy hashes, CTPH can match inputs that have homologies. Such inputs have sequences of identical bytes in the same order, although bytes in between these sequences may be different in both content and length.
 For further information on ssdeep, visit its site: http://ssdeep.sourceforge.net/
 Supported: TBI
 Example:
-SecRule REQUEST_BODY &quot;\\@fuzzyHash /path/to/ssdeep/hashes.txt 6&quot; &quot;id:192372,log,deny&quot; eq # Description: Performs numerical comparison and returns true if the input value is equal to the provided parameter. Macro expansion is performed on the parameter string before comparison.
-Example:
-# Detect exactly 15 request headers SecRule &amp;REQUEST_HEADERS_NAMES &quot;@eq 15&quot; &quot;id:153&quot; Note: If a value is provided that cannot be converted to an integer (i.e a string) this operator will treat that value as 0.
-ge # Description: Performs numerical comparison and returns true if the input value is greater than or equal to the provided parameter. Macro expansion is performed on the parameter string before comparison.
+SecRule REQUEST_BODY &quot;\\@fuzzyHash /path/to/ssdeep/hashes.txt 6&quot; &quot;id:192372,log,deny&quot; ge # Description: Performs numerical comparison and returns true if the input value is greater than or equal to the provided parameter. Macro expansion is performed on the parameter string before comparison.
 Example:
 # Detect 15 or more request headers SecRule &amp;REQUEST_HEADERS_NAMES &quot;@ge 15&quot; &quot;id:154&quot; Note: If a value is provided that cannot be converted to an integer (i.e a string) this operator will treat that value as 0.
 geoLookup # Description: Performs a geolocation lookup using the IP address in input against the geolocation database previously configured using SecGeoLookupDb. If the lookup is successful, the obtained information is captured in the GEO collection.
@@ -415,6 +421,9 @@ ipMatch # Description: Performs a fast ipv4 or ipv6 match of REMOTE_ADDR variabl
 Full IPv4 Address - 192.168.1.100 Network Block/CIDR Address - 192.168.1.0/24 Full IPv6 Address - 2001:db8:85a3:8d3:1319:8a2e:370:7348 Network Block/CIDR Address - 2001:db8:85a3:8d3:1319:8a2e:370:0/24 Examples:
 Individual Address:
 SecRule REMOTE_ADDR &quot;@ipMatch 192.168.1.100&quot; &quot;id:161&quot; Multiple Addresses w/network block: SecRule REMOTE_ADDR &quot;@ipMatch 192.168.1.100,192.168.1.50,10.10.50.0/24&quot; &quot;id:162&quot; ipMatchF # short alias for ipMatchFromFile
+ipMatchFromDataSet # Description: This operator is the same as @ipFromFile below, except that it uses a memory dataset instead of a file as argument. It will match any one of the IPs listed in the dataset anywhere in the target value.
+Example:
+SecDataset ip_dataset &quot; 127.0.0.1 8.8.8.8 &quot; SecRule REQUEST_ADDR &quot;@ipFromDataset ip_dataset&quot; &quot;id:1,log,phase:1,pass,msg:'Match ip_dataset'&quot; Note: SecDatasets are added as replacement for .data files. WASM support is an essential feature of Coraza v3, but users cannot fully enjoy its potential because of file reading limitations. For this reason, SecDataset is a decent replacement for .data files.
 ipMatchFromFile # Description: Performs a fast ipv4 or ipv6 match of REMOTE_ADDR variable, loading data from a file. Can handle the following formats:
 Full IPv4 Address - 192.168.1.100 Network Block/CIDR Address - 192.168.1.0/24 Full IPv6 Address - 2001:db8:85a3:8d3:1319:8a2e:370:7348 Network Block/CIDR Address - 2001:db8:85a3:8d3:1319:8a2e:370:0/24 Examples:
 SecRule REMOTE_ADDR &quot;@ipMatchFromFile ips.txt&quot; &quot;id:163&quot; The file ips.txt may contain:
@@ -431,6 +440,9 @@ pm # Description: Performs a case-insensitive match of the provided phrases agai
 Example:
 # Detect suspicious client by looking at the user agent identification SecRule REQUEST_HEADERS:User-Agent &quot;@pm WebZIP WebCopier Webster WebStripper ... SiteSnagger ProWebWalker CheeseBot&quot; &quot;id:166&quot; 👉 This operator supports a snort/suricata content style. ie: "@pm A|42|C|44|F". ⚠️ This operator does not support macro expansion. Note: This operator supports the &ldquo;capture&rdquo; action.
 pmf # Short alias for pmFromFile.
+pmFromDataset # Description: This operator is the same as @pmFromFile below, except that it uses a memory dataset instead of a file as argument. It will match any one of the phrases listed in the dataset anywhere in the target value.
+Example:
+SecDataset pm_dataset &quot; uri1 uri2 &quot; SecRule REQUEST_URI &quot;@pmFromDataset pm_dataset&quot; &quot;id:1,log,phase:1,pass,msg:'Match pm_dataset'&quot; Note: SecDatasets are added as replacement for .data files. WASM support is an essential feature of Coraza v3, but users cannot fully enjoy its potential because of file reading limitations. For this reason, SecDataset is a decent replacement for .data files.
 pmFromFile # Description: Performs a case-insensitive match of the provided phrases against the desired input value. The operator uses a set-based matching algorithm (Aho-Corasick), which means that it will match any number of keywords in parallel. When matching of a large number of keywords is needed, this operator performs much better than a regular expression.
 This operator is the same as @pm, except that it takes a list of files as arguments. It will match any one of the phrases listed in the file(s) anywhere in the target value.
 Example:
@@ -444,7 +456,10 @@ Example:
 SecRule REMOTE_ADDR &quot;@rbl sbl-xbl.spamhaus.org&quot; &quot;phase:1,id:171,t:none,pass,nolog,auditlog,msg:'RBL Match for SPAM Source',tag:'AUTOMATION/MALICIOUS',severity:'2',setvar:'tx.msg=%{rule.msg}',setvar:tx.automation_score=+%{tx.warning_anomaly_score},setvar:tx.anomaly_score=+%{tx.warning_anomaly_score}, \\ setvar:tx.%{rule.id}-AUTOMATION/MALICIOUS-%{matched_var_name}=%{matched_var},setvar:ip.spammer=1,expirevar:ip.spammer=86400,setvar:ip.previous_rbl_check=1,expirevar:ip.previous_rbl_check=86400,skipAfter:END_RBL_CHECK&quot; Note: If the RBL used is dnsbl.httpbl.org (Honeypot Project RBL) then the SecHttpBlKey directive must specify the user&rsquo;s registered API key.
 Note: If the RBL used is either multi.uribl.com or zen.spamhaus.org combined RBLs, it is possible to also parse the return codes in the last octet of the DNS response to identify which specific RBL the IP was found in.
 Note: This operator supports the &ldquo;capture&rdquo; action.
-rsub # Description: Performs regular expression data substitution when applied to either the STREAM_INPUT_BODY or STREAM_OUTPUT_BODY variables. This operator also supports macro expansion. Starting with Coraza 2.7.0 this operator supports the syntax |hex| allowing users to use special chars like \\n \\r
+restpath # Description: takes as argument a path expression in the format /path/to/resource/{id}/{name}/{age} and helps evaluation of application urls. The path will be transformed to a regex and assigned to variables in ARGS_PATH, ARGS_NAMES, and ARGS
+Syntax: &quot;/some-random/url-{id}/{name}&quot;
+Examples:
+SecRule REQUEST_URI &quot;@restpath /some/random/url/{id}/{name}&quot; \\ &quot;deny,chain&quot; SecRule ARGS_PATH:id &quot;!@eq %{user:session_id}&quot; &quot;t:none&quot; rsub # Description: Performs regular expression data substitution when applied to either the STREAM_INPUT_BODY or STREAM_OUTPUT_BODY variables. This operator also supports macro expansion. Starting with Coraza 2.7.0 this operator supports the syntax |hex| allowing users to use special chars like \\n \\r
 Syntax: @rsub s/regex/str/[id]
 Supported: TBI
 Examples: Removing HTML Comments from response bodies:
@@ -463,6 +478,8 @@ Example:
 # Detect suspicious client by looking at the user agent identification SecRule REQUEST_HEADERS:User-Agent &quot;@strmatch WebZIP&quot; &quot;id:177&quot; Note: Starting on Coraza v2.6.0 this operator supports a snort/suricata content style. ie: &ldquo;@strmatch A|42|C|44|F&rdquo;. unconditionalMatch
 Description: Will force the rule to always return true. This is similar to SecAction however all actions that occur as a result of a rule matching will fire such as the setting of MATCHED_VAR. This can also be part a chained rule.
 Example:
+SecRule REMOTE_ADDR &quot;@unconditionalMatch&quot; &quot;id:1000,phase:1,pass,nolog,t:hexEncode,setvar:TX.ip_hash=%{MATCHED_VAR}&quot; unconditionalMatch # Description: Will force the rule to always return true. This is similar to SecAction however all actions that occur as a result of a rule matching will fire such as the setting of MATCHED_VAR. This can also be part a chained rule.
+Example:
 SecRule REMOTE_ADDR &quot;@unconditionalMatch&quot; &quot;id:1000,phase:1,pass,nolog,t:hexEncode,setvar:TX.ip_hash=%{MATCHED_VAR}&quot; validateByteRange # Description: Validates that the byte values used in input fall into the range specified by the operator parameter. This operator matches on an input value that contains bytes that are not in the specified range.
 Example:
 # Enforce very strict byte range for request parameters (only # works for the applications that do not use the languages other # than English). SecRule ARGS &quot;@validateByteRange 10, 13, 32-126&quot; &quot;id:178&quot; The validateByteRange is most useful when used to detect the presence of NUL bytes, which don’t have a legitimate use, but which are often used as an evasion technique.
@@ -470,7 +487,10 @@ Example:
 validateHash # Description: Validates REQUEST_URI that contains data protected by the hash engine.
 Supported: TBI
 Example:
-# Validates requested URI that matches a regular expression. SecRule REQUEST_URI &quot;@validatehash &quot;product_info|product_list&quot; &quot;phase:1,deny,id:123456&quot; validateUrlEncoding # Description: Validates the URL-encoded characters in the provided input string.
+# Validates requested URI that matches a regular expression. SecRule REQUEST_URI &quot;@validatehash &quot;product_info|product_list&quot; &quot;phase:1,deny,id:123456&quot; validateNid # Description: Validates the matched argument contains a valid National IDentifier
+Syntax: @validatenid cl|us
+Example:
+SecRule ARGS:nid &quot;!@validatenid cl&quot; &quot;id:100,nolog,noauditlog,phase:2,deny&quot; validateUrlEncoding # Description: Validates the URL-encoded characters in the provided input string.
 Example:
 # Validate URL-encoded characters in the request URI SecRule REQUEST_URI_RAW &quot;@validateUrlEncoding&quot; &quot;id:192&quot; Coraza will automatically decode the URL-encoded characters in request parameters, which means that there is little sense in applying the @validateUrlEncoding operator to them —that is, unless you know that some of the request parameters were URL-encoded more than once. Use this operator against raw input, or against the input that you know is URL-encoded. For example, some applications will URL-encode cookies, although that’s not in the standard. Because it is not in the standard, Coraza will neither validate nor decode such encodings.
 validateUtf8Encoding # Description: Check whether the input is a valid UTF-8 string.
