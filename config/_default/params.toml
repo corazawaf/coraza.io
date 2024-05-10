@@ -12,7 +12,7 @@ alertDismissable = true
 alertText = "Coraza v3 <a class=\"alert-link\" href=\"https://github.com/corazawaf/coraza/releases\">available here!</a>"
 
 ## Open Graph
-images = ["doks.png"]
+images = ["images/logo_animal_only.png"]
 ogLocale = "en_US"
 domainTLD = "coraza.io"
 titleHome = "OWASP Coraza"
