@@ -157,10 +157,12 @@ Contributions are welcome! Please refer to [CONTRIBUTING.md](./CONTRIBUTING.md) 
 ### Companies using Coraza
 
 * [Babiel](https://babiel.com) (supporter)
+* [Traefik](https://owasp.org/blog/2024/03/19/traefik_owasp)
+* [United Security Providers AG](https://www.united-security-providers.ch/)
 
-### Author on Twitter
+### Coraza on X/Twitter
 
-- [@jptosso](https://twitter.com/jptosso)
+- [@corazaio](https://twitter.com/corazaio)
 
 ## Donations
 
