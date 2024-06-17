@@ -155,7 +155,6 @@ Contributions are welcome! Please refer to [CONTRIBUTING.md](./CONTRIBUTING.md) 
 
 ### Companies using Coraza
 
-* [Babiel](https://babiel.com) (supporter)
 * [Traefik](https://owasp.org/blog/2024/03/19/traefik_owasp)
 * [United Security Providers AG](https://www.united-security-providers.ch/)
 * [Ambassador Labs](https://www.getambassador.io/docs/edge-stack/latest/howtos/web-application-firewalls)
