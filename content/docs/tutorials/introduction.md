@@ -159,6 +159,7 @@ Contributions are welcome! Please refer to [CONTRIBUTING.md](./CONTRIBUTING.md) 
 * [United Security Providers AG](https://www.united-security-providers.ch/)
 * [Ambassador Labs](https://www.getambassador.io/docs/edge-stack/latest/howtos/web-application-firewalls)
 * [Apache APISIX](https://apisix.apache.org/blog/2023/09/08/APISIX-integrates-with-Coraza/)
+* [Wallarm API Firewall](https://github.com/wallarm/api-firewall)
 
 ### Coraza on X/Twitter
 
