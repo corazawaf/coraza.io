@@ -153,7 +153,7 @@ Contributions are welcome! Please refer to [CONTRIBUTING.md](./CONTRIBUTING.md) 
 * Modsecurity team for creating ModSecurity
 * OWASP Coreruleset team for the CRS and their help
 
-### Companies using Coraza
+### Companies/Products using Coraza
 
 * [Traefik](https://owasp.org/blog/2024/03/19/traefik_owasp)
 * [United Security Providers AG](https://www.united-security-providers.ch/)
