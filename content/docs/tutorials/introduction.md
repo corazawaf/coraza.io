@@ -32,7 +32,6 @@ Coraza is an open source, enterprise-grade, high performance Web Application Fir
 * Forum: [Github Discussions](https://github.com/corazawaf/coraza/discussions)
 * OWASP Slack Community (#coraza): https://owasp.org/slack/invite
 * Rule testing: [Coraza Playground](https://playground.coraza.io)
-* Planning: [Github Projects](https://github.com/orgs/corazawaf/projects?type=beta)
 
 <br/>
 
@@ -159,6 +158,7 @@ Contributions are welcome! Please refer to [CONTRIBUTING.md](./CONTRIBUTING.md) 
 * [Babiel](https://babiel.com) (supporter)
 * [Traefik](https://owasp.org/blog/2024/03/19/traefik_owasp)
 * [United Security Providers AG](https://www.united-security-providers.ch/)
+* [Ambassador Labs](https://www.getambassador.io/docs/edge-stack/latest/howtos/web-application-firewalls)
 
 ### Coraza on X/Twitter
 
