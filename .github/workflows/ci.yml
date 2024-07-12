@@ -28,7 +28,7 @@ jobs:
       - name: Tests and coverage
         run: go run mage.go test
 
-      - name: Tests and coverage
+      - name: Generate content
         run: go run mage.go generate
 
       - name: Verifies differences
