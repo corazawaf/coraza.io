@@ -32,7 +32,6 @@ Coraza is an open source, enterprise-grade, high performance Web Application Fir
 * Forum: [Github Discussions](https://github.com/corazawaf/coraza/discussions)
 * OWASP Slack Community (#coraza): https://owasp.org/slack/invite
 * Rule testing: [Coraza Playground](https://playground.coraza.io)
-* Planning: [Github Projects](https://github.com/orgs/corazawaf/projects?type=beta)
 
 <br/>
 
@@ -154,13 +153,17 @@ Contributions are welcome! Please refer to [CONTRIBUTING.md](./CONTRIBUTING.md) 
 * Modsecurity team for creating ModSecurity
 * OWASP Coreruleset team for the CRS and their help
 
-### Companies using Coraza
+### Companies/Products using Coraza
 
-* [Babiel](https://babiel.com) (supporter)
+* [Traefik](https://owasp.org/blog/2024/03/19/traefik_owasp)
+* [United Security Providers AG](https://www.united-security-providers.ch/)
+* [Ambassador Labs](https://www.getambassador.io/docs/edge-stack/latest/howtos/web-application-firewalls)
+* [Apache APISIX](https://apisix.apache.org/blog/2023/09/08/APISIX-integrates-with-Coraza/)
+* [Wallarm API Firewall](https://github.com/wallarm/api-firewall)
 
-### Author on Twitter
+### Coraza on X/Twitter
 
-- [@jptosso](https://twitter.com/jptosso)
+- [@corazaio](https://twitter.com/corazaio)
 
 ## Donations
 
