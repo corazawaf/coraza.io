@@ -56,7 +56,7 @@ SecRule REQUEST_FILENAME|ARGS_NAMES|ARGS|XML:/* "\bgetparentfolder\b" \
 **Example:**
 
 ```
-# Allow unrestricted access from 192.168.1.100 
+# Allow unrestricted access from 192.168.1.100
 SecRule REMOTE_ADDR "^192\.168\.1\.100$" phase:1,id:95,nolog,allow
 ```
 
@@ -120,13 +120,13 @@ This action is essentially a placeholder that is intended to be used by rule wri
 **Examples:**
 
 ```
-# Specify how blocking is to be done 
+# Specify how blocking is to be done
 SecDefaultAction "phase:2,deny,id:101,status:403,log,auditlog"
 
-# Detect attacks where we want to block 
+# Detect attacks where we want to block
 SecRule ARGS "@rx attack1" "phase:2,block,id:102"
 
-# Detect attacks where we want only to warn 
+# Detect attacks where we want only to warn
 SecRule ARGS "@rx attack2" "phase:2,pass,id:103"
 ```
 
@@ -139,13 +139,13 @@ It is possible to use the `SecRuleUpdateActionById` directive to override how a 
 The following example demonstrates the first case, in which the hard-coded block is removed in favor of the user-controllable block:
 
 ```
-# Specify how blocking is to be done 
+# Specify how blocking is to be done
 SecDefaultAction "phase:2,deny,status:403,log,auditlog,id:104"
 
-# Detect attacks and block 
+# Detect attacks and block
 SecRule ARGS "@rx attack1" "phase:2,id:1,deny"
 
-# Change how rule ID 1 blocks 
+# Change how rule ID 1 blocks
 SecRuleUpdateActionById 1 "block"
 ```
 
@@ -175,7 +175,7 @@ Up to 10 captures will be copied on a successful pattern match, each with a name
 **Example:**
 
 ```bash
-# Refuse to accept POST requests that do not contain a Content-Length header. 
+# Refuse to accept POST requests that do not contain a Content-Length header.
 #
 # Note: this rule should be preceded by a rule that verifies only valid
 # request methods are used.
@@ -205,7 +205,7 @@ Special rules control the usage of actions in chained rules:
 **Example:**
 
 ```
-# Parse requests with Content-Type "text/xml" as XML 
+# Parse requests with Content-Type "text/xml" as XML
 SecRule REQUEST_CONTENT_TYPE ^text/xml "nolog,pass,id:106,ctl:requestBodyProcessor=XML"
 
 # white-list the user parameter for rule #981260 when the REQUEST_URI is /index.php
@@ -279,10 +279,10 @@ This action is extremely useful when responding to both Brute Force and Denial o
 **Example:**
 
 ```
-# Run external program on rule match 
+# Run external program on rule match
 SecRule REQUEST_URI "^/cgi-bin/script\.pl" "phase:2,id:112,t:none,t:lowercase,t:normalizePath,block,\ exec:/usr/local/apache/bin/test.sh"
 
-# Run Lua script on rule match 
+# Run Lua script on rule match
 SecRule ARGS:p attack "phase:2,id:113,block,exec:/usr/local/apache/conf/exec.lua"
 ```
 
@@ -453,10 +453,10 @@ SecRule REQUEST_HEADERS:User-Agent "@streq Test" "log,pass,id:122"
 When using pass with a SecRule with multiple targets, all variables will be inspected and all non-disruptive actions trigger for every match. In the following example, the TX.test variable will be incremented once for every request parameter:
 
 ```
-# Set TX.test to zero 
+# Set TX.test to zero
 SecAction "phase:2,nolog,pass,setvar:TX.test=0,id:123"
 
-# Increment TX.test for every request parameter 
+# Increment TX.test for every request parameter
 SecRule ARGS "test" "phase:2,log,pass,setvar:TX.test=+1,id:124"
 ```
 
@@ -572,7 +572,7 @@ Note : This action is used in combination with the id action to allow the same r
 **Example:**
 
 ```
-# Never log passwords 
+# Never log passwords
 SecAction "nolog,phase:2,id:131,sanitiseArg:password,sanitiseArg:newPassword,sanitiseArg:oldPassword"
 ```
 
@@ -608,8 +608,8 @@ Note : The sanitize actions affect only the data as it is logged to audit log. H
 * `sanitiseMatchedBytes`:1/4 -- This would x out the bytes that matched, but keep the first byte and last 4 bytes
 
 ```
-# Detect credit card numbers in parameters and 
-# prevent them from being logged to audit log 
+# Detect credit card numbers in parameters and
+# prevent them from being logged to audit log
 SecRule ARGS "@verifyCC \d{13,16}" "phase:2,id:133,nolog,capture,pass,msg:'Potential credit card number in request',sanitiseMatchedBytes"
 SecRule RESPONSE_BODY "@verifyCC \d{13,16}" "phase:4,id:134,t:none,log,capture,block,msg:'Potential credit card number is response body',sanitiseMatchedBytes:0/4"
 ```
@@ -716,7 +716,7 @@ This action understands application namespaces (configured using SecWebAppId), a
 **Example:**
 
 ```
-# Initialise session variables using the session cookie value 
+# Initialise session variables using the session cookie value
 SecRule REQUEST_COOKIES:PHPSESSID !^$ "nolog,pass,id:138,setsid:%{REQUEST_COOKIES.PHPSESSID}"
 ```
 
@@ -770,7 +770,7 @@ setvar:tx.anomaly_score=+%{tx.critical_anomaly_score},setvar:tx.%{rule.id}-WEB_A
 Note : When used in a chain this action will be executed when an individual rule matches and not the entire chain.This means that
 
 ```
-SecRule REQUEST_FILENAME "@contains /test.php" "chain,id:7,phase:1,t:none,nolog,setvar:tx.auth_attempt=+1" 
+SecRule REQUEST_FILENAME "@contains /test.php" "chain,id:7,phase:1,t:none,nolog,setvar:tx.auth_attempt=+1"
     SecRule ARGS_POST:action "@streq login" "t:none"
 ```
 
@@ -791,10 +791,10 @@ SecRule REQUEST_FILENAME "@streq test.php" "chain,id:7,phase:1,t:none,nolog"
 **Example:**
 
 ```
-# Require Accept header, but not from access from the localhost 
-SecRule REMOTE_ADDR "^127\.0\.0\.1$" "phase:1,skip:1,id:141" 
+# Require Accept header, but not from access from the localhost
+SecRule REMOTE_ADDR "^127\.0\.0\.1$" "phase:1,skip:1,id:141"
 
-# This rule will be skipped over when REMOTE_ADDR is 127.0.0.1 
+# This rule will be skipped over when REMOTE_ADDR is 127.0.0.1
 SecRule &REQUEST_HEADERS:Accept "@eq 0" "phase:1,id:142,deny,msg:'Request Missing an Accept Header'"
 ```
 
@@ -809,11 +809,11 @@ The `skip` action works only within the current processing phase and not necessa
 **Example:** The following rules implement the same logic as the skip example, but using skipAfter:
 
 ```
-# Require Accept header, but not from access from the localhost 
-SecRule REMOTE_ADDR "^127\.0\.0\.1$" "phase:1,id:143,skipAfter:IGNORE_LOCALHOST" 
+# Require Accept header, but not from access from the localhost
+SecRule REMOTE_ADDR "^127\.0\.0\.1$" "phase:1,id:143,skipAfter:IGNORE_LOCALHOST"
 
-# This rule will be skipped over when REMOTE_ADDR is 127.0.0.1 
-SecRule &REQUEST_HEADERS:Accept "@eq 0" "phase:1,deny,id:144,msg:'Request Missing an Accept Header'" 
+# This rule will be skipped over when REMOTE_ADDR is 127.0.0.1
+SecRule &REQUEST_HEADERS:Accept "@eq 0" "phase:1,deny,id:144,msg:'Request Missing an Accept Header'"
 SecMarker IGNORE_LOCALHOST
 ```
 
@@ -878,7 +878,7 @@ SecRule REQUEST_FILENAME|ARGS_NAMES|ARGS|XML:/* "\bgetparentfolder\b" \
 {TX.0}',severity:'2',setvar:'tx.msg=%{rule.msg}',setvar:tx.xss_score=+%{tx.critical_anomaly_score},setvar:tx.anomaly_score=+%{tx.critical_anomaly_score},setvar:tx.%{rule.id}-WEB_ATTACK/XSS-%{matched_var_name}=%{tx.0}"
 ```
 
-The tag information appears along with other rule metadata. The purpose of the tagging mechanism to allow easy automated categorization of events. Multiple tags can be specified on the same rule. Use forward slashes to create a hierarchy of categories (as in the example). Tag support Macro Expansions
+The tag information appears along with other rule metadata. The purpose of the tagging mechanism to allow easy automated categorization of events. Multiple tags can be specified on the same rule. Use forward slashes to create a hierarchy of categories (as in the example). (*) Tag _does not_ support Macro Expansions right now (see https://github.com/corazawaf/coraza/issues/1118)
 
 ## ver
 
