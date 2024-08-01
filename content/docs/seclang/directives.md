@@ -3,7 +3,7 @@ title: "Directives"
 Description: "The following section outlines all of the Coraza directives. "
 lead: "The following section outlines all of the Coraza directives. "
 date: 2020-10-06T08:48:57+00:00
-lastmod: "2024-02-05T09:55:41+01:00"
+lastmod: "2024-08-01T11:29:36-03:00"
 draft: false
 images: []
 menu:
@@ -318,7 +318,7 @@ blocking possible. The possible values are:
 
 **Syntax:** `SecRequestBodyInMemoryLimit [LIMIT_IN_BYTES]`
 
-**Default:** `131072 (128 KB)`
+**Default:** `defaults to RequestBodyLimit`
 
 When a `multipart/form-data` request is being processed, once the in-memory limit is reached,
 the request body will start to be streamed into a temporary file on disk.
@@ -329,7 +329,7 @@ the request body will start to be streamed into a temporary file on disk.
 
 **Syntax:** `SecRequestBodyLimit [LIMIT_IN_BYTES]`
 
-**Default:** `134217728 (131072 KB)`
+**Default:** `134217728 (128 Mib)`
 
 Anything over the limit will be rejected with status code 413 (Request Entity Too Large).
 There is a hard limit of 1 GB.
@@ -356,6 +356,7 @@ avoid OOM issues while buffering the request body prior the inspection.
 Generally speaking, the default value is not small enough. For most applications, you
 should be able to reduce it down to 128 KB or lower. Anything over the limit will be
 rejected with status code 413 (Request Entity Too Large). There is a hard limit of 1 GB.
+**Note:** not implemented yet
 
 ## SecResponseBodyAccess
 
@@ -377,7 +378,7 @@ configured with [`SecResponseBodyMimeType`](#secresponsebodymimetype)).
 
 **Syntax:** `SecResponseBodyLimit [LIMIT_IN_BYTES]`
 
-**Default:** `524288 (512 KB)`
+**Default:** `524288 (512 Kib)`
 
 Anything over this limit will be rejected with status code 500 (Internal Server Error).
 This setting will not affect the responses with MIME types that are not selected for
@@ -457,6 +458,28 @@ by case-sensitive string equality.
 SecRuleRemoveByTag attack-dos
 ```
 
+**Note:** OWASP CRS has a list of supported tags https://coreruleset.org/docs/rules/metadata/
+
+## SecRuleUpdateTargetByID
+
+**Description:** Updates the target (variable) list of the specified rule(s).
+
+**Syntax:** `SecRuleUpdateTargetById ID TARGET1[|TARGET2|TARGET3]`
+
+This directive will append variables to the specified rule with the targets provided in the second parameter.
+The rule ID can be single IDs or ranges of IDs. The targets are separated by a pipe character.
+
+## SecRuleUpdateTargetByTag
+
+**Description:** Updates the target (variable) list of the specified rule(s) by tag.
+
+**Syntax:** `SecRuleUpdateTargetByTag TAG TARGET1[|TARGET2|TARGET3]`
+
+As an alternative to [`SecRuleUpdateTargetById`](#secruleupdatetargetbyid), this directive will append variables to the specified rule
+with the targets provided in the second parameter. It can be handy for updating an entire group of rules.
+Matching is by case-sensitive string equality.
+This directive will append variables to the specified rule with the targets provided in the second parameter.
+The rule ID can be single IDs or ranges of IDs. The targets are separated by a pipe character.
 **Note:** OWASP CRS has a list of supported tags https://coreruleset.org/docs/rules/metadata/
 
 
