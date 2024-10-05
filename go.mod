@@ -1,6 +1,6 @@
 module github.com/corazawaf/coraza.io
 
-go 1.19
+go 1.21
 
 require (
 	github.com/corazawaf/coraza/v3 v3.0.5-0.20240205085451-fc71a09e809b
