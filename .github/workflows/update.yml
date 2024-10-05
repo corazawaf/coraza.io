@@ -63,7 +63,7 @@ jobs:
           **branch**: upgrades_coraza_${{ steps.coraza-latest-commit.outputs.short }}
           **title**: docs: upgrades to latest coraza
           **assignees**: ${{ github.actor }}
-          **body**: This PR upgrades the docs to latest coraza commit namely [`${{ steps.coraza-latest-commit.outputs.short }}`](https://github.com/corazawaf/coraza/tree/${{ steps.coraza-latest-commit.outputs.long }})
+          **body**: This PR upgrades the docs to latest coraza commit namely [${{ steps.coraza-latest-commit.outputs.short }}](https://github.com/corazawaf/coraza/tree/${{ steps.coraza-latest-commit.outputs.long }})
           EOF
 
       - name: Create Pull Request
@@ -78,7 +78,7 @@ jobs:
           title: 'docs: upgrades to latest coraza'
           assignees: ${{ github.actor }}
           body: |
-            This PR upgrades the docs to latest coraza commit namely [`${{ steps.coraza-latest-commit.outputs.short }}`](https://github.com/corazawaf/coraza/tree/${{ steps.coraza-latest-commit.outputs.long }})
+            This PR upgrades the docs to latest coraza commit namely [${{ steps.coraza-latest-commit.outputs.short }}](https://github.com/corazawaf/coraza/tree/${{ steps.coraza-latest-commit.outputs.long }})
 
       - name: Check outputs
         if: ${{ github.event_name != 'pull_request' && steps.create-pr.outputs.pull-request-number }}
