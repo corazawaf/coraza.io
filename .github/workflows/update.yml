@@ -11,7 +11,7 @@ permissions:
   pull-requests: write
 
 jobs:
-  test:
+  create-pr:
     runs-on: ubuntu-latest
     steps:
       - name: Install Go
