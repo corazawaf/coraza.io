@@ -27,12 +27,14 @@ jobs:
 
       - name: Get last commit of coraza
         id: coraza-latest-commit
-        run: echo "value=$(gh api repos/corazawaf/coraza/commits/main -q .sha)" >> $GITHUB_OUTPUT
+        run: |
+          echo "long=$(gh api repos/corazawaf/coraza/commits/main -q .sha)" >> $GITHUB_OUTPUT
+          echo "short=$(gh api repos/corazawaf/coraza/commits/main -q .sha | cut -c 1-8)" >> $GITHUB_OUTPUT
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   
       - name: Pull latest coraza
-        run: go get -u github.com/corazawaf/coraza/v3@${{ steps.coraza-latest-commit.outputs.value }}
+        run: go get -u github.com/corazawaf/coraza/v3@${{ steps.coraza-latest-commit.outputs.long }}
 
       - name: Tests and coverage
         run: go run mage.go test
@@ -53,15 +55,15 @@ jobs:
           CHANGED_FILES: ${{ steps.verify-changed-files.outputs.changed_files }}
         run: |
           cat <<EOF > $GITHUB_STEP_SUMMARY
-          Changed files:
+          # Changed files:
           $CHANGED_FILES
 
-          PR information:
-          commit-message: 'docs: upgrades coraza docs to ${{ steps.coraza-latest-commit.outputs.value }}'
-          branch: upgrades_coraza_${{ steps.coraza-latest-commit.outputs.value }}
-          title: 'docs: upgrades to latest coraza'
-          assignees: ${{ github.actor }}
-          body: This PR upgrades the docs to latest coraza commit namely ${{ steps.coraza-latest-commit.outputs.value }}
+          # PR information:
+          **commit-message**: docs: upgrades coraza docs to github.com/corazawaf/coraza/v3@${{ steps.coraza-latest-commit.outputs.short }}
+          **branch**: upgrades_coraza_${{ steps.coraza-latest-commit.outputs.short }}
+          **title**: docs: upgrades to latest coraza
+          **assignees**: ${{ github.actor }}
+          **body**: This PR upgrades the docs to latest coraza commit namely [`${{ steps.coraza-latest-commit.outputs.short }}`](https://github.com/corazawaf/coraza/tree/${{ steps.coraza-latest-commit.outputs.long }})
           EOF
 
       - name: Create Pull Request
@@ -70,13 +72,13 @@ jobs:
         id: create-pr
         with:
           add-paths: content/docs
-          commit-message: 'docs: upgrades coraza docs to ${{ steps.coraza-latest-commit.outputs.value }}'
+          commit-message: 'docs: upgrades coraza docs to ${{ steps.coraza-latest-commit.outputs.short }}'
           signoff: true
-          branch: upgrades_coraza_${{ steps.coraza-latest-commit.outputs.value }}
+          branch: upgrades_coraza_${{ steps.coraza-latest-commit.outputs.short }}
           title: 'docs: upgrades to latest coraza'
           assignees: ${{ github.actor }}
           body: |
-            This PR upgrades the docs to latest coraza commit namely ${{ steps.coraza-latest-commit.outputs.value }}
+            This PR upgrades the docs to latest coraza commit namely [`${{ steps.coraza-latest-commit.outputs.short }}`](https://github.com/corazawaf/coraza/tree/${{ steps.coraza-latest-commit.outputs.long }})
 
       - name: Check outputs
         if: ${{ github.event_name != 'pull_request' && steps.create-pr.outputs.pull-request-number }}
