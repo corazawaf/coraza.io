@@ -6,8 +6,11 @@
     </div>
     <div class="col-lg-9 col-xl-8 text-center">
       <p class="lead">{{ .Params.lead | safeHTML }}</p>
-      <a class="btn btn-primary btn-lg px-4 mb-2" href="{{ "docs/tutorials/quick-start" | relURL }}" role="button">Get started</a>
-      <p class="meta">Open-source Apache 2 Licensed. <a href="https://github.com/corazawaf/coraza">GitHub {{ $data := getJSON "https://api.github.com/repos/corazawaf/coraza/tags" }}{{ $tag := index ($data) 0 }}{{ $tag.name }}</a></p>
+      <a class="btn btn-primary btn-lg px-4 mb-2" href="{{ " docs/tutorials/quick-start" | relURL }}" role="button">Get
+        started</a>
+      <p class="meta">Open-source Apache 2 Licensed. <a href="https://github.com/corazawaf/coraza">GitHub {{ $data :=
+          get "https://api.github.com/repos/corazawaf/coraza/tags" }}{{ $tag := index ($data) 0 }}{{ $tag.name }}</a>
+      </p>
     </div>
   </div>
 </section>
@@ -19,29 +22,35 @@
     <div class="row justify-content-center text-center">
       <div class="col-lg-5">
         <h2 class="h4">Security </h2>
-        <p>Security is what Coraza is for, enforce policies using <a href="/docs/tutorials/coreruleset">OWASP CRS</a> or create your own policies to stop attackers and generate important audit information.</p>
+        <p>Security is what Coraza is for, enforce policies using <a href="/docs/tutorials/coreruleset">OWASP CRS</a> or
+          create your own policies to stop attackers and generate important audit information.</p>
       </div>
       <div class="col-lg-5">
         <h2 class="h4">Fast by default ⚡️</h2>
-        <p>From huge websites to small blogs, Coraza can handle that load with minimal performance impacts, just check our <a href="/docs/reference/benchmarks">Benchmarks</a>.</p>
+        <p>From huge websites to small blogs, Coraza can handle that load with minimal performance impacts, just check
+          our <a href="/docs/reference/benchmarks">Benchmarks</a>.</p>
       </div>
       <div class="col-lg-5">
         <h2 class="h4">Extensible</h2>
-        <p>Audit Loggers, persistence engines, operators, actions, create your own functionalities to extend Coraza as much as you want.</p>
+        <p>Audit Loggers, persistence engines, operators, actions, create your own functionalities to extend Coraza as
+          much as you want.</p>
       </div>
     </div>
     <div class="row justify-content-center text-center">
       <div class="col-lg-5">
         <h2 class="h4">Integrations</h2>
-        <p>Coraza WAF is just a library but we support many integrations to deploy a WAF as an <a href="#">application server</a>, <a href="#">reverse proxy</a>, <a href="#">container</a>, and more.</p>
+        <p>Coraza WAF is just a library but we support many integrations to deploy a WAF as an <a href="#">application
+            server</a>, <a href="#">reverse proxy</a>, <a href="#">container</a>, and more.</p>
       </div>
       <div class="col-lg-5">
         <h2 class="h4">Roadmap</h2>
-        <p>Expect interesting features and improvements within our community-driven roadmap, for small developers and big companies.</p>
+        <p>Expect interesting features and improvements within our community-driven roadmap, for small developers and
+          big companies.</p>
       </div>
       <div class="col-lg-5">
         <h2 class="h4">Enterprise ready</h2>
-        <p>Continuous development, high performance and great documentation are the recipe for a perfect enterprise open source project.</p>
+        <p>Continuous development, high performance and great documentation are the recipe for a perfect enterprise open
+          source project.</p>
       </div>
     </div>
   </div>
