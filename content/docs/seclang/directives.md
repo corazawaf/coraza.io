@@ -3,7 +3,7 @@ title: "Directives"
 Description: "The following section outlines all of the Coraza directives. "
 lead: "The following section outlines all of the Coraza directives. "
 date: 2020-10-06T08:48:57+00:00
-lastmod: "2024-08-01T11:29:36-03:00"
+lastmod: "2024-10-06T18:18:19Z"
 draft: false
 images: []
 menu:
@@ -88,7 +88,7 @@ SecAuditEngine RelevantOnly
 SecAuditLog logs/audit/audit.log
 SecAuditLogParts ABCFHZ
 SecAuditLogType concurrent
-SecAuditLogStorageDir logs/audit
+SecAuditLogDir logs/audit
 SecAuditLogRelevantStatus ^(?:5|4(?!04))
 ```
 
@@ -98,8 +98,6 @@ SecAuditLogRelevantStatus ^(?:5|4(?!04))
 
 **Syntax:** `SecAuditLog [ABSOLUTE_PATH_TO_LOG_FILE]`
 
-When used in combination with mlogc (only possible with concurrent logging), this
-directive defines the mlogc location and command line.
 
 **Example:**
 ```apache
@@ -110,9 +108,23 @@ SecAuditLog "/path/to/audit.log"
 as root. You should not allow non-root users to have write privileges for this file
 or for the directory.
 
+## SecAuditLogDir
+
+**Description:** Configures the directory where concurrent audit log entries are stored.
+
+**Syntax:** `SecAuditLogDir [PATH_TO_LOG_DIR]`
+
+This directive is required only when concurrent audit logging is used. Ensure that you
+specify a file system location with adequate disk space.
+
+**Example:**
+```apache
+SecAuditLogDir /tmp/auditlogs/
+```
+
 ## SecAuditLogDirMode
 
-**Description:** Configures the mode (permissions) of any directories created for the concurrent audit logs, using an octal mode value as parameter (as used in chmod).
+**Description:** Configures the mode (permissions) of any directories created for the concurrent audit logs, using an octal mode value as parameter (as used in `chmod`).
 
 **Syntax:** `SecAuditLogDirMode octal_mode|"default"`
 
@@ -141,9 +153,9 @@ SecAuditLogFileMode 00640
 
 ## SecAuditLogFormat
 
-**Description:** Select the output format of the AuditLogs. The format can be either the native AuditLogs format or JSON.
+**Description:** Select the output format of the AuditLogs. The format can be the native AuditLogs format, JSON, or OCSF (Open CyberSecurity Schema Framework).
 
-**Syntax:** `SecAuditLogFormat JSON|Native`
+**Syntax:** `SecAuditLogFormat JSON|JsonLegacy|Native|OCSF`
 
 **Default:** `Native`
 
