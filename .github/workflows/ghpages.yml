@@ -19,9 +19,8 @@ jobs:
         with:
           hugo-version: 'latest'
           extended: true
-          # extended: true
 
-      - name: Build
+      - name: Install deps
         run: npm install
 
       - name: Build
