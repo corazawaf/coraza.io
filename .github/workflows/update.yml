@@ -34,7 +34,9 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   
       - name: Pull latest coraza
-        run: go get -u github.com/corazawaf/coraza/v3@${{ steps.coraza-latest-commit.outputs.long }}
+        run: |
+          go get -u github.com/corazawaf/coraza/v3@${{ steps.coraza-latest-commit.outputs.long }}
+          go mod tidy
 
       - name: Tests and coverage
         run: go run mage.go test
@@ -48,6 +50,8 @@ jobs:
         with:
           files: |
              content/docs/*
+             go.mod
+             go.sum
 
       - name: List changed files
         if: ${{ github.event_name == 'pull_request' }}
