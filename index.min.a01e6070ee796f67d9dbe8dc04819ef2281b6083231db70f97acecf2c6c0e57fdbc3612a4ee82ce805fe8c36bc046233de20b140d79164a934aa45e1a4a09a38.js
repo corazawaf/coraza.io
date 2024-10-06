@@ -19,12 +19,15 @@ The SecAuditEngine directive is used to configure the audit engine, which logs c
 The possible values for the audit log engine are as follows:
 On: log all transactions Off: do not log any transactions RelevantOnly: only the log transactions that have triggered a warning or an error, or have a status code that is considered to be relevant (as determined by the SecAuditLogRelevantStatus directive) Note: If you need to change the audit log engine configuration on a per-transaction basis (e.g., in response to some transaction data), use the ctl action.
 The following example demonstrates how SecAuditEngine is used:
-SecAuditEngine RelevantOnly SecAuditLog logs/audit/audit.log SecAuditLogParts ABCFHZ SecAuditLogType concurrent SecAuditLogStorageDir logs/audit SecAuditLogRelevantStatus ^(?:5|4(?!04)) SecAuditLog # Description: Defines the path to the main audit log file (serial logging format) or the concurrent logging index file (concurrent logging format).
+SecAuditEngine RelevantOnly SecAuditLog logs/audit/audit.log SecAuditLogParts ABCFHZ SecAuditLogType concurrent SecAuditLogDir logs/audit SecAuditLogRelevantStatus ^(?:5|4(?!04)) SecAuditLog # Description: Defines the path to the main audit log file (serial logging format) or the concurrent logging index file (concurrent logging format).
 Syntax: SecAuditLog [ABSOLUTE_PATH_TO_LOG_FILE]
-When used in combination with mlogc (only possible with concurrent logging), this directive defines the mlogc location and command line.
 Example:
 SecAuditLog &quot;/path/to/audit.log&quot; Note: This audit log file is opened on startup when the server typically still runs as root. You should not allow non-root users to have write privileges for this file or for the directory.
-SecAuditLogDirMode # Description: Configures the mode (permissions) of any directories created for the concurrent audit logs, using an octal mode value as parameter (as used in chmod).
+SecAuditLogDir # Description: Configures the directory where concurrent audit log entries are stored.
+Syntax: SecAuditLogDir [PATH_TO_LOG_DIR]
+This directive is required only when concurrent audit logging is used. Ensure that you specify a file system location with adequate disk space.
+Example:
+SecAuditLogDir /tmp/auditlogs/ SecAuditLogDirMode # Description: Configures the mode (permissions) of any directories created for the concurrent audit logs, using an octal mode value as parameter (as used in chmod).
 Syntax: SecAuditLogDirMode octal_mode|&quot;default&quot;
 Default: 0600
 The default mode for new audit log directories (0600) only grants read/write access to the owner.
@@ -33,8 +36,8 @@ SecAuditLogDirMode 02750 SecAuditLogFileMode # Description: Configures the mode 
 Syntax: SecAuditLogFileMode octal_mode|&quot;default&quot;
 Default: 0600
 Example:
-SecAuditLogFileMode 00640 SecAuditLogFormat # Description: Select the output format of the AuditLogs. The format can be either the native AuditLogs format or JSON.
-Syntax: SecAuditLogFormat JSON|Native
+SecAuditLogFileMode 00640 SecAuditLogFormat # Description: Select the output format of the AuditLogs. The format can be the native AuditLogs format, JSON, or OCSF (Open CyberSecurity Schema Framework).
+Syntax: SecAuditLogFormat JSON|JsonLegacy|Native|OCSF
 Default: Native
 SecAuditLogParts # Description: Defines which parts of each transaction are going to be recorded in the audit log. Each part is assigned a single letter; when a letter appears in the list then the equivalent part will be recorded. See below for the list of all parts.
 Syntax: SecAuditLogParts [PARTLETTERS]
