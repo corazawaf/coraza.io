@@ -1,1 +1,22 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Contributors on</title><link>https://coraza.io/contributors/</link><description>Recent content in Contributors on</description><generator>Hugo</generator><language>en-US</language><lastBuildDate>Tue, 06 Oct 2020 08:50:45 +0000</lastBuildDate><atom:link href="https://coraza.io/contributors/index.xml" rel="self" type="application/rss+xml"/><item><title>Felipe Zipitria</title><link>https://coraza.io/contributors/felipe-zipitria/</link><pubDate>Tue, 06 Oct 2020 08:50:45 +0000</pubDate><guid>https://coraza.io/contributors/felipe-zipitria/</guid><description> You can find me fzipi @ github!</description></item><item><title>Juan Pablo Tosso</title><link>https://coraza.io/contributors/juan-pablo-tosso/</link><pubDate>Tue, 06 Oct 2020 08:50:45 +0000</pubDate><guid>https://coraza.io/contributors/juan-pablo-tosso/</guid><description> Hi, I'm Juan Pablo Tosso, OWASP #Coraza project co-leader - Research Engineer at @traceableai, Proud Father and Open-Source Developer.</description></item></channel></rss>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Contributors on</title><link>https://coraza.io/contributors/</link><description>Recent content in Contributors on</description><generator>Hugo</generator><language>en-US</language><lastBuildDate>Tue, 06 Oct 2020 08:50:45 +0000</lastBuildDate><atom:link href="https://coraza.io/contributors/index.xml" rel="self" type="application/rss+xml"/><item><title>Felipe Zipitria</title><link>https://coraza.io/contributors/felipe-zipitria/</link><pubDate>Tue, 06 Oct 2020 08:50:45 +0000</pubDate><guid>https://coraza.io/contributors/felipe-zipitria/</guid><description>&lt;p align="center">
+ &lt;samp>
+ You can find me fzipi @ github!
+ &lt;/samp>
+ &lt;br>&lt;br>
+&lt;/p></description></item><item><title>Juan Pablo Tosso</title><link>https://coraza.io/contributors/juan-pablo-tosso/</link><pubDate>Tue, 06 Oct 2020 08:50:45 +0000</pubDate><guid>https://coraza.io/contributors/juan-pablo-tosso/</guid><description>&lt;p align="center">
+ &lt;samp>
+ Hi, I'm Juan Pablo Tosso, OWASP #Coraza project co-leader - Research Engineer at @traceableai, Proud Father and Open-Source Developer.
+ &lt;/samp>
+ &lt;br>&lt;br>
+&lt;/p>
+&lt;div align="center">
+ &lt;a href="https://www.linkedin.com/in/jptosso/">
+ &lt;img align="middle" alt="Juan Pablo Tosso Linkedin" width="48px" src="https://raw.githubusercontent.com/edent/SuperTinyIcons/099dc12b59179d07d534069bc8551718f786d91a/images/svg/linkedin.svg" hspace="30" />
+ &lt;/a>
+ &lt;a href="mailto:jptosso@gmail.com">
+ &lt;img align="middle" alt="Juan Pablo Tosso email" width="48px" src="https://raw.githubusercontent.com/edent/SuperTinyIcons/099dc12b59179d07d534069bc8551718f786d91a/images/svg/email.svg" hspace="30" />
+ &lt;/a>
+ &lt;a href="https://www.twitter.com/jptosso">
+ &lt;img align="middle" alt="Juan Pablo Tosso twitter" width="48px" src="https://raw.githubusercontent.com/edent/SuperTinyIcons/099dc12b59179d07d534069bc8551718f786d91a/images/svg/twitter.svg" hspace="30" />
+ &lt;/a>
+&lt;/div></description></item></channel></rss>
