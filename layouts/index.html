@@ -8,9 +8,7 @@
       <p class="lead">{{ .Params.lead | safeHTML }}</p>
       <a class="btn btn-primary btn-lg px-4 mb-2" href="{{ " docs/tutorials/quick-start" | relURL }}" role="button">Get
         started</a>
-      <p class="meta">Open-source Apache 2 Licensed. <a href="https://github.com/corazawaf/coraza">GitHub {{ $data :=
-          get "https://api.github.com/repos/corazawaf/coraza/tags" }}{{ $tag := index ($data) 0 }}{{ $tag.name }}</a>
-      </p>
+      <p class="meta">Open-source Apache 2 Licensed. <a href="https://github.com/corazawaf/coraza">GitHub</a></p>
     </div>
   </div>
 </section>
