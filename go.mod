@@ -5,7 +5,7 @@ go 1.22.3
 toolchain go1.23.2
 
 require (
-	github.com/corazawaf/coraza/v3 v3.2.2-0.20241015082545-7714a9b89615
+	github.com/corazawaf/coraza/v3 18ae0d832817
 	github.com/magefile/mage v1.15.0
 )
 
