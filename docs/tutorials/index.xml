@@ -50,7 +50,7 @@ git clone https://github.com/coreruleset/coreruleset
 }
 &lt;/code>&lt;/pre>
 &lt;h2 id="configuration">Configuration &lt;a href="#configuration" class="anchor" aria-hidden="true">#&lt;/a>&lt;/h2>
-&lt;p>Please check &lt;a href="https://coreruleset.org/installation/">https://coreruleset.org/installation/&lt;/a> for configuration examples.&lt;/p></description></item><item><title>Using Plugins</title><link>https://coraza.io/docs/tutorials/using-plugins/</link><pubDate>Sun, 05 Sep 2021 14:03:58 -0300</pubDate><guid>https://coraza.io/docs/tutorials/using-plugins/</guid><description>&lt;p>Plugins are imported by calling the respective helpers:&lt;/p>
+&lt;p>Please check &lt;a href="https://coreruleset.org/docs/deployment/install/">https://coreruleset.org/docs/deployment/install/&lt;/a> for configuration examples.&lt;/p></description></item><item><title>Using Plugins</title><link>https://coraza.io/docs/tutorials/using-plugins/</link><pubDate>Sun, 05 Sep 2021 14:03:58 -0300</pubDate><guid>https://coraza.io/docs/tutorials/using-plugins/</guid><description>&lt;p>Plugins are imported by calling the respective helpers:&lt;/p>
 &lt;ul>
 &lt;li>&lt;code>plugins.RegisterOperator(...)&lt;/code>&lt;/li>
 &lt;li>&lt;code>plugins.RegisterAction(...)&lt;/code>&lt;/li>
