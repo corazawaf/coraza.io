@@ -39,11 +39,11 @@ git clone https://github.com/coreruleset/coreruleset
 &lt;/ol>
 &lt;p>For example:&lt;/p>
 &lt;pre>&lt;code class="language-go">func initCoraza(){
- cfg := coraza.NewWafConfig()
+ cfg := coraza.NewWAFConfig()
  .WithDirectivesFromFile(&amp;quot;coraza.conf&amp;quot;)
  .WithDirectivesFromFile(&amp;quot;coreruleset/crs-setup.conf.example&amp;quot;)
  .WithDirectivesFromFile(&amp;quot;coreruleset/rules/*.conf&amp;quot;)
- waf, err := coraza.NewWaf(cfg)
+ waf, err := coraza.NewWAF(cfg)
  if err != nil {
  panic(err)
  }
