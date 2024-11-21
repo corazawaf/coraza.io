@@ -30,11 +30,11 @@ For example:
 
 ```go
 func initCoraza(){
-  cfg := coraza.NewWafConfig()
+  cfg := coraza.NewWAFConfig()
     .WithDirectivesFromFile("coraza.conf")
     .WithDirectivesFromFile("coreruleset/crs-setup.conf.example")
     .WithDirectivesFromFile("coreruleset/rules/*.conf")
-  waf, err := coraza.NewWaf(cfg)
+  waf, err := coraza.NewWAF(cfg)
   if err != nil {
     panic(err)
   }
