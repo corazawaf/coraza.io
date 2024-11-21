@@ -37,8 +37,8 @@ import (
   "github.com/corazawaf/coraza/v3"
 )
 func initCoraza(){
-  cfg := coraza.NewWafConfig()
-  waf, err := coraza.NewWaf(cfg)
+  cfg := coraza.NewWAFConfig()
+  waf, err := coraza.NewWAF(cfg)
 }
 ```
 
