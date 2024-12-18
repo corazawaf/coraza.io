@@ -5,8 +5,8 @@ go 1.22.3
 toolchain go1.23.2
 
 require (
-	github.com/corazawaf/coraza/v3 v3.2.2-0.20241015082545-7714a9b89615
-	github.com/magefile/mage v1.15.0
+	github.com/corazawaf/coraza/v3 v3.2.2
+	github.com/magefile/mage v1.15.1-0.20231118170541-2385abb49a1f
 )
 
 require (
@@ -16,8 +16,8 @@ require (
 	github.com/tidwall/match v1.1.1 // indirect
 	github.com/tidwall/pretty v1.2.1 // indirect
 	github.com/valllabh/ocsf-schema-golang v1.0.3 // indirect
-	golang.org/x/net v0.30.0 // indirect
-	golang.org/x/sync v0.8.0 // indirect
+	golang.org/x/net v0.31.0 // indirect
+	golang.org/x/sync v0.9.0 // indirect
 	google.golang.org/protobuf v1.34.2 // indirect
 	rsc.io/binaryregexp v0.2.0 // indirect
 )
