@@ -2,7 +2,7 @@ module github.com/corazawaf/coraza.io
 
 go 1.22.3
 
-toolchain go1.23.2
+toolchain go1.23.7
 
 require (
 	github.com/corazawaf/coraza/v3 v3.2.2-0.20241015082545-7714a9b89615
