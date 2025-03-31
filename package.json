@@ -34,7 +34,7 @@
     "version": "auto-changelog -p && git add CHANGELOG.md"
   },
   "devDependencies": {
-    "@babel/cli": "7.26.4",
+    "@babel/cli": "7.27.0",
     "@babel/core": "7.26.10",
     "@babel/preset-env": "7.26.9",
     "@fullhuman/postcss-purgecss": "6.0.0",
@@ -45,18 +45,18 @@
     "eslint": "9.23.0",
     "exec-bin": "1.0.0",
     "hugo-installer": "4.0.1",
-    "flexsearch": "0.8.117",
+    "flexsearch": "0.8.147",
     "highlight.js": "11.11.1",
     "instant.page": "5.2.0",
     "katex": "0.16.21",
     "lazysizes": "5.3.2",
     "markdownlint-cli": "0.44.0",
-    "mermaid": "11.5.0",
+    "mermaid": "11.6.0",
     "postcss": "8.5.3",
     "postcss-cli": "11.0.1",
     "purgecss-whitelister": "2.4.0",
     "shx": "0.4.0",
-    "stylelint": "16.16.0",
+    "stylelint": "16.17.0",
     "stylelint-config-standard": "37.0.0"
   },
   "otherDependencies": {
