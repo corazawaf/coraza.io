@@ -52,8 +52,8 @@ Clone the coraza-spoa repository:
 git clone https://github.com/corazawaf/coraza-spoa.git
 ```
 
-To compile a development version of coraza-spoa, run `make`. This will download
-all dependencies and compile a `coraza-spoa` binary.
+To compile a development version of coraza-spoa, run `go run mage.go build`.
+This will download all dependencies and compile a `coraza-spoa` binary.
 
 ## Configuration Overview
 
