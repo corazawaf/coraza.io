@@ -96,19 +96,36 @@ defaults
 frontend test
     mode http
     bind *:80
-    unique-id-format %[uuid()]
-    unique-id-header X-Unique-ID
-    log-format "%ci:%cp\ [%t]\ %ft\ %b/%s\ %Th/%Ti/%TR/%Tq/%Tw/%Tc/%Tr/%Tt\ %ST\ %B\ %CC\ %CS\ %tsc\ %ac/%fc/%bc/%sc/%rc\ %sq/%bq\ %hr\ %hs\ %{+Q}r\ %ID\ spoa-error:\ %[var(txn.coraza.error)]\ waf-hit:\ %[var(txn.coraza.fail)]"
+    log-format "%ci:%cp\ [%t]\ %ft\ %b/%s\ %Th/%Ti/%TR/%Tq/%Tw/%Tc/%Tr/%Tt\ %ST\ %B\ %CC\ %CS\ %tsc\ %ac/%fc/%bc/%sc/%rc\ %sq/%bq\ %hr\ %hs\ %{+Q}r\ %[var(txn.coraza.id)]\ spoa-error:\ %[var(txn.coraza.error)]\ waf-hit:\ %[var(txn.coraza.status)]"
 
-    filter spoe engine coraza config coraza.cfg
+    # Emulate Apache behavior by only allowing http 1.0, 1.1, 2.0
+    http-request deny deny_status 400 if !HTTP
+    http-request deny deny_status 400 if !HTTP_1.0 !HTTP_1.1 !HTTP_2.0
 
-    # Deny for Coraza WAF hits
-    http-request deny if { var(txn.coraza.fail) -m int eq 1 }
-    http-response deny if { var(txn.coraza.fail) -m int eq 1 }
+    # Set coraza app in HAProxy config to allow customized configs per host.
+    # You can also just leave this as is or even replace the use of a variable
+    # inside the coraza.cfg.
+    http-request set-var(txn.coraza.app) str(sample_app)
+
+    # !! Every http-request line will be executed before this !!
+    # Execute coraza request check.
+    filter spoe engine coraza config /usr/local/etc/haproxy/coraza.cfg
+    http-request send-spoe-group coraza coraza-req
+
+    # Currently haproxy cannot use variables to set the code or deny_status, so this needs to be manually configured here
+    http-request redirect code 302 location %[var(txn.coraza.data)] if { var(txn.coraza.action) -m str redirect }
+    http-response redirect code 302 location %[var(txn.coraza.data)] if { var(txn.coraza.action) -m str redirect }
+
+    http-request deny deny_status 403 hdr waf-block "request"  if { var(txn.coraza.action) -m str deny }
+    http-response deny deny_status 403 hdr waf-block "response" if { var(txn.coraza.action) -m str deny }
+
+    http-request silent-drop if { var(txn.coraza.action) -m str drop }
+    http-response silent-drop if { var(txn.coraza.action) -m str drop }
 
     # Deny in case of an error, when processing with the Coraza SPOA
-    http-request deny deny_status 504 if { var(txn.coraza.error) -m int gt 0 }
-    http-response deny deny_status 504 if { var(txn.coraza.error) -m int gt 0 }
+    http-request deny deny_status 500 if { var(txn.coraza.error) -m int gt 0 }
+    http-response deny deny_status 500 if { var(txn.coraza.error) -m int gt 0 }
+
     use_backend test_backend
 
 backend test_backend
@@ -116,14 +133,15 @@ backend test_backend
     http-request return status 200 content-type "text/plain" string "Welcome!\n"
 
 backend coraza-spoa
+    option spop-check
     mode tcp
-    server s1 127.0.0.1:9000
+    server s1 127.0.0.1:9000 check
 ```
 
 The HAProxy SPOE gets activated by the `filter` statement in `frontent test`.
 
 Configuration of the SPOE behavior is then defined in `coraza.cfg`. This
-includes messages to exchange, which backend HAPRoxy should use internally to
+includes messages to exchange, which backend HAProxy should use internally to
 exchange messages with the SPOA, and some other details.
 
 After a HTTP Request or Response has been scanned by the Coraza Engine, it will
@@ -136,7 +154,7 @@ configuration via the `http-request deny` and `http-response deny`
 statements.
 
 Additionally in case the Coraza SPOA failed processing the request, it will get
-blocked with a `deny_status 504`. By default HAProxy would just disable the
+blocked with a `deny_status 500`. By default HAProxy would just disable the
 `filter` if Coraza takes too long to process the request.
 
 ## HAProxy SPOE Configuration
