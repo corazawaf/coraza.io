@@ -109,7 +109,7 @@ frontend test
 
     # !! Every http-request line will be executed before this !!
     # Execute coraza request check.
-    filter spoe engine coraza config /usr/local/etc/haproxy/coraza.cfg
+    filter spoe engine coraza config /etc/haproxy/coraza.cfg
     http-request send-spoe-group coraza coraza-req
 
     # Currently haproxy cannot use variables to set the code or deny_status, so this needs to be manually configured here
@@ -163,30 +163,45 @@ The HAProxy SPOE is configured in the `/etc/haproxy/coraza.cfg`:
 
 ```conf
 # https://github.com/haproxy/haproxy/blob/master/doc/SPOE.txt
+# /usr/local/etc/haproxy/coraza.cfg
 [coraza]
 spoe-agent coraza-agent
-    messages coraza-req coraza-res
-    option var-prefix coraza
-    option set-on-error error
-    timeout hello      100ms
-    timeout idle       2m
-    timeout processing 500ms
+    # Process HTTP requests only (the responses are not evaluated)
+    messages    coraza-req
+    # Comment the previous line and add coraza-res, to process responses also.
+    #messages   coraza-req     coraza-res
+    groups      coraza-req      coraza-res
+    option      var-prefix      coraza
+    option      set-on-error    error
+    timeout     hello           2s
+    timeout     idle            2m
+    timeout     processing      500ms
     use-backend coraza-spoa
-    log global
+    log         global
 
 spoe-message coraza-req
-    args id=unique-id src-ip=src method=method path=path query=query version=req.ver headers=req.hdrs body=req.body
+    # Arguments are required to be in this order
+    args app=var(txn.coraza.app) src-ip=src src-port=src_port dst-ip=dst dst-port=dst_port method=method path=path query=query version=req.ver headers=req.hdrs body=req.body
     event on-frontend-http-request
 
 spoe-message coraza-res
-    args id=unique-id version=res.ver status=status headers=res.hdrs body=res.body
+    # Arguments are required to be in this order
+    args app=var(txn.coraza.app) id=var(txn.coraza.id) version=res.ver status=status headers=res.hdrs body=res.body
     event on-http-response
+
+spoe-group coraza-req
+    messages coraza-req
+
+spoe-group coraza-res
+    messages coraza-res
+
 ```
 
 It defines processing timeouts and the messages to exchange via the SPOP protocol.
 
-Thats it for the HAProxy side, lets configure the `coraza-spoa` service, which
-should listen on `127.0.0.1:9000` to exchange the `spoe-message` with HAProxy.
+That's it for the HAProxy side, let's configure the `coraza-spoa` service,
+which should listen on `127.0.0.1:9000` to exchange the `spoe-message` with
+HAProxy.
 
 ## Coraza Configuration
 
