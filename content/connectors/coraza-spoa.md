@@ -266,7 +266,7 @@ listed in the `include` section:
 - [/etc/coraza-spoa/plugins/*.conf](https://github.com/coreruleset/coreruleset/tree/v4.0/dev/plugins) - Core Ruleset Plugins
 
 Once the coraza-spoa daemon is running you can begin with the
-[Coraza Engine](http://localhost:1313/docs/seclang/directives/) and
+[Coraza Engine](https://coraza.io/docs/seclang/directives/) and
 [Coreruleset configuration](https://coreruleset.org/docs/).
 
 ## HELP
