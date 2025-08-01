@@ -208,29 +208,49 @@ HAProxy.
 Coraza SPOA is configured via the `/etc/coraza-spoa/config.yml`:
 
 ```yaml
-log:
-  # The log level configuration, one of: debug/info/warn/error/panic/fatal
-  level: info
-  # The log file dir of the coraza-spoa
-  dir: /var/log/coraza-spoa
+# The SPOA server bind address
+bind: 127.0.0.1:9000
 
-spoa:
-  # The SPOA server bind address
-  bind: "127.0.0.1:9000"
+# The log level configuration, one of: debug/info/warn/error/panic/fatal
+log_level: info
+# The log file path
+log_file: /var/log/coraza-spoa/server.log
+# The log format, one of: console/json
+log_format: console
 
-  # Get the coraza.conf from https://github.com/corazawaf/coraza
-  #
-  # Download the OWASP CRS from https://github.com/coreruleset/coreruleset/releases
-  # and copy crs-setup.conf, the rules & plugins directories to /etc/coraza-spoa
-  include:
-    - /etc/coraza-spoa/coraza.conf
-    - /etc/coraza-spoa/crs-setup.conf
-    - /etc/coraza-spoa/rules/*.conf
+# Optional default application to use when the app from the request
+# does not match any of the declared application names
+default_application: sample_app
 
-  # The transaction cache lifetime(ms)
-  transaction_ttl: 60000
-  # The transaction cache limit
-  transaction_active_limit: 100000
+applications:
+  # name is used as key to identify the directives
+  - name: sample_app
+    # Get the coraza.conf from https://github.com/corazawaf/coraza
+    #
+    # Download the OWASP CRS from https://github.com/coreruleset/coreruleset/releases
+    # and copy crs-setup.conf, the rules & plugins directories to /etc/coraza-spoa
+    directives: |
+      Include /etc/coraza-spoa/coraza.conf
+      Include /etc/coraza-spoa/crs-setup.conf
+      SecRuleEngine On
+      Include /etc/coraza-spoa/plugins/*-config.conf
+      Include /etc/coraza-spoa/plugins/*-before.conf
+      Include /etc/coraza-spoa/rules/*.conf
+      Include /etc/coraza-spoa/plugins/*-after.conf
+
+    # HAProxy configured to send requests only, that means no cache required
+    response_check: false
+
+    # The transaction cache lifetime in milliseconds (60000ms = 60s)
+    transaction_ttl_ms: 60000
+
+    # The log level configuration, one of: debug/info/warn/error/panic/fatal
+    log_level: info
+    # The log file path
+    log_file: /var/log/coraza-spoa/coraza-agent.log
+    # The log format, one of: console/json
+    log_format: console
+
 ```
 
 Since Coraza SPOA is only a daemon which exchanges SPOP protocol messages with
