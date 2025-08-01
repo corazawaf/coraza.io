@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Seclang on</title><link>https://coraza.io/docs/seclang/</link><description>Recent content in Seclang on</description><generator>Hugo</generator><language>en-US</language><lastBuildDate>Sun, 06 Oct 2024 18:18:19 +0000</lastBuildDate><atom:link href="https://coraza.io/docs/seclang/index.xml" rel="self" type="application/rss+xml"/><item><title>Directives</title><link>https://coraza.io/docs/seclang/directives/</link><pubDate>Tue, 06 Oct 2020 08:48:57 +0000</pubDate><guid>https://coraza.io/docs/seclang/directives/</guid><description>&lt;h2 id="include">Include &lt;a href="#include" class="anchor" aria-hidden="true">#&lt;/a>&lt;/h2>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Seclang on</title><link>https://coraza.io/docs/seclang/</link><description>Recent content in Seclang on</description><generator>Hugo -- gohugo.io</generator><language>en-US</language><lastBuildDate>Tue, 06 Oct 2020 08:48:23 +0000</lastBuildDate><atom:link href="https://coraza.io/docs/seclang/index.xml" rel="self" type="application/rss+xml"/><item><title>Directives</title><link>https://coraza.io/docs/seclang/directives/</link><pubDate>Tue, 06 Oct 2020 08:48:57 +0000</pubDate><guid>https://coraza.io/docs/seclang/directives/</guid><description>&lt;h2 id="include">Include &lt;a href="#include" class="anchor" aria-hidden="true">#&lt;/a>&lt;/h2>
 &lt;p>&lt;strong>Description:&lt;/strong> Include and evaluate a file or file pattern.&lt;/p>
 &lt;p>&lt;strong>Syntax:&lt;/strong> &lt;code>Include [PATH_TO_CONF_FILES]&lt;/code>&lt;/p>
 &lt;p>Include loads a file or a list of files from the filesystem using golang Glob syntax.&lt;/p>
@@ -14,10 +14,9 @@ Glob ignores file system errors such as I/O errors reading directories. The only
 SecDirective2 &amp;quot;some option between brackets \&amp;quot; and escaped&amp;quot;
 &lt;/code>&lt;/pre>
 &lt;pre>&lt;code>SecSampleDirective this \
- directive \
- is splitted \
- in lines
-
+directive \
+is splitted \
+in lines
 &lt;/code>&lt;/pre>
 &lt;h2 id="rule-syntax">Rule syntax &lt;a href="#rule-syntax" class="anchor" aria-hidden="true">#&lt;/a>&lt;/h2>
 &lt;p>Rules are a special directive that must contain variables, operator and actions: &lt;code>SecRule VARIABLES &amp;quot;@OPERATOR OPERATOR_ARGUMENTS&amp;quot; &amp;quot;ACTIONS&amp;quot;&lt;/code>.&lt;/p></description></item><item><title>Actions</title><link>https://coraza.io/docs/seclang/actions/</link><pubDate>Tue, 06 Oct 2020 08:48:57 +0000</pubDate><guid>https://coraza.io/docs/seclang/actions/</guid><description>&lt;p>Actions are defined as part of a &lt;code>SecRule&lt;/code> or as parameter for &lt;code>SecAction&lt;/code> or &lt;code>SecDefaultAction&lt;/code>. A rule can have no or serveral actions which need to be separated by a comma.&lt;/p>
@@ -25,12 +24,8 @@ SecDirective2 &amp;quot;some option between brackets \&amp;quot; and escaped&amp
 &lt;ul>
 &lt;li>&lt;strong>Disruptive actions&lt;/strong> - Cause Coraza to do something. In many cases something means block transaction, but not in all. For example, the allow action is classified as a disruptive action, but it does the opposite of blocking. There can only be one disruptive action per rule (if there are multiple disruptive actions present, or inherited, only the last one will take effect), or rule chain (in a chain, a disruptive action can only appear in the first rule).
 &lt;div class="alert alert-warning d-flex" role="alert">
- &lt;div class="flex-shrink-1 alert-icon">👉 &lt;/div>
- 
- 
- &lt;div class="w-100"> Disruptive actions will NOT be executed if the &lt;code>SecRuleEngine&lt;/code> is set to &lt;code>DetectionOnly&lt;/code>. If you are creating exception/allowlisting rules that use the allow action, you should also add the &lt;code>ctl:ruleEngine=On&lt;/code> action to execute the action.&lt;/div>
- 
- 
+&lt;div class="flex-shrink-1 alert-icon">👉 &lt;/div>
+&lt;div class="w-100"> Disruptive actions will NOT be executed if the &lt;code>SecRuleEngine&lt;/code> is set to &lt;code>DetectionOnly&lt;/code>. If you are creating exception/allowlisting rules that use the allow action, you should also add the &lt;code>ctl:ruleEngine=On&lt;/code> action to execute the action.&lt;/div>
 &lt;/div>
 &lt;/li>
 &lt;li>&lt;strong>Non-disruptive actions&lt;/strong> - Do something, but that something does not and cannot affect the rule processing flow. Setting a variable, or changing its value is an example of a non-disruptive action. Non-disruptive action can appear in any rule, including each rule belonging to a chain.&lt;/li>

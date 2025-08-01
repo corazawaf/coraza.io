@@ -1,6 +1,6 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Tutorials on</title><link>https://coraza.io/docs/tutorials/</link><description>Recent content in Tutorials on</description><generator>Hugo</generator><language>en-US</language><lastBuildDate>Sun, 05 Sep 2021 14:03:58 -0300</lastBuildDate><atom:link href="https://coraza.io/docs/tutorials/index.xml" rel="self" type="application/rss+xml"/><item><title>Introduction</title><link>https://coraza.io/docs/tutorials/introduction/</link><pubDate>Tue, 06 Oct 2020 08:48:57 +0000</pubDate><guid>https://coraza.io/docs/tutorials/introduction/</guid><description>&lt;h1>
- &lt;img src="https://coraza.io/images/logo_shield_only.png" align="left" height="46px" alt=""/>&amp;nbsp;
- &lt;span>Coraza - Web Application Firewall&lt;/span>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Tutorials on</title><link>https://coraza.io/docs/tutorials/</link><description>Recent content in Tutorials on</description><generator>Hugo -- gohugo.io</generator><language>en-US</language><lastBuildDate>Tue, 06 Oct 2020 08:48:45 +0000</lastBuildDate><atom:link href="https://coraza.io/docs/tutorials/index.xml" rel="self" type="application/rss+xml"/><item><title>Introduction</title><link>https://coraza.io/docs/tutorials/introduction/</link><pubDate>Tue, 06 Oct 2020 08:48:57 +0000</pubDate><guid>https://coraza.io/docs/tutorials/introduction/</guid><description>&lt;h1>
+&lt;img src="https://coraza.io/images/logo_shield_only.png" align="left" height="46px" alt=""/>&amp;nbsp;
+&lt;span>Coraza - Web Application Firewall&lt;/span>
 &lt;/h1>
 &lt;p>&lt;a href="https://github.com/corazawaf/coraza/actions/workflows/regression.yml">&lt;img src="https://github.com/corazawaf/coraza/actions/workflows/regression.yml/badge.svg" alt="Regression Tests">&lt;/a>
 &lt;a href="#">&lt;img src="https://img.shields.io/badge/Coreruleset%20Compatibility-100%25-brightgreen" alt="Coreruleset Compatibility">&lt;/a>
@@ -39,14 +39,14 @@ git clone https://github.com/coreruleset/coreruleset
 &lt;/ol>
 &lt;p>For example:&lt;/p>
 &lt;pre>&lt;code class="language-go">func initCoraza(){
- cfg := coraza.NewWAFConfig()
- .WithDirectivesFromFile(&amp;quot;coraza.conf&amp;quot;)
- .WithDirectivesFromFile(&amp;quot;coreruleset/crs-setup.conf.example&amp;quot;)
- .WithDirectivesFromFile(&amp;quot;coreruleset/rules/*.conf&amp;quot;)
- waf, err := coraza.NewWAF(cfg)
- if err != nil {
- panic(err)
- }
+cfg := coraza.NewWAFConfig()
+.WithDirectivesFromFile(&amp;quot;coraza.conf&amp;quot;)
+.WithDirectivesFromFile(&amp;quot;coreruleset/crs-setup.conf.example&amp;quot;)
+.WithDirectivesFromFile(&amp;quot;coreruleset/rules/*.conf&amp;quot;)
+waf, err := coraza.NewWAF(cfg)
+if err != nil {
+panic(err)
+}
 }
 &lt;/code>&lt;/pre>
 &lt;h2 id="configuration">Configuration &lt;a href="#configuration" class="anchor" aria-hidden="true">#&lt;/a>&lt;/h2>
@@ -60,10 +60,9 @@ git clone https://github.com/coreruleset/coreruleset
 &lt;p>Most plugins will register themselves automatically, but some will require you to call the respective helper.&lt;/p>
 &lt;p>Self-registering plugins will use init() to call the respective registration helper, and they can be imported like this:&lt;/p>
 &lt;pre>&lt;code class="language-go">package main
-
 include(
- &amp;quot;github.com/corazawaf/coraza/v3&amp;quot;
- _ &amp;quot;github.com/someorg/my-awesome-plugin
+&amp;quot;github.com/corazawaf/coraza/v3&amp;quot;
+_ &amp;quot;github.com/someorg/my-awesome-plugin
 )
 &lt;/code>&lt;/pre></description></item><item><title>Upgrade to v3 🆕</title><link>https://coraza.io/docs/tutorials/upgrade/</link><pubDate>Mon, 16 Nov 2020 13:59:39 +0100</pubDate><guid>https://coraza.io/docs/tutorials/upgrade/</guid><description>&lt;p>In this guide, we will outline the necessary steps to upgrade from Coraza v2 to v3. Coraza v3 brings improvements in performance, usability, and extensibility, making it an essential update for users of the library. Follow these steps to ensure a smooth transition.&lt;/p>
 &lt;h3 id="1-update-your-dependencies">1. Update your dependencies &lt;a href="#1-update-your-dependencies" class="anchor" aria-hidden="true">#&lt;/a>&lt;/h3>
