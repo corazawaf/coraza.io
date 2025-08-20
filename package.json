@@ -51,7 +51,7 @@
     "katex": "0.16.21",
     "lazysizes": "5.3.2",
     "markdownlint-cli": "0.44.0",
-    "mermaid": "11.6.0",
+    "mermaid": "11.10.0",
     "postcss": "8.5.3",
     "postcss-cli": "11.0.1",
     "purgecss-whitelister": "2.4.0",
