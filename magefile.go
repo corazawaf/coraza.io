@@ -8,6 +8,8 @@ package main
 
 import (
 	"bufio"
+	"errors"
+	"os"
 	"strings"
 
 	"github.com/magefile/mage/sh"
@@ -18,7 +20,19 @@ func Generate() error {
 		return err
 	}
 
-	if err := sh.RunV("go", "run", "tools/directivesgen/main.go", ".vendor/github.com/corazawaf/coraza/v3"); err != nil {
+	return generateFrom("./vendor/github.com/corazawaf/coraza/v3")
+}
+
+func GenerateFromPath() error {
+	if os.Getenv("CORAZA_PATH") == "" {
+		return errors.New("CORAZA_PATH is not set")
+	}
+
+	return generateFrom(os.Getenv("CORAZA_PATH"))
+}
+
+func generateFrom(libraryPath string) error {
+	if err := sh.RunV("go", "run", "tools/directivesgen/main.go", libraryPath); err != nil {
 		return err
 	}
 
