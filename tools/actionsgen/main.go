@@ -114,7 +114,7 @@ func getActionFromFile(file string, page Page) Page {
 		switch ty := n.(type) {
 		case *ast.GenDecl:
 			if ty.Doc.Text() != "" {
-				actionDoc += ty.Doc.Text()
+				actionDoc = ty.Doc.Text()
 			}
 		case *ast.TypeSpec:
 			typeName := ty.Name.String()
@@ -170,7 +170,22 @@ func parseAction(name string, doc string) Action {
 			key, value, ok = strings.Cut(line, ": ")
 			if !ok {
 				key = previousKey
-				value = " " + line
+				if previousKey == "Example" {
+					value = "\n" + line
+				} else if previousKey == "Description" {
+					// Handle description formatting - preserve line breaks for better readability
+					trimmedLine := strings.TrimSpace(line)
+					if trimmedLine == "" {
+						value = "\n"
+					} else if d.Description == "" {
+						// This is the first line of description
+						value = line
+					} else {
+						value = "\n" + line
+					}
+				} else {
+					value = " " + line
+				}
 			}
 		}
 

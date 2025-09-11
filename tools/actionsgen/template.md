@@ -40,5 +40,8 @@ Disruptive actions will NOT be executed if the `SecRuleEngine` is set to `Detect
 {{ end }}
 
 **Example**:
+
+```
 {{ .Example }}
+```
 {{ end }}
