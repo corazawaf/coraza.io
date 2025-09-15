@@ -1,29 +1,29 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Reference on</title><link>https://coraza.io/docs/reference/</link><description>Recent content in Reference on</description><generator>Hugo -- gohugo.io</generator><language>en-US</language><lastBuildDate>Tue, 06 Oct 2020 08:48:45 +0000</lastBuildDate><atom:link href="https://coraza.io/docs/reference/index.xml" rel="self" type="application/rss+xml"/><item><title>Internals</title><link>https://coraza.io/docs/reference/internals/</link><pubDate>Tue, 06 Oct 2020 08:48:57 +0000</pubDate><guid>https://coraza.io/docs/reference/internals/</guid><description>&lt;h2 id="waf-engine">WAF Engine &lt;a href="#waf-engine" class="anchor" aria-hidden="true">#&lt;/a>&lt;/h2>
-&lt;p>Waf is the main interface used to store settings, rules and create transactions, most directives will set variables for Waf instances. A coraza implementation might have unlimited Waf instances and each Waf might process unlimited transactions.&lt;/p>
-&lt;h2 id="transactions">Transactions &lt;a href="#transactions" class="anchor" aria-hidden="true">#&lt;/a>&lt;/h2>
-&lt;p>Transactions are an instance of an url call for a Waf instance, transactions are created with &lt;code>wafinstance.NewTransaction()&lt;/code>. Transactions hold collections and configurations that may be updated using rules.&lt;/p>
-&lt;h2 id="macro-expansion">Macro Expansion &lt;a href="#macro-expansion" class="anchor" aria-hidden="true">#&lt;/a>&lt;/h2>
-&lt;p>Macro expansions are a function available for &lt;code>transactions&lt;/code>, a macro expansion will compile a string and provide variables data to the current context. Macro expansion is performed by running a regular expression that will find &lt;code>%{request_headers.test}&lt;/code> and replace the value using:&lt;/p></description></item><item><title>Benchmarks</title><link>https://coraza.io/docs/reference/benchmarks/</link><pubDate>Tue, 06 Oct 2020 08:48:57 +0000</pubDate><guid>https://coraza.io/docs/reference/benchmarks/</guid><description>&lt;h2 id="tests-description">Tests description &lt;a href="#tests-description" class="anchor" aria-hidden="true">#&lt;/a>&lt;/h2>
-&lt;ul>
-&lt;li>Tests are performed using OWASP Core Ruleset v4 and go benchmarks.&lt;/li>
-&lt;li>The benchmark tool supports coraza v2, v3 and modsecurity.&lt;/li>
-&lt;li>Modsecurity is executed using CGO.&lt;/li>
-&lt;li>There are currently 4 test-cases and 7 variations:
-&lt;ul>
-&lt;li>JSON request: 1kb and 100kb payload&lt;/li>
-&lt;li>URLENCODED request: 1kb and 100kb payload&lt;/li>
-&lt;li>Multipart file upload: 1kb and 100kb payload&lt;/li>
-&lt;li>GET request: no body&lt;/li>
-&lt;/ul>
-&lt;/li>
-&lt;/ul>
-&lt;h2 id="results">Results &lt;a href="#results" class="anchor" aria-hidden="true">#&lt;/a>&lt;/h2>
-&lt;p>&lt;strong>Machine specs:&lt;/strong> Apple M1 Pro (10 cores, 16 GB RAM)&lt;/p></description></item><item><title>Body Processing</title><link>https://coraza.io/docs/reference/body-processing/</link><pubDate>Tue, 06 Oct 2020 08:48:57 +0000</pubDate><guid>https://coraza.io/docs/reference/body-processing/</guid><description>&lt;h2 id="bodybuffer">BodyBuffer &lt;a href="#bodybuffer" class="anchor" aria-hidden="true">#&lt;/a>&lt;/h2>
-&lt;p>BodyBuffer is used to effectively handle large bodies. Coraza has to buffer the body in order to make reliable blocking possible. Future versions might implement a more efficient solution.&lt;/p>
-&lt;p>&lt;code>BodyBuffer.Reader&lt;/code> is a &lt;code>io.Reader&lt;/code> that reads from either a memory buffer or a file. Using files is disabled for tinygo.&lt;/p>
-&lt;p>&lt;strong>Important:&lt;/strong> Copying a Reader to BodyBuffer will most likely flush the original reader. In most cases you will have to keep two copies of the reader, one for coraza, and one for your application. You can simply replace your reader pointer with the BodyBuffer reader pointer.&lt;/p></description></item><item><title>Extending</title><link>https://coraza.io/docs/reference/extending/</link><pubDate>Tue, 06 Oct 2020 08:48:57 +0000</pubDate><guid>https://coraza.io/docs/reference/extending/</guid><description>&lt;ul>
-&lt;li>&lt;strong>Rule Operators:&lt;/strong> Create rule operators like @even to detect even numbers&lt;/li>
-&lt;li>&lt;strong>Rule Transformations:&lt;/strong> Create rule transformations like t:rot13 to encode your values in ROT13&lt;/li>
-&lt;li>&lt;strong>Rule Actions:&lt;/strong> Create rule actions like challenge to redirect a malicious request to some bot detection system&lt;/li>
-&lt;/ul>
-&lt;p>The plugin interface provides three functions to extend rule operators, transformations and actions. Each one of them must match it&amp;rsquo;s proper type or interface and be registered using the &lt;code>plugins&lt;/code> package.&lt;/p></description></item></channel></rss>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Reference on</title><link>https://coraza.io/docs/reference/</link><description>Recent content in Reference on</description><generator>Hugo -- gohugo.io</generator><language>en-US</language><lastBuildDate>Tue, 06 Oct 2020 08:48:45 +0000</lastBuildDate><atom:link href="https://coraza.io/docs/reference/index.xml" rel="self" type="application/rss+xml"/><item><title>Internals</title><link>https://coraza.io/docs/reference/internals/</link><pubDate>Tue, 06 Oct 2020 08:48:57 +0000</pubDate><guid>https://coraza.io/docs/reference/internals/</guid><description>&lt;h2 id="waf-engine"&gt;WAF Engine &lt;a href="#waf-engine" class="anchor" aria-hidden="true"&gt;#&lt;/a&gt;&lt;/h2&gt;
+&lt;p&gt;Waf is the main interface used to store settings, rules and create transactions, most directives will set variables for Waf instances. A coraza implementation might have unlimited Waf instances and each Waf might process unlimited transactions.&lt;/p&gt;
+&lt;h2 id="transactions"&gt;Transactions &lt;a href="#transactions" class="anchor" aria-hidden="true"&gt;#&lt;/a&gt;&lt;/h2&gt;
+&lt;p&gt;Transactions are an instance of an url call for a Waf instance, transactions are created with &lt;code&gt;wafinstance.NewTransaction()&lt;/code&gt;. Transactions hold collections and configurations that may be updated using rules.&lt;/p&gt;
+&lt;h2 id="macro-expansion"&gt;Macro Expansion &lt;a href="#macro-expansion" class="anchor" aria-hidden="true"&gt;#&lt;/a&gt;&lt;/h2&gt;
+&lt;p&gt;Macro expansions are a function available for &lt;code&gt;transactions&lt;/code&gt;, a macro expansion will compile a string and provide variables data to the current context. Macro expansion is performed by running a regular expression that will find &lt;code&gt;%{request_headers.test}&lt;/code&gt; and replace the value using:&lt;/p&gt;</description></item><item><title>Benchmarks</title><link>https://coraza.io/docs/reference/benchmarks/</link><pubDate>Tue, 06 Oct 2020 08:48:57 +0000</pubDate><guid>https://coraza.io/docs/reference/benchmarks/</guid><description>&lt;h2 id="tests-description"&gt;Tests description &lt;a href="#tests-description" class="anchor" aria-hidden="true"&gt;#&lt;/a&gt;&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;Tests are performed using OWASP Core Ruleset v4 and go benchmarks.&lt;/li&gt;
+&lt;li&gt;The benchmark tool supports coraza v2, v3 and modsecurity.&lt;/li&gt;
+&lt;li&gt;Modsecurity is executed using CGO.&lt;/li&gt;
+&lt;li&gt;There are currently 4 test-cases and 7 variations:
+&lt;ul&gt;
+&lt;li&gt;JSON request: 1kb and 100kb payload&lt;/li&gt;
+&lt;li&gt;URLENCODED request: 1kb and 100kb payload&lt;/li&gt;
+&lt;li&gt;Multipart file upload: 1kb and 100kb payload&lt;/li&gt;
+&lt;li&gt;GET request: no body&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="results"&gt;Results &lt;a href="#results" class="anchor" aria-hidden="true"&gt;#&lt;/a&gt;&lt;/h2&gt;
+&lt;p&gt;&lt;strong&gt;Machine specs:&lt;/strong&gt; Apple M1 Pro (10 cores, 16 GB RAM)&lt;/p&gt;</description></item><item><title>Body Processing</title><link>https://coraza.io/docs/reference/body-processing/</link><pubDate>Tue, 06 Oct 2020 08:48:57 +0000</pubDate><guid>https://coraza.io/docs/reference/body-processing/</guid><description>&lt;h2 id="bodybuffer"&gt;BodyBuffer &lt;a href="#bodybuffer" class="anchor" aria-hidden="true"&gt;#&lt;/a&gt;&lt;/h2&gt;
+&lt;p&gt;BodyBuffer is used to effectively handle large bodies. Coraza has to buffer the body in order to make reliable blocking possible. Future versions might implement a more efficient solution.&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;BodyBuffer.Reader&lt;/code&gt; is a &lt;code&gt;io.Reader&lt;/code&gt; that reads from either a memory buffer or a file. Using files is disabled for tinygo.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Important:&lt;/strong&gt; Copying a Reader to BodyBuffer will most likely flush the original reader. In most cases you will have to keep two copies of the reader, one for coraza, and one for your application. You can simply replace your reader pointer with the BodyBuffer reader pointer.&lt;/p&gt;</description></item><item><title>Extending</title><link>https://coraza.io/docs/reference/extending/</link><pubDate>Tue, 06 Oct 2020 08:48:57 +0000</pubDate><guid>https://coraza.io/docs/reference/extending/</guid><description>&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Rule Operators:&lt;/strong&gt; Create rule operators like @even to detect even numbers&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Rule Transformations:&lt;/strong&gt; Create rule transformations like t:rot13 to encode your values in ROT13&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Rule Actions:&lt;/strong&gt; Create rule actions like challenge to redirect a malicious request to some bot detection system&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;The plugin interface provides three functions to extend rule operators, transformations and actions. Each one of them must match it&amp;rsquo;s proper type or interface and be registered using the &lt;code&gt;plugins&lt;/code&gt; package.&lt;/p&gt;</description></item></channel></rss>
