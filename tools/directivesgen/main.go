@@ -12,6 +12,7 @@ import (
 	"go/token"
 	"html"
 	"html/template"
+	"io/fs"
 	"log"
 	"os"
 	"path"
@@ -23,10 +24,10 @@ import (
 
 type Page struct {
 	LastModification string
-	Directives       []Directive
+	Blocks           []DocBlock
 }
 
-type Directive struct {
+type DocBlock struct {
 	Name             string
 	Description      string
 	Syntax           string
@@ -36,13 +37,28 @@ type Directive struct {
 	Content          string
 }
 
-//go:embed template.md
-var contentTemplate string
+var (
+	//go:embed templates/directives.md
+	directivesTemplate string
 
-const dstFile = "./content/docs/seclang/directives.md"
+	//go:embed templates/operators.md
+	operatorsTemplate string
+)
+
+const (
+	directivesOutput = "./content/docs/seclang/directives.md"
+	operatorsOutput  = "./content/docs/seclang/operators.md"
+)
+
+var directivesRegex = regexp.MustCompile("(`Sec[a-zA-Z0-9]+`)")
 
 func main() {
-	tmpl, err := template.New("directive").Parse(contentTemplate)
+	updateOperators()
+	updateDirectives()
+}
+
+func updateDirectives() {
+	tmpl, err := template.New("directives").Parse(directivesTemplate)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -59,7 +75,7 @@ func main() {
 		log.Fatal(err)
 	}
 
-	dstf, err := os.Create(dstFile)
+	dstf, err := os.Create(directivesOutput)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -84,19 +100,21 @@ func main() {
 				return true
 			}
 
-			directiveName := fnName[9:]
-
-			page.Directives = append(page.Directives, parseDirective(directiveName, fn.Doc.Text()))
+			page.Blocks = append(page.Blocks, parseDocblock(fn.Doc.Text(), directivesRegex))
 		}
 		return true
 	})
 
-	sort.Slice(page.Directives, func(i, j int) bool {
-		return page.Directives[i].Name < page.Directives[j].Name
+	writePage(page, tmpl, dstf)
+}
+
+func writePage(page Page, tmpl *template.Template, dstf *os.File) {
+	sort.Slice(page.Blocks, func(i, j int) bool {
+		return page.Blocks[i].Name < page.Blocks[j].Name
 	})
 
 	content := bytes.Buffer{}
-	err = tmpl.Execute(&content, page)
+	err := tmpl.Execute(&content, page)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -107,24 +125,65 @@ func main() {
 	}
 }
 
-func parseDirective(name string, doc string) Directive {
-	d := Directive{
-		Name: name,
+func updateOperators() {
+	tmpl, err := template.New("operators").Parse(operatorsTemplate)
+	if err != nil {
+		log.Fatal(err)
 	}
 
-	fieldAppenders := map[string]func(d *Directive, value string){
-		"Description": func(d *Directive, value string) { d.Description += value },
-		"Syntax":      func(d *Directive, value string) { d.Syntax += value },
-		"Default":     func(d *Directive, value string) { d.Default += value },
+	dirpath := path.Join(os.Args[1], "internal/operators")
+	fset := token.NewFileSet()
+	pkgs, err := parser.ParseDir(fset, dirpath, func(fi fs.FileInfo) bool { return true }, parser.ParseComments)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	dstf, err := os.Create(operatorsOutput)
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer dstf.Close()
+
+	page := Page{
+		LastModification: time.Now().Format(time.RFC3339),
+	}
+
+	for _, pkg := range pkgs {
+		for _, f := range pkg.Files {
+			ast.Inspect(f, func(n ast.Node) bool {
+				switch fn := n.(type) {
+				case *ast.FuncDecl:
+					if fn.Doc == nil {
+						return true
+					}
+
+					if !strings.HasPrefix(fn.Name.String(), "newOperator") {
+						return true
+					}
+
+					page.Blocks = append(page.Blocks, parseDocblock(fn.Doc.Text(), nil))
+				}
+				return true
+			})
+		}
+	}
+
+	writePage(page, tmpl, dstf)
+}
+
+func parseDocblock(doc string, linker *regexp.Regexp) DocBlock {
+	d := DocBlock{}
+
+	fieldAppenders := map[string]func(d *DocBlock, value string){
+		"Name":        func(d *DocBlock, value string) { d.Name = value },
+		"Description": func(d *DocBlock, value string) { d.Description += value },
+		"Syntax":      func(d *DocBlock, value string) { d.Syntax += value },
+		"Default":     func(d *DocBlock, value string) { d.Default += value },
 	}
 
 	previousKey := ""
 	scanner := bufio.NewScanner(strings.NewReader(doc))
 	for scanner.Scan() {
-		if strings.HasPrefix(scanner.Text(), "directive") {
-			continue
-		}
-
 		if len(strings.TrimSpace(scanner.Text())) == 0 {
 			continue
 		}
@@ -153,8 +212,10 @@ func parseDirective(name string, doc string) Directive {
 		d.Content += decorateExample(decorateNote(scanner.Text())) + "\n"
 	}
 
-	d.Description = addsLinksToDirectives(d.Description)
-	d.Content = addsLinksToDirectives(d.Content)
+	if linker != nil {
+		d.Description = addsLinksToDirectives(d.Description, linker)
+		d.Content = addsLinksToDirectives(d.Content, linker)
+	}
 
 	return d
 }
@@ -167,10 +228,8 @@ func decorateExample(s string) string {
 	return strings.Replace(s, "Example:", "**Example:**", -1)
 }
 
-var directivesRegex = regexp.MustCompile("(`Sec[a-zA-Z0-9]+`)")
-
-func addsLinksToDirectives(s string) string {
-	return directivesRegex.ReplaceAllStringFunc(s, func(s string) string {
+func addsLinksToDirectives(s string, linker *regexp.Regexp) string {
+	return linker.ReplaceAllStringFunc(s, func(s string) string {
 		return "[" + s + "](#" + strings.ToLower(s[1:len(s)-1]) + ")"
 	})
 }
