@@ -112,27 +112,42 @@ func getActionFromFile(file string, page Page) Page {
 		log.Fatal(err)
 	}
 
-	actionDoc := ""
-	ast.Inspect(f, func(n ast.Node) bool {
-		switch ty := n.(type) {
-		case *ast.GenDecl:
-			if ty.Doc.Text() != "" {
-				actionDoc = ty.Doc.Text()
+	for _, decl := range f.Decls {
+		genDecl, ok := decl.(*ast.GenDecl)
+		if !ok || genDecl.Tok != token.TYPE {
+			continue
+		}
+
+		// Default documentation for all specs in this GenDecl.
+		groupDoc := ""
+		if genDecl.Doc != nil {
+			groupDoc = genDecl.Doc.Text()
+		}
+
+		for _, spec := range genDecl.Specs {
+			typeSpec, ok := spec.(*ast.TypeSpec)
+			if !ok {
+				continue
 			}
-		case *ast.TypeSpec:
-			typeName := ty.Name.String()
+
+			typeName := typeSpec.Name.Name
 			if !strings.HasSuffix(typeName, "Fn") {
-				return true
+				continue
 			}
 			if len(typeName) < 3 {
-				return true
+				continue
+			}
+
+			// Prefer doc comments directly attached to the TypeSpec, if any.
+			specDoc := groupDoc
+			if typeSpec.Doc != nil && typeSpec.Doc.Text() != "" {
+				specDoc = typeSpec.Doc.Text()
 			}
 
 			actionName := typeName[0 : len(typeName)-2]
-			page.Actions = append(page.Actions, parseAction(actionName, actionDoc))
+			page.Actions = append(page.Actions, parseAction(actionName, specDoc))
 		}
-		return true
-	})
+	}
 	return page
 }
 
@@ -192,7 +207,7 @@ func parseAction(name string, doc string) Action {
 			}
 		}
 
-		if fn, ok := fieldAppenders[key]; ok {
+		if fn, foundOk := fieldAppenders[key]; foundOk {
 			fn(&d, value)
 			previousKey = key
 		} else if previousKey != "" {
