@@ -7,7 +7,6 @@ import (
 	"bufio"
 	"bytes"
 	_ "embed"
-	"fmt"
 	"go/ast"
 	"go/parser"
 	"go/token"
