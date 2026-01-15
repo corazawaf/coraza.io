@@ -1,0 +1,219 @@
+// Copyright 2024 The OWASP Coraza contributors
+// SPDX-License-Identifier: Apache-2.0
+
+package main
+
+import (
+	"bufio"
+	"bytes"
+	_ "embed"
+	"go/ast"
+	"go/parser"
+	"go/token"
+	"html"
+	"html/template"
+	"log"
+	"os"
+	"path"
+	"path/filepath"
+	"sort"
+	"strings"
+	"time"
+)
+
+type Page struct {
+	LastModification string
+	Actions          []Action
+}
+
+type Action struct {
+	Name        string
+	ActionGroup string
+	Description string
+	Example     string
+	Phases      string
+}
+
+//go:embed template.md
+var contentTemplate string
+
+const dstFile = "./content/docs/seclang/actions.md"
+
+func main() {
+	tmpl, err := template.New("action").Parse(contentTemplate)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	var files []string
+
+	if len(os.Args) < 2 {
+		log.Fatalf("usage: %s <coraza-path>", os.Args[0])
+	}
+
+	root := path.Join(os.Args[1], "internal/actions")
+	err = filepath.Walk(root, func(path string, info os.FileInfo, err error) error {
+		if err != nil {
+			log.Printf("error walking %q: %v", path, err)
+			return err
+		}
+
+		// get all files that are not test files
+		if !info.IsDir() && !strings.HasSuffix(info.Name(), "_test.go") && info.Name() != "actions.go" {
+			files = append(files, path)
+		}
+
+		return nil
+	})
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	dstf, err := os.Create(dstFile)
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer dstf.Close()
+
+	page := Page{
+		LastModification: time.Now().Format(time.RFC3339),
+	}
+
+	for _, file := range files {
+		page = getActionFromFile(file, page)
+	}
+
+	sort.Slice(page.Actions, func(i, j int) bool {
+		return page.Actions[i].Name < page.Actions[j].Name
+	})
+
+	content := bytes.Buffer{}
+	err = tmpl.Execute(&content, page)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	_, err = dstf.WriteString(html.UnescapeString(content.String()))
+	if err != nil {
+		log.Fatal(err)
+	}
+}
+
+func getActionFromFile(file string, page Page) Page {
+	src, err := os.ReadFile(file)
+	if err != nil {
+		log.Fatal(err)
+	}
+	fSet := token.NewFileSet()
+	f, err := parser.ParseFile(fSet, file, src, parser.ParseComments)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	for _, decl := range f.Decls {
+		genDecl, ok := decl.(*ast.GenDecl)
+		if !ok || genDecl.Tok != token.TYPE {
+			continue
+		}
+
+		// Default documentation for all specs in this GenDecl.
+		groupDoc := ""
+		if genDecl.Doc != nil {
+			groupDoc = genDecl.Doc.Text()
+		}
+
+		for _, spec := range genDecl.Specs {
+			typeSpec, ok := spec.(*ast.TypeSpec)
+			if !ok {
+				continue
+			}
+
+			typeName := typeSpec.Name.Name
+			if !strings.HasSuffix(typeName, "Fn") {
+				continue
+			}
+			if len(typeName) < 3 {
+				continue
+			}
+
+			// Prefer doc comments directly attached to the TypeSpec, if any.
+			specDoc := groupDoc
+			if typeSpec.Doc != nil && typeSpec.Doc.Text() != "" {
+				specDoc = typeSpec.Doc.Text()
+			}
+
+			actionName := typeName[0 : len(typeName)-2]
+			page.Actions = append(page.Actions, parseAction(actionName, specDoc))
+		}
+	}
+	return page
+}
+
+func parseAction(name string, doc string) Action {
+	var key string
+	var value string
+	var ok bool
+
+	d := Action{
+		Name: name,
+	}
+
+	fieldAppenders := map[string]func(d *Action, value string){
+		"Description":       func(a *Action, value string) { a.Description += value },
+		"Action Group":      func(a *Action, value string) { a.ActionGroup += value },
+		"Example":           func(a *Action, value string) { a.Example += value },
+		"Processing Phases": func(a *Action, value string) { a.Phases += value },
+	}
+
+	previousKey := ""
+	scanner := bufio.NewScanner(strings.NewReader(doc))
+	for scanner.Scan() {
+		line := scanner.Text()
+		if len(strings.TrimSpace(line)) == 0 {
+			continue
+		}
+
+		// There are two types of comments. One is a key-value pair, the other is a continuation of the previous key
+		// E.g.
+		// Action Group: Non-disruptive                <= first one, key value pair
+		// Example:                                    <= second one, key in a line, value in the next lines
+		// This action is used to generate a response.
+		//
+		if strings.HasSuffix(line, ":") {
+			key = line[:len(line)-1]
+			value = ""
+		} else {
+			key, value, ok = strings.Cut(line, ": ")
+			if !ok {
+				key = previousKey
+				if previousKey == "Example" {
+					value = "\n" + line
+				} else if previousKey == "Description" {
+					// Handle description formatting - preserve line breaks for better readability
+					trimmedLine := strings.TrimSpace(line)
+					if trimmedLine == "" {
+						value = "\n"
+					} else if d.Description == "" {
+						// This is the first line of description
+						value = line
+					} else {
+						value = "\n" + line
+					}
+				} else {
+					value = " " + line
+				}
+			}
+		}
+
+		if fn, foundOk := fieldAppenders[key]; foundOk {
+			fn(&d, value)
+			previousKey = key
+		} else if previousKey != "" {
+			fieldAppenders[previousKey](&d, value)
+		} else {
+			log.Fatalf("unknown field %q", key)
+		}
+	}
+	return d
+}
