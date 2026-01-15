@@ -95,17 +95,18 @@ You may evaluate multiple variables by separating them win pipe (|), for example
 SecRule VARIABLE1|VARIABLE2|VARIABLE3:/some-regex/|!VARIABLE3:id "!@rx \w+" "id:1,pass"
 ```
 
-#### XPATH variables
+#### XPath variables
 
 If the body processor is set to process JSON or XML, you may use the special variables **XML** and **JSON**, for example:
 
 ```
 SecAction "id:1, phase:1,ctl:setRequestBodyProcessor=XML,pass,nolog"
 # We are denying a book because we don't like it
-SecRule XML:/bookstore/book[last()] "name of the book" "id:2,phase:2,log,logdata:'We don´t like this book!',deny,status:403"
+SecRule XML:/* "name of the book" "id:2,phase:2,log,logdata:'We don´t like this book!',deny,status:403"
 ```
 
-See [https://github.com/antchfx/xpath](https://github.com/antchfx/xpath) for more information about XPATH support.
+For XML, currently only two XPath expressions are supported: `XML:/*` and `XML://@*`.
+For JSON, you can access elements using either `.OBJECT_KEY` or `.ARRAY_ELEMENT_INDEX` (for example: `JSON.a.1` for `{"a":[1,2]} returns 2).
 
 ### Operators
 
