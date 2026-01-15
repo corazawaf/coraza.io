@@ -1,6 +1,10 @@
 package main
 
-import "testing"
+import (
+	"os"
+	"path/filepath"
+	"testing"
+)
 
 func TestParseAction(t *testing.T) {
 	tests := map[string]struct {
@@ -85,60 +89,143 @@ func TestParseAction(t *testing.T) {
 	}
 }
 
-func TestPage(t *testing.T) {
-	// Test the Page struct initialization
-	page := Page{
-		LastModification: "2024-01-01T00:00:00Z",
-		Actions: []Action{
-			{
-				Name:        "test",
-				ActionGroup: "Disruptive",
-				Description: "Test action",
-				Example:     "Test example",
+func TestGetActionFromFile(t *testing.T) {
+	// Create a temporary directory for test files
+	tmpDir := t.TempDir()
+
+	tests := map[string]struct {
+		fileContent string
+		expected    []Action
+	}{
+		"single action with full documentation": {
+			fileContent: `package actions
+
+// Action Group: Disruptive
+//
+// Description: Denies access to the request.
+//
+// Example:
+// ` + "```" + `
+// SecRule ARGS "@rx test" "phase:2,deny,id:1"
+// ` + "```" + `
+type DenyFn struct{}
+`,
+			expected: []Action{
+				{
+					Name:        "Deny",
+					ActionGroup: "Disruptive",
+					Description: "Denies access to the request.",
+					Example:     "\n" + "```" + "\nSecRule ARGS \"@rx test\" \"phase:2,deny,id:1\"\n" + "```",
+					Phases:      "",
+				},
 			},
+		},
+		"action with processing phases": {
+			fileContent: `package actions
+
+// Action Group: Non-disruptive
+//
+// Description: Sets a variable.
+//
+// Processing Phases: 1, 2, 3, 4, 5
+//
+// Example:
+// ` + "```" + `
+// SecAction "phase:1,setvar:tx.test=1,id:2"
+// ` + "```" + `
+type SetvarFn struct{}
+`,
+			expected: []Action{
+				{
+					Name:        "Setvar",
+					ActionGroup: "Non-disruptive",
+					Description: "Sets a variable.",
+					Example:     "\n" + "```" + "\nSecAction \"phase:1,setvar:tx.test=1,id:2\"\n" + "```",
+					Phases:      "1, 2, 3, 4, 5",
+				},
+			},
+		},
+		"multiple actions in one file": {
+			fileContent: `package actions
+
+// Action Group: Disruptive
+//
+// Description: Blocks the request.
+type BlockFn struct{}
+
+// Action Group: Non-disruptive
+//
+// Description: Logs a message.
+type LogFn struct{}
+`,
+			expected: []Action{
+				{
+					Name:        "Block",
+					ActionGroup: "Disruptive",
+					Description: "Blocks the request.",
+					Example:     "",
+					Phases:      "",
+				},
+				{
+					Name:        "Log",
+					ActionGroup: "Non-disruptive",
+					Description: "Logs a message.",
+					Example:     "",
+					Phases:      "",
+				},
+			},
+		},
+		"file with no action types": {
+			fileContent: `package actions
+
+// Some random comment
+type SomeOtherType struct{}
+`,
+			expected: []Action{},
 		},
 	}
 
-	if page.LastModification != "2024-01-01T00:00:00Z" {
-		t.Errorf("LastModification: want %q, have %q", "2024-01-01T00:00:00Z", page.LastModification)
-	}
+	for name, test := range tests {
+		t.Run(name, func(t *testing.T) {
+			// Create test file
+			testFile := filepath.Join(tmpDir, name+".go")
+			err := os.WriteFile(testFile, []byte(test.fileContent), 0644)
+			if err != nil {
+				t.Fatalf("Failed to create test file: %v", err)
+			}
 
-	if len(page.Actions) != 1 {
-		t.Errorf("Actions length: want %d, have %d", 1, len(page.Actions))
-	}
+			// Test getActionFromFile
+			page := Page{}
+			result := getActionFromFile(testFile, page)
 
-	if page.Actions[0].Name != "test" {
-		t.Errorf("First action name: want %q, have %q", "test", page.Actions[0].Name)
-	}
-}
+			// Verify the number of actions
+			if len(result.Actions) != len(test.expected) {
+				t.Errorf("Number of actions: want %d, got %d", len(test.expected), len(result.Actions))
+			}
 
-func TestAction(t *testing.T) {
-	// Test the Action struct initialization
-	action := Action{
-		Name:        "testAction",
-		ActionGroup: "Non-disruptive",
-		Description: "Test description",
-		Example:     "Test example",
-		Phases:      "1, 2",
-	}
+			// Verify each action
+			for i, expectedAction := range test.expected {
+				if i >= len(result.Actions) {
+					break
+				}
+				gotAction := result.Actions[i]
 
-	if action.Name != "testAction" {
-		t.Errorf("Name: want %q, have %q", "testAction", action.Name)
-	}
-
-	if action.ActionGroup != "Non-disruptive" {
-		t.Errorf("ActionGroup: want %q, have %q", "Non-disruptive", action.ActionGroup)
-	}
-
-	if action.Description != "Test description" {
-		t.Errorf("Description: want %q, have %q", "Test description", action.Description)
-	}
-
-	if action.Example != "Test example" {
-		t.Errorf("Example: want %q, have %q", "Test example", action.Example)
-	}
-
-	if action.Phases != "1, 2" {
-		t.Errorf("Phases: want %q, have %q", "1, 2", action.Phases)
+				if gotAction.Name != expectedAction.Name {
+					t.Errorf("Action[%d].Name: want %q, got %q", i, expectedAction.Name, gotAction.Name)
+				}
+				if gotAction.ActionGroup != expectedAction.ActionGroup {
+					t.Errorf("Action[%d].ActionGroup: want %q, got %q", i, expectedAction.ActionGroup, gotAction.ActionGroup)
+				}
+				if gotAction.Description != expectedAction.Description {
+					t.Errorf("Action[%d].Description: want %q, got %q", i, expectedAction.Description, gotAction.Description)
+				}
+				if gotAction.Example != expectedAction.Example {
+					t.Errorf("Action[%d].Example: want %q, got %q", i, expectedAction.Example, gotAction.Example)
+				}
+				if gotAction.Phases != expectedAction.Phases {
+					t.Errorf("Action[%d].Phases: want %q, got %q", i, expectedAction.Phases, gotAction.Phases)
+				}
+			}
+		})
 	}
 }
