@@ -3,11 +3,7 @@ title: "Actions"
 description: "Actions available in Coraza"
 lead: "The action of a rule defines how to handle HTTP requests that have matched one or more rule conditions."
 date: 2020-10-06T08:48:57+00:00
-<<<<<<< HEAD
 lastmod: "2026-01-15T08:20:48-03:00"
-=======
-lastmod: "2025-09-11T09:53:04-03:00"
->>>>>>> 374f5fc (docs: update actions with generated content)
 draft: false
 images: []
 menu:
@@ -40,21 +36,12 @@ stopping processing of the current phase but also skipping over all other phases
 (The logging phase is special; it is designed to be always execute.)the engine will stop processing the current phase, and the other phases will continue.engine will stop processing the current phase, and the next phase to be processed will be phase `types.PhaseResponseHeaders`.
 
 **Action Group**: Disruptive
-<<<<<<< HEAD
 
 
 
 
 **Example**:
 
-=======
-
-
-
-**Example**:
-
-```
->>>>>>> 374f5fc (docs: update actions with generated content)
 
 ```
 # Allow unrestricted access from 192.168.1.100
@@ -66,19 +53,14 @@ SecAction phase:1,allow,id:97
 # If you want to allow a response through, put a rule in phase RESPONSE_HEADERS and use allow
 SecAction phase:3,allow,id:98
 ```
-<<<<<<< HEAD
 
 
-=======
-```
->>>>>>> 374f5fc (docs: update actions with generated content)
 
 ## auditlog
 
 **Description**: Marks the transaction for logging in the audit log.
 
 **Action Group**: Non-disruptive
-<<<<<<< HEAD
 
 
 
@@ -92,20 +74,6 @@ SecRule REMOTE_ADDR "^192\.168\.1\.100$" "auditlog,phase:1,id:100,allow"
 ```
 
 
-=======
-
-
-
-**Example**:
-
-```
-
-```
-# The action is explicit if the log is specified.
-SecRule REMOTE_ADDR "^192\.168\.1\.100$" "auditlog,phase:1,id:100,allow"
-```
-```
->>>>>>> 374f5fc (docs: update actions with generated content)
 
 ## block
 
@@ -119,15 +87,9 @@ In future versions of Coraza, more control and functionality will be added to de
 
 
 
-<<<<<<< HEAD
 
 **Example**:
 
-=======
-**Example**:
-
-```
->>>>>>> 374f5fc (docs: update actions with generated content)
 
 ```
 # Specify how blocking is to be done
@@ -148,7 +110,6 @@ SecRule ARGS "@rx attack1" "phase:2,id:1,deny"
 # Change how rule ID 1 blocks
 SecRuleUpdateActionById 1 "block"
 ```
-```
 
 
 
@@ -162,33 +123,19 @@ The `TX.0` variable always contains the entire area that the regular expression 
 All the other variables contain the captured values, in the order in which the capturing parentheses appear in the regular expression.
 
 **Action Group**: Non-disruptive
-<<<<<<< HEAD
 
 
 
 
 **Example**:
 
-=======
-
-
-
-**Example**:
-
-```
->>>>>>> 374f5fc (docs: update actions with generated content)
 
 ```
 SecRule REQUEST_BODY "^username=(\w{25,})" phase:2,capture,t:none,chain,id:105
 SecRule TX:1 "(?:(?:a(dmin|nonymous)))"
-<<<<<<< HEAD
 ```
 
 
-=======
-```
-```
->>>>>>> 374f5fc (docs: update actions with generated content)
 
 ## chain
 
@@ -212,7 +159,6 @@ If one of the chained rule is negative, the entire rule chain will fail to match
 
 
 
-<<<<<<< HEAD
 
 **Example**:
 
@@ -225,19 +171,6 @@ If one of the chained rule is negative, the entire rule chain will fail to match
 ```
 
 
-=======
-**Example**:
-
-```
-
-```
-# Refuse to accept POST requests that do not contain a Content-Length header.
-# Noted that the rule should be preceded by a rule that verifies only valid request methods are used.
-	SecRule REQUEST_METHOD "^POST$" "phase:1,chain,t:none,id:105"
-		SecRule &REQUEST_HEADERS:Content-Length "@eq 0" "t:none"
-```
-```
->>>>>>> 374f5fc (docs: update actions with generated content)
 
 ## ctl
 
@@ -275,7 +208,6 @@ The default configuration, as well as the other transactions running in parallel
     This allows for inspection of request bodies of unknown types.
 
 **Action Group**: Non-disruptive
-<<<<<<< HEAD
 
 
 
@@ -292,23 +224,6 @@ SecRule REQUEST_CONTENT_TYPE ^text/xml "nolog,pass,id:106,phase:1,ctl:requestBod
 ```
 
 
-=======
-
-
-
-**Example**:
-
-```
-
-```
-# Parse requests with Content-Type "text/xml" as XML
-SecRule REQUEST_CONTENT_TYPE ^text/xml "nolog,pass,id:106,ctl:requestBodyProcessor=XML"
-# white-list the user parameter for rule #981260 when the REQUEST_URI is /index.php
-		SecRule REQUEST_URI "@beginsWith /index.php" "phase:1,t:none,pass,\
-	 	nolog,ctl:ruleRemoveTargetById=981260;ARGS:user"
-```
-```
->>>>>>> 374f5fc (docs: update actions with generated content)
 
 ## deny
 
@@ -316,25 +231,15 @@ SecRule REQUEST_CONTENT_TYPE ^text/xml "nolog,pass,id:106,ctl:requestBodyProcess
 If status action is not used, deny action defaults to status 403.
 
 **Action Group**: Disruptive
-<<<<<<< HEAD
 
 
 
 
 **Example**:
 
-=======
-
-
-
-**Example**:
-
-```
->>>>>>> 374f5fc (docs: update actions with generated content)
 
 ```
 SecRule REQUEST_HEADERS:User-Agent "nikto" "log,deny,id:107,msg:'Nikto Scanners Identified'"
-```
 ```
 
 
@@ -347,7 +252,6 @@ This action is extremely useful when responding to both Brute Force and Denial o
 which you may want to minimize the network bandwidth and the data returned to the client.core_output_filter: writing data to the network`
 
 **Action Group**: Disruptive
-<<<<<<< HEAD
 
 
 
@@ -356,28 +260,14 @@ which you may want to minimize the network bandwidth and the data returned to th
 
 
 ```
-=======
-
-
-
-**Example**:
-
-```
-
-```
->>>>>>> 374f5fc (docs: update actions with generated content)
 # The following example initiates an IP collection for tracking Basic Authentication attempts.
 # If the client exceed the threshold of more than 25 attempts in 2 minutes, it will `DROP` the subsequent connections.
 SecAction phase:1,id:109,initcol:ip=%{REMOTE_ADDR},nolog
 SecRule ARGS:login "!^$" "nolog,phase:1,id:110,setvar:ip.auth_attempt=+1,deprecatevar:ip.auth_attempt=25/120"
 SecRule IP:AUTH_ATTEMPT "@gt 25" "log,drop,phase:1,id:111,msg:'Possible Brute Force Attack'"
 ```
-<<<<<<< HEAD
 
 
-=======
-```
->>>>>>> 374f5fc (docs: update actions with generated content)
 
 ## exec
 
@@ -392,21 +282,12 @@ Forking can therefore incur larger overhead in a multithreaded deployment.
 > if it doesn’t, Coraza will assume that the script failed, and will record the failure.
 
 **Action Group**: Non-disruptive
-<<<<<<< HEAD
 
 
 
 
 **Example**:
 
-=======
-
-
-
-**Example**:
-
-```
->>>>>>> 374f5fc (docs: update actions with generated content)
 
 ```
 # Run external program on rule match
@@ -414,12 +295,8 @@ SecRule REQUEST_URI "^/cgi-bin/script\.pl" "phase:2,id:112,t:none,t:lowercase,t:
 # Run Lua script on rule match
 SecRule ARGS:p attack "phase:2,id:113,block,exec:/usr/local/apache/conf/exec.lua"
 ```
-<<<<<<< HEAD
 
 
-=======
-```
->>>>>>> 374f5fc (docs: update actions with generated content)
 
 ## expirevar
 
@@ -431,7 +308,6 @@ The expire time will be reset if they are used on their own (perhaps in a SecAct
 
 
 
-<<<<<<< HEAD
 
 **Example**:
 
@@ -443,18 +319,6 @@ The expire time will be reset if they are used on their own (perhaps in a SecAct
 ```
 
 
-=======
-**Example**:
-
-```
-
-```
-	SecRule REQUEST_COOKIES:JSESSIONID "!^$" "nolog,phase:1,id:114,pass,setsid:%{REQUEST_COOKIES:JSESSIONID}"
-	SecRule REQUEST_URI "^/cgi-bin/script\.pl" "phase:2,id:115,t:none,t:lowercase,t:normalizePath,log,allow,\
-		setvar:session.suspicious=1,expirevar:session.suspicious=3600,phase:1"
-```
-```
->>>>>>> 374f5fc (docs: update actions with generated content)
 
 ## id
 
@@ -462,31 +326,18 @@ The expire time will be reset if they are used on their own (perhaps in a SecAct
 Assigns a unique ID to the rule or chain in which it appears.
 
 **Action Group**: Metadata
-<<<<<<< HEAD
 
 
 
 
 **Example**:
 
-=======
-
-
-
-**Example**:
-
-```
->>>>>>> 374f5fc (docs: update actions with generated content)
 
 ```
 SecRule &REQUEST_HEADERS:Host "@eq 0" "log,id:60008,severity:2,msg:'Request Missing a Host Header'"
 ```
-<<<<<<< HEAD
 
 
-=======
-```
->>>>>>> 374f5fc (docs: update actions with generated content)
 
 ## initcol
 
@@ -499,7 +350,6 @@ See the `Persistent Storage` section for further details.
 
 
 
-<<<<<<< HEAD
 
 **Example**:
 
@@ -510,24 +360,12 @@ SecAction "phase:1,id:116,nolog,pass,initcol:ip=%{REMOTE_ADDR}"
 ```
 
 
-=======
-**Example**:
-
-```
-
-```
-# Initiates IP address tracking, which is best done in phase 1
-SecAction "phase:1,id:116,nolog,pass,initcol:ip=%{REMOTE_ADDR}"
-```
-```
->>>>>>> 374f5fc (docs: update actions with generated content)
 
 ## log
 
 **Description**: Indicates that a successful match of the rule needs to be logged.
 
 **Action Group**: Non-disruptive
-<<<<<<< HEAD
 
 
 
@@ -541,20 +379,6 @@ SecAction "phase:1,id:117,pass,initcol:ip=%{REMOTE_ADDR},log"
 ```
 
 
-=======
-
-
-
-**Example**:
-
-```
-
-```
-# log matches from the error log file to the Coraza audit log.
-SecAction "phase:1,id:117,pass,initcol:ip=%{REMOTE_ADDR},log"
-```
-```
->>>>>>> 374f5fc (docs: update actions with generated content)
 
 ## logdata
 
@@ -564,31 +388,18 @@ so you may use variable names such as %{TX.0} or %{MATCHED_VAR}.
 The information is properly escaped for use with logging of binary data.
 
 **Action Group**: Non-disruptive
-<<<<<<< HEAD
 
 
 
 
 **Example**:
 
-=======
-
-
-
-**Example**:
-
-```
->>>>>>> 374f5fc (docs: update actions with generated content)
 
 ```
 SecRule ARGS:p "@rx <script>" "phase:2,id:118,log,pass,logdata:%{MATCHED_VAR}"
 ```
-<<<<<<< HEAD
 
 
-=======
-```
->>>>>>> 374f5fc (docs: update actions with generated content)
 
 ## maturity
 
@@ -596,7 +407,6 @@ SecRule ARGS:p "@rx <script>" "phase:2,id:118,log,pass,logdata:%{MATCHED_VAR}"
 The value is a string based on a numeric scale (1-9 where 9 is extensively tested and 1 is a brand new experimental rule).
 
 **Action Group**: Metadata
-<<<<<<< HEAD
 
 
 
@@ -608,20 +418,6 @@ The value is a string based on a numeric scale (1-9 where 9 is extensively teste
 	SecRule REQUEST_FILENAME|ARGS_NAMES|ARGS|XML:/* "\bgetparentfolder\b" \
 		"phase:2,ver:'CRS/2.2.4,accuracy:'9',maturity:'9',capture,t:none,t:htmlEntityDecode,t:compressWhiteSpace,t:lowercase,ctl:auditLogParts=+E,block,msg:'Cross-site Scripting (XSS) Attack',id:'958016',tag:'WEB_ATTACK/XSS',tag:'WASCTC/WASC-8',tag:'WASCTC/WASC-22',tag:'OWASP_TOP_10/A2',tag:'OWASP_AppSensor/IE1',tag:'PCI/6.5.1',logdata:'% \
 	 	{TX.0}',severity:'2',setvar:'tx.msg=%{rule.msg}',setvar:tx.xss_score=+%{tx.critical_anomaly_score},setvar:tx.anomaly_score=+%{tx.critical_anomaly_score},setvar:tx.%{rule.id}-WEB_ATTACK/XSS-%{matched_var_name}=%{tx.0}"
-=======
-
-
-
-**Example**:
-
-```
-
-```
-	SecRule REQUEST_FILENAME|ARGS_NAMES|ARGS|XML:/* "\bgetparentfolder\b" \
-		"phase:2,ver:'CRS/2.2.4,accuracy:'9',maturity:'9',capture,t:none,t:htmlEntityDecode,t:compressWhiteSpace,t:lowercase,ctl:auditLogParts=+E,block,msg:'Cross-site Scripting (XSS) Attack',id:'958016',tag:'WEB_ATTACK/XSS',tag:'WASCTC/WASC-8',tag:'WASCTC/WASC-22',tag:'OWASP_TOP_10/A2',tag:'OWASP_AppSensor/IE1',tag:'PCI/6.5.1',logdata:'% \
-	 	{TX.0}',severity:'2',setvar:'tx.msg=%{rule.msg}',setvar:tx.xss_score=+%{tx.critical_anomaly_score},setvar:tx.anomaly_score=+%{tx.critical_anomaly_score},setvar:tx.%{rule.id}-WEB_ATTACK/XSS-%{matched_var_name}=%{tx.0}"
-```
->>>>>>> 374f5fc (docs: update actions with generated content)
 ```
 
 
@@ -632,28 +428,17 @@ The value is a string based on a numeric scale (1-9 where 9 is extensively teste
 Noted that the msg information appears in the error and/or audit log files and is not sent back to the client in response headers.
 
 **Action Group**: Metadata
-<<<<<<< HEAD
 
 
 
 
 **Example**:
 
-=======
-
-
-
-**Example**:
-
-```
->>>>>>> 374f5fc (docs: update actions with generated content)
 
 ```
 SecRule &REQUEST_HEADERS:Host "@eq 0" "log,id:60008,severity:2,msg:'Request Missing a Host Header'"
 ```
-```
 
-<<<<<<< HEAD
 
 
 ## multimatch
@@ -669,31 +454,12 @@ With multiMatch, variables are checked against the operator before and after eve
 
 **Example**:
 
-=======
-## multimatch
-
-**Description**: Perform multiple operator invocations for every target, before and after every anti-evasion transformation is performed.
-Normally, variables are inspected only once per rule, and only after all transformation functions have been completed.
-With multiMatch, variables are checked against the operator before and after every transformation function that changes the input.
-
-**Action Group**: Non-disruptive
-
-
-
-**Example**:
-
-```
->>>>>>> 374f5fc (docs: update actions with generated content)
 
 ```
 SecRule ARGS "attack" "phase1,log,deny,id:119,t:removeNulls,t:lowercase,multiMatch"
 ```
-<<<<<<< HEAD
 
 
-=======
-```
->>>>>>> 374f5fc (docs: update actions with generated content)
 
 ## noauditlog
 
@@ -705,31 +471,18 @@ a match in another rule will still cause audit logging to take place.
 If you want to prevent audit logging from taking place, regardless of whether any rule matches, use `ctl:auditEngine=Off`.
 
 **Action Group**: Non-disruptive
-<<<<<<< HEAD
 
 
 
 
 **Example**:
 
-=======
-
-
-
-**Example**:
-
-```
->>>>>>> 374f5fc (docs: update actions with generated content)
 
 ```
 SecRule REQUEST_HEADERS:User-Agent "@streq Test" "allow,noauditlog,id:120"
 ```
-<<<<<<< HEAD
 
 
-=======
-```
->>>>>>> 374f5fc (docs: update actions with generated content)
 
 ## nolog
 
@@ -737,52 +490,30 @@ SecRule REQUEST_HEADERS:User-Agent "@streq Test" "allow,noauditlog,id:120"
 Although nolog implies noauditlog, you can override the former by using `nolog,auditlog`.
 
 **Action Group**: Non-disruptive
-<<<<<<< HEAD
 
 
 
 
 **Example**:
 
-=======
-
-
-
-**Example**:
-
-```
->>>>>>> 374f5fc (docs: update actions with generated content)
 
 ```
 SecRule REQUEST_HEADERS:User-Agent "@streq Test" "allow,nolog,id:121"
 ```
-<<<<<<< HEAD
 
 
-=======
-```
->>>>>>> 374f5fc (docs: update actions with generated content)
 
 ## pass
 
 **Description**: Continues processing with the next rule in spite of a successful match.
 
 **Action Group**: Disruptive
-<<<<<<< HEAD
 
 
 
 
 **Example**:
 
-=======
-
-
-
-**Example**:
-
-```
->>>>>>> 374f5fc (docs: update actions with generated content)
 
 ```
 SecRule REQUEST_HEADERS:User-Agent "@streq Test" "log,pass,id:122"
@@ -794,12 +525,8 @@ SecAction "phase:2,nolog,pass,setvar:TX.test=0,id:123"
 # Increment TX.test for every request parameter
 SecRule ARGS "test" "phase:2,log,pass,setvar:TX.test=+1,id:124"
 ```
-<<<<<<< HEAD
 
 
-=======
-```
->>>>>>> 374f5fc (docs: update actions with generated content)
 
 ## phase
 
@@ -812,21 +539,12 @@ It can also be used in `SecDefaultAction` to establish the rule defaults.
 > but it misses malicious data because you specified the wrong phase.
 
 **Action Group**: Metadata
-<<<<<<< HEAD
 
 
 
 
 **Example**:
 
-=======
-
-
-
-**Example**:
-
-```
->>>>>>> 374f5fc (docs: update actions with generated content)
 
 ```
 # Initialize IP address tracking in phase 1
@@ -834,12 +552,8 @@ SecAction phase:1,nolog,pass,id:126,initcol:IP=%{REMOTE_ADDR}
 # Example of using phase alias
 SecRule REQUEST_HEADERS:User-Agent "Test" "phase:request,log,deny,id:127"
 ```
-<<<<<<< HEAD
 
 
-=======
-```
->>>>>>> 374f5fc (docs: update actions with generated content)
 
 ## redirect
 
@@ -848,31 +562,18 @@ If the status action is presented on the same rule,  and its value can be used f
 Otherwise, status code 302 will be used.
 
 **Action Group**: Disruptive
-<<<<<<< HEAD
 
 
 
 
 **Example**:
 
-=======
-
-
-
-**Example**:
-
-```
->>>>>>> 374f5fc (docs: update actions with generated content)
 
 ```
 SecRule REQUEST_HEADERS:User-Agent "@streq Test" "phase:1,id:130,log,redirect:http://www.example.com/failed.html"
 ```
-<<<<<<< HEAD
 
 
-=======
-```
->>>>>>> 374f5fc (docs: update actions with generated content)
 
 ## rev
 
@@ -880,7 +581,6 @@ SecRule REQUEST_HEADERS:User-Agent "@streq Test" "phase:1,id:130,log,redirect:ht
 and it can still provide some indication about the rule changes.
 
 **Action Group**: Metadata
-<<<<<<< HEAD
 
 
 
@@ -929,54 +629,6 @@ Header set Set-Cookie "%{httponly_cookie}e; HTTPOnly" env=httponly_cookie
 
 
 ```
-=======
-
-
-
-**Example**:
-
-```
-
-```
-	SecRule REQUEST_FILENAME|ARGS_NAMES|ARGS|XML:/* "(?:(?:[\;\|\`]\W*?\bcc|\b(wget|curl))\b|\/cc(?:[\'\"\|\;\`\-\s]|$))" \
-		"phase:2,rev:'2.1.3',capture,t:none,t:normalizePath,t:lowercase,ctl:auditLogParts=+E,block,msg:'System Command Injection',id:'950907',tag:'WEB_ATTACK/COMMAND_INJECTION',tag:'WASCTC/WASC-31',tag:'OWASP_TOP_10/A1',tag:'PCI/6.5.2',logdata:'%{TX.0}',severity:'2',setvar:'tx.msg=%{rule.msg}',setvar:tx.anomaly_score=+%{tx.critical_anomaly_score},setvar:tx.command_injection_score=+%{tx.critical_anomaly_score},setvar:tx.%{rule.id}-WEB_ATTACK/COMMAND_INJECTION-%{matched_var_name}=%{tx.0},skipAfter:END_COMMAND_INJECTION1"
-```
-```
-
-## setenv
-
-**Description**: Creates, removes, and updates environment variables that can be accessed by the implementation.
-> In a trained rule, the action will be executed when an individual rule matches (not the entire chain).
-
-**Action Group**: Non-disruptive
-
-
-
-**Example**:
-
-```
-
-```
-SecRule RESPONSE_HEADERS:/Set-Cookie2?/ "(?i:(j?sessionid|(php)?sessid|(asp|jserv|jw)?session[-_]?(id)?|cf(id|token)|sid))" "phase:3,t:none,pass,id:139,nolog,setvar:tx.sessionid=%{matched_var}"Missing HttpOnly Cookie Flag.'"
-# In Apache
-Header set Set-Cookie "%{httponly_cookie}e; HTTPOnly" env=httponly_cookie
-```
-```
-
-## setvar
-
-**Description**: Creates, removes, or updates a variable. Variable names are **case-insensitive**.
-
-**Action Group**: Non-disruptive
-
-
-
-**Example**:
-
-```
-
-```
->>>>>>> 374f5fc (docs: update actions with generated content)
 # Create a variable and set its value to 1 (usually used for setting flags)
 `setvar:TX.score`
 # Create a variable and initialize it at the same time,
@@ -999,12 +651,8 @@ Header set Set-Cookie "%{httponly_cookie}e; HTTPOnly" env=httponly_cookie
 	SecRule REQUEST_FILENAME "@streq test.php" "chain,id:7,phase:1,t:none,nolog"
 		SecRule ARGS_POST:action "@streq login" "t:none,setvar:tx.auth_attempt=+1"
 ```
-<<<<<<< HEAD
 
 
-=======
-```
->>>>>>> 374f5fc (docs: update actions with generated content)
 
 ## severity
 
@@ -1021,25 +669,15 @@ Severity values in Coraza follows the numeric scale of syslog (where 0 is the mo
 
 
 
-<<<<<<< HEAD
 
 **Example**:
 
-=======
-**Example**:
-
-```
->>>>>>> 374f5fc (docs: update actions with generated content)
 
 ```
 SecRule REQUEST_METHOD "^PUT$" "id:340002,rev:1,severity:CRITICAL,msg:'Restricted HTTP function'"
 ```
-<<<<<<< HEAD
 
 
-=======
-```
->>>>>>> 374f5fc (docs: update actions with generated content)
 
 ## skip
 
@@ -1049,21 +687,12 @@ If you place a phase 2 rule after a phase 1 rule that uses skip, it will not ski
 it will skip over the next phase 1 rule that follows it in the phase.
 
 **Action Group**: Flow
-<<<<<<< HEAD
 
 
 
 
 **Example**:
 
-=======
-
-
-
-**Example**:
-
-```
->>>>>>> 374f5fc (docs: update actions with generated content)
 
 ```
 # Require Accept header, but not from access from the localhost
@@ -1071,9 +700,7 @@ SecRule REMOTE_ADDR "^127\.0\.0\.1$" "phase:1,skip:1,id:141"
 # This rule will be skipped over when REMOTE_ADDR is 127.0.0.1
 SecRule &REQUEST_HEADERS:Accept "@eq 0" "phase:1,id:142,deny,msg:'Request Missing an Accept Header'"
 ```
-```
 
-<<<<<<< HEAD
 
 
 ## skipafter
@@ -1089,21 +716,6 @@ The `skipAfter` action works only within the current processing phase and not ne
 
 **Example**:
 
-=======
-## skipafter
-
-**Description**: Action `skipAfter` is similar to `skip`, it skip one or more rules (or chained rules) on a successful match,
-**and resuming rule execution with the first rule that follows the rule (or marker created by SecMarker) with the provided ID)).
-The `skipAfter` action works only within the current processing phase and not necessarily the order in which the rules appear in the configuration file.
-
-**Action Group**: Flow
-
-
-
-**Example**:
-
-```
->>>>>>> 374f5fc (docs: update actions with generated content)
 
 ```
 # Require Accept header, but not from access from the localhost
@@ -1123,12 +735,8 @@ SecMarker BEGIN_HOST_CHECK
 		setvar:tx.%{rule.id}-PROTOCOL_VIOLATION/MISSING_HEADER-%{matched_var_name}=%{matched_var}"
 SecMarker END_HOST_CHECK
 ```
-<<<<<<< HEAD
 
 
-=======
-```
->>>>>>> 374f5fc (docs: update actions with generated content)
 
 ## status
 
@@ -1136,7 +744,6 @@ SecMarker END_HOST_CHECK
 If status is not set, deny action defaults to status 403.
 
 **Action Group**: Data
-<<<<<<< HEAD
 
 
 
@@ -1145,19 +752,8 @@ If status is not set, deny action defaults to status 403.
 
 
 ```
-=======
-
-
-
-**Example**:
-
-```
-
-```
->>>>>>> 374f5fc (docs: update actions with generated content)
 # Deny status 403
 SecDefaultAction "phase:1,log,deny,id:145,status:403"
-```
 ```
 
 
@@ -1169,31 +765,18 @@ Any transformation functions that you specify in a `SecRule` will be added to th
 It is recommended that you always use `t:none` in your rules, which prevents them depending on the default configuration.
 
 **Action Group**: Non-disruptive
-<<<<<<< HEAD
 
 
 
 
 **Example**:
 
-=======
-
-
-
-**Example**:
-
-```
->>>>>>> 374f5fc (docs: update actions with generated content)
 
 ```
 SecRule ARGS "(asfunction|javascript|vbscript|data|mocha|livescript):" "id:146,t:none,t:htmlEntityDecode,t:lowercase,t:removeNulls,t:removeWhitespace"
 ```
-<<<<<<< HEAD
 
 
-=======
-```
->>>>>>> 374f5fc (docs: update actions with generated content)
 
 ## tag
 
@@ -1202,7 +785,6 @@ Tags allow easy automated categorization of events, and multiple tags can be spe
 You can use forward slashes to create a hierarchy of categories (see example), and it also support Macro Expansions.
 
 **Action Group**: Metadata
-<<<<<<< HEAD
 
 
 
@@ -1217,28 +799,12 @@ You can use forward slashes to create a hierarchy of categories (see example), a
 ```
 
 
-=======
-
-
-
-**Example**:
-
-```
-
-```
-	SecRule REQUEST_FILENAME|ARGS_NAMES|ARGS|XML:/* "\bgetparentfolder\b" \
-	 	"phase:2,rev:'2.1.3',capture,t:none,t:htmlEntityDecode,t:compressWhiteSpace,t:lowercase,ctl:auditLogParts=+E,block,msg:'Cross-site Scripting (XSS) Attack',id:'958016',tag:'WEB_ATTACK/XSS',tag:'WASCTC/WASC-8',tag:'WASCTC/WASC-22',tag:'OWASP_TOP_10/A2',tag:'OWASP_AppSensor/IE1',tag:'PCI/6.5.1',logdata:'% \
-		{TX.0}',severity:'2',setvar:'tx.msg=%{rule.msg}',setvar:tx.xss_score=+%{tx.critical_anomaly_score},setvar:tx.anomaly_score=+%{tx.critical_anomaly_score},setvar:tx.%{rule.id}-WEB_ATTACK/XSS-%{matched_var_name}=%{tx.0}"
-```
-```
->>>>>>> 374f5fc (docs: update actions with generated content)
 
 ## ver
 
 **Description**: Specifies the rule set version.
 
 **Action Group**: Metadata
-<<<<<<< HEAD
 
 
 
@@ -1253,19 +819,4 @@ You can use forward slashes to create a hierarchy of categories (see example), a
 ```
 
 
-=======
-
-
-
-**Example**:
-
-```
-
-```
-	SecRule REQUEST_FILENAME|ARGS_NAMES|ARGS|XML:/* "\bgetparentfolder\b" \
-	 	"phase:2,ver:'CRS/2.2.4,capture,t:none,t:htmlEntityDecode,t:compressWhiteSpace,t:lowercase,ctl:auditLogParts=+E,block,msg:'Cross-site Scripting (XSS) Attack',id:'958016',tag:'WEB_ATTACK/XSS',tag:'WASCTC/WASC-8',tag:'WASCTC/WASC-22',tag:'OWASP_TOP_10/A2',tag:'OWASP_AppSensor/IE1',tag:'PCI/6.5.1',logdata:'% \
-		{TX.0}',severity:'2',setvar:'tx.msg=%{rule.msg}',setvar:tx.xss_score=+%{tx.critical_anomaly_score},setvar:tx.anomaly_score=+%{tx.critical_anomaly_score},setvar:tx.%{rule.id}-WEB_ATTACK/XSS-%{matched_var_name}=%{tx.0}"
-```
-```
->>>>>>> 374f5fc (docs: update actions with generated content)
 
