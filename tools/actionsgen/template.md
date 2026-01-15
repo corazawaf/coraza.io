@@ -39,9 +39,10 @@ Disruptive actions will NOT be executed if the `SecRuleEngine` is set to `Detect
 **Processing Phases**: {{ .Phases }}
 {{ end }}
 
+{{ if .Example }}
 **Example**:
 
-```
 {{ .Example }}
-```
+{{ end }}
+
 {{ end }}
