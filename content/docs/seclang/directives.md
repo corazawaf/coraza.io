@@ -3,7 +3,7 @@ title: "Directives"
 Description: "The following section outlines all of the Coraza directives. "
 lead: "The following section outlines all of the Coraza directives. "
 date: 2020-10-06T08:48:57+00:00
-lastmod: "2024-10-06T18:18:19Z"
+lastmod: "2026-01-15T08:27:54-03:00"
 draft: false
 images: []
 menu:
@@ -167,9 +167,6 @@ SecAuditLogFileMode 00640
 **Syntax:** `SecAuditLogParts [PARTLETTERS]`
 
 **Default:** `ABCFHZ`
-
-The format of the audit log format is documented in detail in the Audit Log Data
-Format Documentation.
 
 **Example:**
 ```apache
@@ -471,6 +468,21 @@ SecRuleRemoveByTag attack-dos
 ```
 
 **Note:** OWASP CRS has a list of supported tags https://coreruleset.org/docs/rules/metadata/
+
+## SecRuleUpdateActionByID
+
+**Description:** Updates the action list of the specified rule(s).
+
+**Syntax:** `SecRuleUpdateActionById ID ACTIONLIST`
+
+This directive will overwrite the action list of the specified rule with the actions provided in the second parameter.
+It has two limitations: it cannot be used to change the ID or phase of a rule.
+Only the actions that can appear only once are overwritten.
+The actions that are allowed to appear multiple times in a list, will be appended to the end of the list.
+The following example demonstrates how [`SecRuleUpdateActionById`](#secruleupdateactionbyid) is used:
+```apache
+SecRuleUpdateActionById 12345 "deny,status:403"
+```
 
 ## SecRuleUpdateTargetByID
 
