@@ -3,6 +3,7 @@ package main
 import (
 	"os"
 	"path/filepath"
+	"strings"
 	"testing"
 )
 
@@ -188,7 +189,8 @@ type SomeOtherType struct{}
 	for name, test := range tests {
 		t.Run(name, func(t *testing.T) {
 			// Create test file with sanitized name
-			testFile := filepath.Join(tmpDir, "test_"+filepath.Base(t.Name())+".go")
+			sanitizedName := strings.ReplaceAll(t.Name(), "/", "_")
+			testFile := filepath.Join(tmpDir, sanitizedName+".go")
 			err := os.WriteFile(testFile, []byte(test.fileContent), 0644)
 			if err != nil {
 				t.Fatalf("Failed to create test file: %v", err)
