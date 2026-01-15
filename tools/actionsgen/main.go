@@ -48,8 +48,11 @@ func main() {
 
 	var files []string
 
-	root := path.Join("../coraza", "/internal/actions")
+	if len(os.Args) < 2 {
+		log.Fatalf("usage: %s <coraza-path>", os.Args[0])
+	}
 
+	root := path.Join(os.Args[1], "internal/actions")
 	err = filepath.Walk(root, func(path string, info os.FileInfo, err error) error {
 		if err != nil {
 			fmt.Println(err)
@@ -143,10 +146,10 @@ func parseAction(name string, doc string) Action {
 	}
 
 	fieldAppenders := map[string]func(d *Action, value string){
-		"Description":       func(a *Action, value string) { d.Description += value },
-		"Action Group":      func(a *Action, value string) { d.ActionGroup += value },
-		"Example":           func(a *Action, value string) { d.Example += value },
-		"Processing Phases": func(a *Action, value string) { d.Phases += value },
+		"Description":       func(a *Action, value string) { a.Description += value },
+		"Action Group":      func(a *Action, value string) { a.ActionGroup += value },
+		"Example":           func(a *Action, value string) { a.Example += value },
+		"Processing Phases": func(a *Action, value string) { a.Phases += value },
 	}
 
 	previousKey := ""
