@@ -20,7 +20,7 @@ func Generate() error {
 		return err
 	}
 
-	return generateFrom("./vendor/github.com/corazawaf/coraza/v3")
+	return generateFrom(".vendor/github.com/corazawaf/coraza/v3")
 }
 
 func GenerateFromPath() error {
