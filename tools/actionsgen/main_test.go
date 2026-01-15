@@ -184,6 +184,31 @@ type SomeOtherType struct{}
 `,
 			expected: []Action{},
 		},
+		"appends to existing page": {
+			fileContent: `package actions
+
+// Action Group: Disruptive
+//
+// Description: New action.
+type NewActionFn struct{}
+`,
+			expected: []Action{
+				{
+					Name:        "ExistingAction",
+					ActionGroup: "Non-disruptive",
+					Description: "Existing action",
+					Example:     "",
+					Phases:      "",
+				},
+				{
+					Name:        "NewAction",
+					ActionGroup: "Disruptive",
+					Description: "New action.",
+					Example:     "",
+					Phases:      "",
+				},
+			},
+		},
 	}
 
 	for name, test := range tests {
@@ -197,7 +222,21 @@ type SomeOtherType struct{}
 			}
 
 			// Test getActionFromFile
-			page := Page{}
+			var page Page
+			// For the "appends to existing page" test, start with an existing action
+			if name == "appends to existing page" {
+				page = Page{
+					Actions: []Action{
+						{
+							Name:        "ExistingAction",
+							ActionGroup: "Non-disruptive",
+							Description: "Existing action",
+							Example:     "",
+							Phases:      "",
+						},
+					},
+				}
+			}
 			result := getActionFromFile(testFile, page)
 
 			// Verify the number of actions
