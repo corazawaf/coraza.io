@@ -3,7 +3,11 @@ title: "Actions"
 description: "Actions available in Coraza"
 lead: "The action of a rule defines how to handle HTTP requests that have matched one or more rule conditions."
 date: 2020-10-06T08:48:57+00:00
+<<<<<<< Updated upstream
 lastmod: 2020-10-06T08:48:57+00:00
+=======
+lastmod: "2026-01-15T08:02:34-03:00"
+>>>>>>> Stashed changes
 draft: false
 images: []
 menu:
@@ -53,7 +57,15 @@ SecRule REQUEST_FILENAME|ARGS_NAMES|ARGS|XML:/* "\bgetparentfolder\b" \
 
 **Action Group:** Disruptive
 
+<<<<<<< Updated upstream
 **Example:**
+=======
+
+
+
+**Example**:
+
+>>>>>>> Stashed changes
 
 ```
 # Allow unrestricted access from 192.168.1.100
@@ -79,6 +91,7 @@ If you want to allow a response through, put a rule in phase RESPONSE_HEADERS an
 SecAction phase:3,allow,id:98
 ```
 
+<<<<<<< Updated upstream
 ## append
 
 **Description**: Appends text given as parameter to the end of response body. Content injection must be enabled (using the SecContentInjection directive). No content type checks are made, which means that before using any of the content injection actions, you must check whether the content type of the response is adequate for injection.
@@ -94,6 +107,9 @@ SecRule RESPONSE_CONTENT_TYPE "^text/html" "nolog,id:99,pass,append:'<hr>Footer'
 ```
 
 Warning : Although macro expansion is allowed in the additional content, you are strongly cautioned against inserting user-defined data fields into output. Doing so would create a cross-site scripting vulnerability.
+=======
+
+>>>>>>> Stashed changes
 
 ## auditlog
 
@@ -101,6 +117,7 @@ Warning : Although macro expansion is allowed in the additional content, you are
 
 **Action Group:** Non-disruptive
 
+<<<<<<< Updated upstream
 **Example:**
 
 ```
@@ -108,6 +125,20 @@ SecRule REMOTE_ADDR "^192\.168\.1\.100$" "auditlog,phase:1,id:100,allow"
 ```
 
 Note : The auditlog action is now explicit if log is already specified.
+=======
+
+
+
+**Example**:
+
+
+```
+# The action is explicit if the log is specified.
+SecRule REMOTE_ADDR "^192\.168\.1\.100$" "auditlog,phase:1,id:100,allow"
+```
+
+
+>>>>>>> Stashed changes
 
 ## block
 
@@ -117,7 +148,14 @@ Note : The auditlog action is now explicit if log is already specified.
 
 This action is essentially a placeholder that is intended to be used by rule writers to request a blocking action, but without specifying how the blocking is to be done. The idea is that such decisions are best left to rule users, as well as to allow users, to override blocking if they so desire. In future versions of Coraza, more control and functionality will be added to define "how" to block.
 
+<<<<<<< Updated upstream
 **Examples:**
+=======
+
+
+**Example**:
+
+>>>>>>> Stashed changes
 
 ```
 # Specify how blocking is to be done
@@ -148,6 +186,11 @@ SecRule ARGS "@rx attack1" "phase:2,id:1,deny"
 # Change how rule ID 1 blocks
 SecRuleUpdateActionById 1 "block"
 ```
+<<<<<<< Updated upstream
+=======
+
+
+>>>>>>> Stashed changes
 
 ## capture
 
@@ -155,12 +198,27 @@ SecRuleUpdateActionById 1 "block"
 
 **Action Group:** Non-disruptive
 
+<<<<<<< Updated upstream
 **Example:**
 
 ```
 SecRule REQUEST_BODY "^username=(\w{25,})" phase:2,capture,t:none,chain,id:105
   SecRule TX:1 "(?:(?:a(dmin|nonymous)))"
 ```
+=======
+
+
+
+**Example**:
+
+
+```
+SecRule REQUEST_BODY "^username=(\w{25,})" phase:2,capture,t:none,chain,id:105
+SecRule TX:1 "(?:(?:a(dmin|nonymous)))"
+```
+
+
+>>>>>>> Stashed changes
 
 Up to 10 captures will be copied on a successful pattern match, each with a name consisting of a digit from 0 to 9. The `TX.0` variable always contains the entire area that the regular expression matched. All the other variables contain the captured values, in the order in which the capturing parentheses appear in the regular expression.
 
@@ -174,6 +232,7 @@ Up to 10 captures will be copied on a successful pattern match, each with a name
 
 **Example:**
 
+<<<<<<< Updated upstream
 ```bash
 # Refuse to accept POST requests that do not contain a Content-Length header.
 #
@@ -182,6 +241,21 @@ Up to 10 captures will be copied on a successful pattern match, each with a name
 SecRule REQUEST_METHOD "^POST$" "phase:1,chain,t:none,id:105"
   SecRule &REQUEST_HEADERS:Content-Length "@eq 0" "t:none"
 ```
+=======
+
+
+**Example**:
+
+
+```
+# Refuse to accept POST requests that do not contain a Content-Length header.
+# Noted that the rule should be preceded by a rule that verifies only valid request methods are used.
+	SecRule REQUEST_METHOD "^POST$" "phase:1,chain,t:none,id:105"
+		SecRule &REQUEST_HEADERS:Content-Length "@eq 0" "t:none"
+```
+
+
+>>>>>>> Stashed changes
 
 Note : Rule chains allow you to simulate logical AND. The disruptive actions specified in the first portion of the chained rule will be triggered only if all of the variable checks return positive hits. If any one aspect of a chained rule comes back negative, then the entire rule chain will fail to match. Also note that disruptive actions, execution phases, metadata actions (id, rev, msg, tag, severity, logdata), skip, and skipAfter actions can be specified only by the chain starter rule.
 The following directives can be used in rule chains:
@@ -202,6 +276,7 @@ Special rules control the usage of actions in chained rules:
 
 **Action Group:** Non-disruptive
 
+<<<<<<< Updated upstream
 **Example:**
 
 ```
@@ -212,6 +287,23 @@ SecRule REQUEST_CONTENT_TYPE ^text/xml "nolog,pass,id:106,ctl:requestBodyProcess
 SecRule REQUEST_URI "@beginsWith /index.php" "phase:1,t:none,pass,\
   nolog,ctl:ruleRemoveTargetById=981260;ARGS:user"
 ```
+=======
+
+
+
+**Example**:
+
+
+```
+# Parse requests with Content-Type "text/xml" as XML
+SecRule REQUEST_CONTENT_TYPE ^text/xml "nolog,pass,id:106,phase:1,ctl:requestBodyProcessor=XML"
+# white-list the user parameter for rule #981260 when the REQUEST_URI is /index.php
+		SecRule REQUEST_URI "@beginsWith /index.php" "phase:1,t:none,pass,\
+	 	nolog,ctl:ruleRemoveTargetById=981260;ARGS:user"
+```
+
+
+>>>>>>> Stashed changes
 
 The following configuration options are supported:
 
@@ -246,11 +338,24 @@ Request body processors will not interrupt a transaction if an error occurs duri
 
 **Action Group:** Disruptive
 
+<<<<<<< Updated upstream
 **Example:**
+=======
+
+
+
+**Example**:
+
+>>>>>>> Stashed changes
 
 ```
 SecRule REQUEST_HEADERS:User-Agent "nikto" "log,deny,id:107,msg:'Nikto Scanners Identified'"
 ```
+<<<<<<< Updated upstream
+=======
+
+
+>>>>>>> Stashed changes
 
 ## drop
 
@@ -258,17 +363,33 @@ SecRule REQUEST_HEADERS:User-Agent "nikto" "log,deny,id:107,msg:'Nikto Scanners 
 
 **Action Group:** Disruptive
 
+<<<<<<< Updated upstream
 **Example:** The following example initiates an IP collection for tracking Basic Authentication attempts. If the client goes over the threshold of more than 25 attempts in 2 minutes, it will `DROP` subsequent connections.
 
 ```
+=======
+
+
+
+**Example**:
+
+
+```
+# The following example initiates an IP collection for tracking Basic Authentication attempts.
+# If the client exceed the threshold of more than 25 attempts in 2 minutes, it will `DROP` the subsequent connections.
+>>>>>>> Stashed changes
 SecAction phase:1,id:109,initcol:ip=%{REMOTE_ADDR},nolog
 SecRule ARGS:login "!^$" "nolog,phase:1,id:110,setvar:ip.auth_attempt=+1,deprecatevar:ip.auth_attempt=25/120"
 SecRule IP:AUTH_ATTEMPT "@gt 25" "log,drop,phase:1,id:111,msg:'Possible Brute Force Attack'"
 ```
 
+<<<<<<< Updated upstream
 **Note :** This action depends on each implementation, the server is instructed to drop the connection.
 
 This action is extremely useful when responding to both Brute Force and Denial of Service attacks in that, in both cases, you want to minimize both the network bandwidth and the data returned to the client. This action causes error message to appear in the log "(9)Bad file descriptor: core_output_filter: writing data to the network"
+=======
+
+>>>>>>> Stashed changes
 
 ## exec
 
@@ -276,7 +397,15 @@ This action is extremely useful when responding to both Brute Force and Denial o
 
 **Action Group:** Non-disruptive
 
+<<<<<<< Updated upstream
 **Example:**
+=======
+
+
+
+**Example**:
+
+>>>>>>> Stashed changes
 
 ```
 # Run external program on rule match
@@ -286,7 +415,11 @@ SecRule REQUEST_URI "^/cgi-bin/script\.pl" "phase:2,id:112,t:none,t:lowercase,t:
 SecRule ARGS:p attack "phase:2,id:113,block,exec:/usr/local/apache/conf/exec.lua"
 ```
 
+<<<<<<< Updated upstream
 The `exec` action is executed independently from any disruptive actions specified. External scripts will always be called with no parameters. Some transaction information will be placed in environment variables. All the usual CGI environment variables will be there. You should be aware that forking a threaded process results in all threads being replicated in the new process. Forking can therefore incur larger overhead in a multithreaded deployment. The script you execute must write something (anything) to stdout; if it doesn’t, Coraza will assume that the script failed, and will record the failure.
+=======
+
+>>>>>>> Stashed changes
 
 ## expirevar
 
@@ -296,6 +429,7 @@ The `exec` action is executed independently from any disruptive actions specifie
 
 **Action Group:** Non-disruptive
 
+<<<<<<< Updated upstream
 **Example:**
 
 ```
@@ -305,6 +439,20 @@ SecRule REQUEST_URI "^/cgi-bin/script\.pl" "phase:2,id:115,t:none,t:lowercase,t:
 ```
 
 You should use the expirevar actions at the same time that you use setvar actions in order to keep the intended expiration time. If they are used on their own (perhaps in a SecAction directive), the expire time will be reset.
+=======
+
+
+**Example**:
+
+
+```
+	SecRule REQUEST_COOKIES:JSESSIONID "!^$" "nolog,phase:1,id:114,pass,setsid:%{REQUEST_COOKIES:JSESSIONID}"
+	SecRule REQUEST_URI "^/cgi-bin/script\.pl" "phase:2,id:115,t:none,t:lowercase,t:normalizePath,log,allow,\
+		setvar:session.suspicious=1,expirevar:session.suspicious=3600,phase:1"
+```
+
+
+>>>>>>> Stashed changes
 
 ## id
 
@@ -312,13 +460,25 @@ You should use the expirevar actions at the same time that you use setvar action
 
 **Action Group:** Meta-data
 
+<<<<<<< Updated upstream
 **Example:**
+=======
+
+
+
+**Example**:
+
+>>>>>>> Stashed changes
 
 ```
 SecRule &REQUEST_HEADERS:Host "@eq 0" "log,id:60008,severity:2,msg:'Request Missing a Host Header'"
 ```
 
+<<<<<<< Updated upstream
 Note : The id action is required for all SecRule/SecAction.
+=======
+
+>>>>>>> Stashed changes
 
 ## initcol
 
@@ -328,6 +488,7 @@ Note : The id action is required for all SecRule/SecAction.
 
 **Supported on Coraza:** TBI
 
+<<<<<<< Updated upstream
 **Example:** The following example initiates IP address tracking, which is best done in phase 1:
 
 ```
@@ -337,6 +498,19 @@ SecAction "phase:1,id:116,nolog,pass,initcol:ip=%{REMOTE_ADDR}"
 Collections are loaded into memory on-demand, when the initcol action is executed. A collection will be persisted only if a change was made to it in the course of transaction processing.
 
 See the "Persistent Storage" section for further details.
+=======
+
+
+**Example**:
+
+
+```
+# Initiates IP address tracking, which is best done in phase 1
+SecAction "phase:1,id:116,nolog,pass,initcol:ip=%{REMOTE_ADDR}"
+```
+
+
+>>>>>>> Stashed changes
 
 ## log
 
@@ -344,6 +518,7 @@ See the "Persistent Storage" section for further details.
 
 **Action Group:** Non-disruptive
 
+<<<<<<< Updated upstream
 **Example:**
 
 ```
@@ -351,6 +526,20 @@ SecAction "phase:1,id:117,pass,initcol:ip=%{REMOTE_ADDR},log"
 ```
 
 This action will log matches to the Apache error log file and the Coraza audit log.
+=======
+
+
+
+**Example**:
+
+
+```
+# log matches from the error log file to the Coraza audit log.
+SecAction "phase:1,id:117,pass,initcol:ip=%{REMOTE_ADDR},log"
+```
+
+
+>>>>>>> Stashed changes
 
 ## logdata
 
@@ -358,13 +547,25 @@ This action will log matches to the Apache error log file and the Coraza audit l
 
 **Action Group:** Non-disruptive
 
+<<<<<<< Updated upstream
 **Example:**
+=======
+
+
+
+**Example**:
+
+>>>>>>> Stashed changes
 
 ```
 SecRule ARGS:p "@rx <script>" "phase:2,id:118,log,pass,logdata:%{MATCHED_VAR}"
 ```
 
+<<<<<<< Updated upstream
 The logdata information appears in the error and/or audit log files. Macro expansion is performed, so you may use variable names such as %{TX.0} or %{MATCHED_VAR}. The information is properly escaped for use with logging of binary data.
+=======
+
+>>>>>>> Stashed changes
 
 ## maturity
 
@@ -372,6 +573,7 @@ The logdata information appears in the error and/or audit log files. Macro expan
 
 **Action Group:** Meta-data
 
+<<<<<<< Updated upstream
 **Example:**
 
 ```
@@ -379,6 +581,21 @@ SecRule REQUEST_FILENAME|ARGS_NAMES|ARGS|XML:/* "\bgetparentfolder\b" \
     "phase:2,ver:'CRS/2.2.4,accuracy:'9',maturity:'9',capture,t:none,t:htmlEntityDecode,t:compressWhiteSpace,t:lowercase,ctl:auditLogParts=+E,block,msg:'Cross-site Scripting (XSS) Attack',id:'958016',tag:'WEB_ATTACK/XSS',tag:'WASCTC/WASC-8',tag:'WASCTC/WASC-22',tag:'OWASP_TOP_10/A2',tag:'OWASP_AppSensor/IE1',tag:'PCI/6.5.1',logdata:'% \
 {TX.0}',severity:'2',setvar:'tx.msg=%{rule.msg}',setvar:tx.xss_score=+%{tx.critical_anomaly_score},setvar:tx.anomaly_score=+%{tx.critical_anomaly_score},setvar:tx.%{rule.id}-WEB_ATTACK/XSS-%{matched_var_name}=%{tx.0}"
 ```
+=======
+
+
+
+**Example**:
+
+
+```
+	SecRule REQUEST_FILENAME|ARGS_NAMES|ARGS|XML:/* "\bgetparentfolder\b" \
+		"phase:2,ver:'CRS/2.2.4,accuracy:'9',maturity:'9',capture,t:none,t:htmlEntityDecode,t:compressWhiteSpace,t:lowercase,ctl:auditLogParts=+E,block,msg:'Cross-site Scripting (XSS) Attack',id:'958016',tag:'WEB_ATTACK/XSS',tag:'WASCTC/WASC-8',tag:'WASCTC/WASC-22',tag:'OWASP_TOP_10/A2',tag:'OWASP_AppSensor/IE1',tag:'PCI/6.5.1',logdata:'% \
+	 	{TX.0}',severity:'2',setvar:'tx.msg=%{rule.msg}',setvar:tx.xss_score=+%{tx.critical_anomaly_score},setvar:tx.anomaly_score=+%{tx.critical_anomaly_score},setvar:tx.%{rule.id}-WEB_ATTACK/XSS-%{matched_var_name}=%{tx.0}"
+```
+
+
+>>>>>>> Stashed changes
 
 ## msg
 
@@ -386,11 +603,24 @@ SecRule REQUEST_FILENAME|ARGS_NAMES|ARGS|XML:/* "\bgetparentfolder\b" \
 
 **Action Group:** Meta-data
 
+<<<<<<< Updated upstream
 **Example:**
+=======
+
+
+
+**Example**:
+
+>>>>>>> Stashed changes
 
 ```
 SecRule &REQUEST_HEADERS:Host "@eq 0" "log,id:60008,severity:2,msg:'Request Missing a Host Header'"
 ```
+<<<<<<< Updated upstream
+=======
+
+
+>>>>>>> Stashed changes
 
 Note : The msg information appears in the error and/or audit log files and is not sent back to the client in response headers.
 
@@ -400,13 +630,24 @@ Note : The msg information appears in the error and/or audit log files and is no
 
 **Action Group:** Non-disruptive
 
+<<<<<<< Updated upstream
 **Example:**
+=======
+
+
+**Example**:
+
+>>>>>>> Stashed changes
 
 ```
 SecRule ARGS "attack" "phase1,log,deny,id:119,t:removeNulls,t:lowercase,multiMatch"
 ```
 
+<<<<<<< Updated upstream
 Normally, variables are inspected only once per rule, and only after all transformation functions have been completed. With multiMatch, variables are checked against the operator before and after every transformation function that changes the input.
+=======
+
+>>>>>>> Stashed changes
 
 ## noauditlog
 
@@ -414,15 +655,27 @@ Normally, variables are inspected only once per rule, and only after all transfo
 
 **Action Group:** Non-disruptive
 
+<<<<<<< Updated upstream
 **Example:**
+=======
+
+
+
+**Example**:
+
+>>>>>>> Stashed changes
 
 ```
 SecRule REQUEST_HEADERS:User-Agent "@streq Test" "allow,noauditlog,id:120"
 ```
 
+<<<<<<< Updated upstream
 If the SecAuditEngine is set to On, all of the transactions will be logged. If it is set to RelevantOnly, then you can control the logging with the noauditlog action.
 
 The noauditlog action affects only the current rule. If you prevent audit logging in one rule only, a match in another rule will still cause audit logging to take place. If you want to prevent audit logging from taking place, regardless of whether any rule matches, use ctl:auditEngine=Off.
+=======
+
+>>>>>>> Stashed changes
 
 ## nolog
 
@@ -430,13 +683,25 @@ The noauditlog action affects only the current rule. If you prevent audit loggin
 
 **Action Group:** Non-disruptive
 
+<<<<<<< Updated upstream
 **Example:**
+=======
+
+
+
+**Example**:
+
+>>>>>>> Stashed changes
 
 ```
 SecRule REQUEST_HEADERS:User-Agent "@streq Test" "allow,nolog,id:121"
 ```
 
+<<<<<<< Updated upstream
 Although nolog implies noauditlog, you can override the former by using nolog,auditlog.
+=======
+
+>>>>>>> Stashed changes
 
 ## pass
 
@@ -444,7 +709,15 @@ Although nolog implies noauditlog, you can override the former by using nolog,au
 
 **Action Group:** Disruptive
 
+<<<<<<< Updated upstream
 **Example:**
+=======
+
+
+
+**Example**:
+
+>>>>>>> Stashed changes
 
 ```
 SecRule REQUEST_HEADERS:User-Agent "@streq Test" "log,pass,id:122"
@@ -460,6 +733,7 @@ SecAction "phase:2,nolog,pass,setvar:TX.test=0,id:123"
 SecRule ARGS "test" "phase:2,log,pass,setvar:TX.test=+1,id:124"
 ```
 
+<<<<<<< Updated upstream
 ## pause
 
 **Description**: Pauses transaction processing for the specified number of milliseconds. This feature also supports macro expansion.
@@ -473,6 +747,9 @@ SecRule REQUEST_HEADERS:User-Agent "Test" "log,pause:5000,id:125"
 ```
 
 Warning : This feature can be of limited benefit for slowing down brute force authentication attacks, but use with care. If you are under a denial of service attack, the pause feature may make matters worse, as it will cause an entire Apache worker (process or thread, depending on the deployment mode) to sit idle until the pause is completed.
+=======
+
+>>>>>>> Stashed changes
 
 ## phase
 
@@ -480,7 +757,15 @@ Warning : This feature can be of limited benefit for slowing down brute force au
 
 **Action Group:** Meta-data
 
+<<<<<<< Updated upstream
 **Example:**
+=======
+
+
+
+**Example**:
+
+>>>>>>> Stashed changes
 
 ```
 # Initialize IP address tracking in phase 1
@@ -499,6 +784,7 @@ There are aliases for some phase numbers:
 SecRule REQUEST_HEADERS:User-Agent "Test" "phase:request,log,deny,id:127"
 ```
 
+<<<<<<< Updated upstream
 Warning : Keep in mind that if you specify the incorrect phase, the variable used in the rule may not yet be available. This could lead to a false negative situation where your variable and operator may be correct, but it misses malicious data because you specified the wrong phase.
 
 ## prepend
@@ -531,6 +817,9 @@ SecRule REQUEST_URI "@streq /test.txt" "phase:1,proxy:'http://$ENV{SERVER_NAME}:
 ```
 
 For this action to work, the implementation must handle the proxy connection after the interruption notification.
+=======
+
+>>>>>>> Stashed changes
 
 ## redirect
 
@@ -538,13 +827,25 @@ For this action to work, the implementation must handle the proxy connection aft
 
 **Action Group:** Disruptive
 
+<<<<<<< Updated upstream
 **Example:**
+=======
+
+
+
+**Example**:
+
+>>>>>>> Stashed changes
 
 ```
 SecRule REQUEST_HEADERS:User-Agent "@streq Test" "phase:1,id:130,log,redirect:http://www.example.com/failed.html"
 ```
 
+<<<<<<< Updated upstream
 If the status action is present on the same rule, and its value can be used for a redirection (i.e., is one of the following: 301, 302, 303, or 307), the value will be used for the redirection status code. Otherwise, status code 302 will be used.
+=======
+
+>>>>>>> Stashed changes
 
 ## rev
 
@@ -552,12 +853,27 @@ If the status action is present on the same rule, and its value can be used for 
 
 **Action Group:** Meta-data
 
+<<<<<<< Updated upstream
 **Example:**
 
 ```
 SecRule REQUEST_FILENAME|ARGS_NAMES|ARGS|XML:/* "(?:(?:[\;\|\`]\W*?\bcc|\b(wget|curl))\b|\/cc(?:[\'\"\|\;\`\-\s]|$))" \
     "phase:2,rev:'2.1.3',capture,t:none,t:normalizePath,t:lowercase,ctl:auditLogParts=+E,block,msg:'System Command Injection',id:'950907',tag:'WEB_ATTACK/COMMAND_INJECTION',tag:'WASCTC/WASC-31',tag:'OWASP_TOP_10/A1',tag:'PCI/6.5.2',logdata:'%{TX.0}',severity:'2',setvar:'tx.msg=%{rule.msg}',setvar:tx.anomaly_score=+%{tx.critical_anomaly_score},setvar:tx.command_injection_score=+%{tx.critical_anomaly_score},setvar:tx.%{rule.id}-WEB_ATTACK/COMMAND_INJECTION-%{matched_var_name}=%{tx.0},skipAfter:END_COMMAND_INJECTION1"
 ```
+=======
+
+
+
+**Example**:
+
+
+```
+	SecRule REQUEST_FILENAME|ARGS_NAMES|ARGS|XML:/* "(?:(?:[\;\|\`]\W*?\bcc|\b(wget|curl))\b|\/cc(?:[\'\"\|\;\`\-\s]|$))" \
+		"phase:2,rev:'2.1.3',capture,t:none,t:normalizePath,t:lowercase,ctl:auditLogParts=+E,block,msg:'System Command Injection',id:'950907',tag:'WEB_ATTACK/COMMAND_INJECTION',tag:'WASCTC/WASC-31',tag:'OWASP_TOP_10/A1',tag:'PCI/6.5.2',logdata:'%{TX.0}',severity:'2',setvar:'tx.msg=%{rule.msg}',setvar:tx.anomaly_score=+%{tx.critical_anomaly_score},setvar:tx.command_injection_score=+%{tx.critical_anomaly_score},setvar:tx.%{rule.id}-WEB_ATTACK/COMMAND_INJECTION-%{matched_var_name}=%{tx.0},skipAfter:END_COMMAND_INJECTION1"
+```
+
+
+>>>>>>> Stashed changes
 
 Note : This action is used in combination with the id action to allow the same rule ID to be used after changes take place but to still provide some indication the rule changed.
 
@@ -569,12 +885,26 @@ Note : This action is used in combination with the id action to allow the same r
 
 **Action Group:** Non-disruptive
 
+<<<<<<< Updated upstream
 **Example:**
 
 ```
 # Never log passwords
 SecAction "nolog,phase:2,id:131,sanitiseArg:password,sanitiseArg:newPassword,sanitiseArg:oldPassword"
 ```
+=======
+
+**Example**:
+
+
+```
+SecRule RESPONSE_HEADERS:/Set-Cookie2?/ "(?i:(j?sessionid|(php)?sessid|(asp|jserv|jw)?session[-_]?(id)?|cf(id|token)|sid))" "phase:3,t:none,pass,id:139,nolog,setvar:tx.sessionid=%{matched_var}"Missing HttpOnly Cookie Flag.'"
+# In Apache
+Header set Set-Cookie "%{httponly_cookie}e; HTTPOnly" env=httponly_cookie
+```
+
+
+>>>>>>> Stashed changes
 
 Note : The sanitize actions affect only the data as it is logged to audit log. High-level debug logs may contain sensitive data. Apache access log may contain sensitive data placed in the request URI.
 
@@ -586,6 +916,7 @@ Note : The sanitize actions affect only the data as it is logged to audit log. H
 
 **Action Group:** Non-disruptive
 
+<<<<<<< Updated upstream
 **Example:** This action can be used to sanitise arbitrary transaction elements when they match a condition. For example, the example below will sanitise any argument that contains the word password in the name.
 
 ```
@@ -606,6 +937,11 @@ Note : The sanitize actions affect only the data as it is logged to audit log. H
 
 * `sanitiseMatchedBytes` -- This would x out only the bytes that matched.
 * `sanitiseMatchedBytes`:1/4 -- This would x out the bytes that matched, but keep the first byte and last 4 bytes
+=======
+
+**Example**:
+
+>>>>>>> Stashed changes
 
 ```
 # Detect credit card numbers in parameters and
@@ -614,6 +950,7 @@ SecRule ARGS "@verifyCC \d{13,16}" "phase:2,id:133,nolog,capture,pass,msg:'Poten
 SecRule RESPONSE_BODY "@verifyCC \d{13,16}" "phase:4,id:134,t:none,log,capture,block,msg:'Potential credit card number is response body',sanitiseMatchedBytes:0/4"
 ```
 
+<<<<<<< Updated upstream
 Note : The sanitize actions affect only the data as it is logged to audit log. High-level debug logs may contain sensitive data. Apache access log may contain sensitive data placed in the request URI. You must use capture action with sanitiseMatchedBytes, so the operator must support capture action. ie: @rx, @verifyCC.
 
 ## sanitiseRequestHeader
@@ -647,6 +984,9 @@ SecAction "phase:3,nolog,pass,id:136,sanitiseResponseHeader:Set-Cookie"
 ```
 
 Note : The sanitize actions affect only the data as it is logged to audit log. High-level debug logs may contain sensitive data. Apache access log may contain sensitive data placed in the request URI.
+=======
+
+>>>>>>> Stashed changes
 
 ## severity
 
@@ -654,12 +994,21 @@ Note : The sanitize actions affect only the data as it is logged to audit log. H
 
 **Action Group:** Meta-data
 
+<<<<<<< Updated upstream
 **Example:**
+=======
+
+
+
+**Example**:
+
+>>>>>>> Stashed changes
 
 ```
 SecRule REQUEST_METHOD "^PUT$" "id:340002,rev:1,severity:CRITICAL,msg:'Restricted HTTP function'"
 ```
 
+<<<<<<< Updated upstream
 Severity values in Coraza follows the numeric scale of syslog (where 0 is the most severe). The data below is used by the OWASP Core Rule Set (CRS):
 
 * **0 - EMERGENCY**: is generated from correlation of anomaly scoring data where there is an inbound attack and an outbound leakage.
@@ -781,6 +1130,9 @@ SecRule REQUEST_FILENAME "@streq test.php" "chain,id:7,phase:1,t:none,nolog"
     SecRule ARGS_POST:action "@streq login" "t:none,setvar:tx.auth_attempt=+1"
 
 ```
+=======
+
+>>>>>>> Stashed changes
 
 ## skip
 
@@ -788,7 +1140,15 @@ SecRule REQUEST_FILENAME "@streq test.php" "chain,id:7,phase:1,t:none,nolog"
 
 **Action Group:** Flow
 
+<<<<<<< Updated upstream
 **Example:**
+=======
+
+
+
+**Example**:
+
+>>>>>>> Stashed changes
 
 ```
 # Require Accept header, but not from access from the localhost
@@ -797,6 +1157,11 @@ SecRule REMOTE_ADDR "^127\.0\.0\.1$" "phase:1,skip:1,id:141"
 # This rule will be skipped over when REMOTE_ADDR is 127.0.0.1
 SecRule &REQUEST_HEADERS:Accept "@eq 0" "phase:1,id:142,deny,msg:'Request Missing an Accept Header'"
 ```
+<<<<<<< Updated upstream
+=======
+
+
+>>>>>>> Stashed changes
 
 The `skip` action works only within the current processing phase and not necessarily in the order in which the rules appear in the configuration file. If you place a phase 2 rule after a phase 1 rule that uses skip, it will not skip over the phase 2 rule. It will skip over the next phase 1 rule that follows it in the phase.
 
@@ -806,7 +1171,14 @@ The `skip` action works only within the current processing phase and not necessa
 
 **Action Group:** Flow
 
+<<<<<<< Updated upstream
 **Example:** The following rules implement the same logic as the skip example, but using skipAfter:
+=======
+
+
+**Example**:
+
+>>>>>>> Stashed changes
 
 ```
 # Require Accept header, but not from access from the localhost
@@ -835,7 +1207,11 @@ setvar:tx.%{rule.id}-PROTOCOL_VIOLATION/MISSING_HEADER-%{matched_var_name}=%{mat
 SecMarker END_HOST_CHECK
 ```
 
+<<<<<<< Updated upstream
 The `skipAfter` action works only within the current processing phase and not necessarily the order in which the rules appear in the configuration file. If you place a phase 2 rule after a phase 1 rule that uses skip, it will not skip over the phase 2 rule. It will skip over the next phase 1 rule that follows it in the phase.
+=======
+
+>>>>>>> Stashed changes
 
 ## status
 
@@ -843,12 +1219,27 @@ The `skipAfter` action works only within the current processing phase and not ne
 
 **Action Group:** Data
 
+<<<<<<< Updated upstream
 **Example:**
 
 ```
 # Deny with status 403
 SecDefaultAction "phase:1,log,deny,id:145,status:403"
 ```
+=======
+
+
+
+**Example**:
+
+
+```
+# Deny status 403
+SecDefaultAction "phase:1,log,deny,id:145,status:403"
+```
+
+
+>>>>>>> Stashed changes
 
 ## t
 
@@ -856,13 +1247,25 @@ SecDefaultAction "phase:1,log,deny,id:145,status:403"
 
 **Action Group:** Non-disruptive
 
+<<<<<<< Updated upstream
 **Example:**
+=======
+
+
+
+**Example**:
+
+>>>>>>> Stashed changes
 
 ```
 SecRule ARGS "(asfunction|javascript|vbscript|data|mocha|livescript):" "id:146,t:none,t:htmlEntityDecode,t:lowercase,t:removeNulls,t:removeWhitespace"
 ```
 
+<<<<<<< Updated upstream
 Any transformation functions that you specify in a SecRule will be added to the previous ones specified in `SecDefaultAction`. It is recommended that you always use t:none in your rules, which prevents them depending on the default configuration.
+=======
+
+>>>>>>> Stashed changes
 
 ## tag
 
@@ -870,6 +1273,7 @@ Any transformation functions that you specify in a SecRule will be added to the 
 
 **Action Group:** Meta-data
 
+<<<<<<< Updated upstream
 **Example:**
 
 ```
@@ -879,6 +1283,21 @@ SecRule REQUEST_FILENAME|ARGS_NAMES|ARGS|XML:/* "\bgetparentfolder\b" \
 ```
 
 The tag information appears along with other rule metadata. The purpose of the tagging mechanism to allow easy automated categorization of events. Multiple tags can be specified on the same rule. Use forward slashes to create a hierarchy of categories (as in the example). (*) Tag _does not_ support Macro Expansions right now (see https://github.com/corazawaf/coraza/issues/1118)
+=======
+
+
+
+**Example**:
+
+
+```
+	SecRule REQUEST_FILENAME|ARGS_NAMES|ARGS|XML:/* "\bgetparentfolder\b" \
+	 	"phase:2,rev:'2.1.3',capture,t:none,t:htmlEntityDecode,t:compressWhiteSpace,t:lowercase,ctl:auditLogParts=+E,block,msg:'Cross-site Scripting (XSS) Attack',id:'958016',tag:'WEB_ATTACK/XSS',tag:'WASCTC/WASC-8',tag:'WASCTC/WASC-22',tag:'OWASP_TOP_10/A2',tag:'OWASP_AppSensor/IE1',tag:'PCI/6.5.1',logdata:'% \
+		{TX.0}',severity:'2',setvar:'tx.msg=%{rule.msg}',setvar:tx.xss_score=+%{tx.critical_anomaly_score},setvar:tx.anomaly_score=+%{tx.critical_anomaly_score},setvar:tx.%{rule.id}-WEB_ATTACK/XSS-%{matched_var_name}=%{tx.0}"
+```
+
+
+>>>>>>> Stashed changes
 
 ## ver
 
@@ -886,6 +1305,7 @@ The tag information appears along with other rule metadata. The purpose of the t
 
 **Action Group:** Meta-data
 
+<<<<<<< Updated upstream
 **Example:**
 
 ```
@@ -893,3 +1313,19 @@ SecRule REQUEST_FILENAME|ARGS_NAMES|ARGS|XML:/* "\bgetparentfolder\b" \
  "phase:2,ver:'CRS/2.2.4,capture,t:none,t:htmlEntityDecode,t:compressWhiteSpace,t:lowercase,ctl:auditLogParts=+E,block,msg:'Cross-site Scripting (XSS) Attack',id:'958016',tag:'WEB_ATTACK/XSS',tag:'WASCTC/WASC-8',tag:'WASCTC/WASC-22',tag:'OWASP_TOP_10/A2',tag:'OWASP_AppSensor/IE1',tag:'PCI/6.5.1',logdata:'% \
 {TX.0}',severity:'2',setvar:'tx.msg=%{rule.msg}',setvar:tx.xss_score=+%{tx.critical_anomaly_score},setvar:tx.anomaly_score=+%{tx.critical_anomaly_score},setvar:tx.%{rule.id}-WEB_ATTACK/XSS-%{matched_var_name}=%{tx.0}"
 ```
+=======
+
+
+
+**Example**:
+
+
+```
+	SecRule REQUEST_FILENAME|ARGS_NAMES|ARGS|XML:/* "\bgetparentfolder\b" \
+	 	"phase:2,ver:'CRS/2.2.4,capture,t:none,t:htmlEntityDecode,t:compressWhiteSpace,t:lowercase,ctl:auditLogParts=+E,block,msg:'Cross-site Scripting (XSS) Attack',id:'958016',tag:'WEB_ATTACK/XSS',tag:'WASCTC/WASC-8',tag:'WASCTC/WASC-22',tag:'OWASP_TOP_10/A2',tag:'OWASP_AppSensor/IE1',tag:'PCI/6.5.1',logdata:'% \
+		{TX.0}',severity:'2',setvar:'tx.msg=%{rule.msg}',setvar:tx.xss_score=+%{tx.critical_anomaly_score},setvar:tx.anomaly_score=+%{tx.critical_anomaly_score},setvar:tx.%{rule.id}-WEB_ATTACK/XSS-%{matched_var_name}=%{tx.0}"
+```
+
+
+
+>>>>>>> Stashed changes

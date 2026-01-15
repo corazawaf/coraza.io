@@ -3,7 +3,7 @@ title: "Directives"
 Description: "The following section outlines all of the Coraza directives. "
 lead: "The following section outlines all of the Coraza directives. "
 date: 2020-10-06T08:48:57+00:00
-lastmod: "2024-10-06T18:18:19Z"
+lastmod: "2026-01-15T08:01:39-03:00"
 draft: false
 images: []
 menu:
