@@ -33,8 +33,10 @@ in lines
 &lt;li&gt;&lt;strong&gt;Meta-data actions&lt;/strong&gt; - used to provide more information about rules. Examples include id, rev, severity and msg.&lt;/li&gt;
 &lt;li&gt;&lt;strong&gt;Data actions&lt;/strong&gt; - Not really actions, these are mere containers that hold data used by other actions. For example, the status action holds the status that will be used for blocking (if it takes place).&lt;/li&gt;
 &lt;/ul&gt;
-&lt;h2 id="accuracy"&gt;accuracy &lt;a href="#accuracy" class="anchor" aria-hidden="true"&gt;#&lt;/a&gt;&lt;/h2&gt;
-&lt;p&gt;&lt;strong&gt;Description&lt;/strong&gt;: Specifies the relative accuracy level of the rule related to false positives/negatives. The value is a string based on a numeric scale (1-9 where 9 is very strong and 1 has many false positives).&lt;/p&gt;</description></item><item><title>Execution flow</title><link>https://coraza.io/docs/seclang/execution-flow/</link><pubDate>Tue, 06 Oct 2020 08:48:57 +0000</pubDate><guid>https://coraza.io/docs/seclang/execution-flow/</guid><description>&lt;h2 id="phases"&gt;Phases &lt;a href="#phases" class="anchor" aria-hidden="true"&gt;#&lt;/a&gt;&lt;/h2&gt;
+&lt;h2 id="allow"&gt;allow &lt;a href="#allow" class="anchor" aria-hidden="true"&gt;#&lt;/a&gt;&lt;/h2&gt;
+&lt;p&gt;&lt;strong&gt;Description&lt;/strong&gt;: Stops rule processing on a successful match and allows a transaction to be proceed.allow will affect the entire transaction.
+stopping processing of the current phase but also skipping over all other phases apart from the logging phase.
+(The logging phase is special; it is designed to be always execute.)the engine will stop processing the current phase, and the other phases will continue.engine will stop processing the current phase, and the next phase to be processed will be phase &lt;code&gt;types.PhaseResponseHeaders&lt;/code&gt;.&lt;/p&gt;</description></item><item><title>Execution flow</title><link>https://coraza.io/docs/seclang/execution-flow/</link><pubDate>Tue, 06 Oct 2020 08:48:57 +0000</pubDate><guid>https://coraza.io/docs/seclang/execution-flow/</guid><description>&lt;h2 id="phases"&gt;Phases &lt;a href="#phases" class="anchor" aria-hidden="true"&gt;#&lt;/a&gt;&lt;/h2&gt;
 &lt;p&gt;Phases are an abstract concept designed to fit most web servers execution flows and give it more oportunities to stop a request.&lt;/p&gt;
 &lt;figure&gt;
 &lt;img src="https://coraza.io/images/execution_flow.png" style="border-1 img-fluid" data-sizes="auto" width="100%"&gt;
