@@ -270,3 +270,181 @@ type NewActionFn struct{}
 		})
 	}
 }
+
+func TestExtractPackageDoc(t *testing.T) {
+	tmpDir := t.TempDir()
+
+	tests := map[string]struct {
+		fileContent string
+		expected    string
+	}{
+		"package with doc comment": {
+			fileContent: `// Package actions provides implementations for various ModSecurity actions.
+// This is a multi-line package comment.
+package actions`,
+			expected: "Package actions provides implementations for various ModSecurity actions.\nThis is a multi-line package comment.",
+		},
+		"package without doc comment": {
+			fileContent: `package actions
+
+type SomeFn struct{}`,
+			expected: "",
+		},
+		"package with single line doc": {
+			fileContent: `// Package actions provides action implementations.
+package actions`,
+			expected: "Package actions provides action implementations.",
+		},
+		"package with whitespace in doc": {
+			fileContent: `// Package actions provides action implementations.
+//
+// This package contains various actions.
+package actions`,
+			expected: "Package actions provides action implementations.\n\nThis package contains various actions.",
+		},
+	}
+
+	for name, test := range tests {
+		t.Run(name, func(t *testing.T) {
+			testFile := filepath.Join(tmpDir, strings.ReplaceAll(t.Name(), "/", "_")+".go")
+			err := os.WriteFile(testFile, []byte(test.fileContent), 0644)
+			if err != nil {
+				t.Fatalf("Failed to create test file: %v", err)
+			}
+
+			result := extractPackageDoc(testFile)
+			if result != test.expected {
+				t.Errorf("want %q, got %q", test.expected, result)
+			}
+		})
+	}
+}
+
+func TestExtractPackageDocFileNotFound(t *testing.T) {
+	result := extractPackageDoc("/nonexistent/file.go")
+	if result != "" {
+		t.Errorf("Expected empty string for non-existent file, got %q", result)
+	}
+}
+
+func TestGetPackageDescription(t *testing.T) {
+	tmpDir := t.TempDir()
+
+	tests := map[string]struct {
+		setup    func(string) error
+		expected string
+	}{
+		"finds doc.go first": {
+			setup: func(dir string) error {
+				docGo := `// Package actions from doc.go
+package actions`
+				actionsGo := `// Package actions from actions.go
+package actions`
+				otherGo := `// Package actions from other.go
+package actions`
+
+				if err := os.WriteFile(filepath.Join(dir, "doc.go"), []byte(docGo), 0644); err != nil {
+					return err
+				}
+				if err := os.WriteFile(filepath.Join(dir, "actions.go"), []byte(actionsGo), 0644); err != nil {
+					return err
+				}
+				return os.WriteFile(filepath.Join(dir, "other.go"), []byte(otherGo), 0644)
+			},
+			expected: "Package actions from doc.go",
+		},
+		"falls back to actions.go if no doc.go": {
+			setup: func(dir string) error {
+				actionsGo := `// Package actions from actions.go
+package actions`
+				otherGo := `// Package actions from other.go
+package actions`
+
+				if err := os.WriteFile(filepath.Join(dir, "actions.go"), []byte(actionsGo), 0644); err != nil {
+					return err
+				}
+				return os.WriteFile(filepath.Join(dir, "other.go"), []byte(otherGo), 0644)
+			},
+			expected: "Package actions from actions.go",
+		},
+		"finds any go file if no doc.go or actions.go": {
+			setup: func(dir string) error {
+				otherGo := `// Package actions from other.go
+package actions`
+				return os.WriteFile(filepath.Join(dir, "other.go"), []byte(otherGo), 0644)
+			},
+			expected: "Package actions from other.go",
+		},
+		"skips test files": {
+			setup: func(dir string) error {
+				testGo := `// Package actions from test file
+package actions`
+				otherGo := `// Package actions from regular file
+package actions`
+
+				if err := os.WriteFile(filepath.Join(dir, "actions_test.go"), []byte(testGo), 0644); err != nil {
+					return err
+				}
+				return os.WriteFile(filepath.Join(dir, "other.go"), []byte(otherGo), 0644)
+			},
+			expected: "Package actions from regular file",
+		},
+		"returns empty string if no package doc found": {
+			setup: func(dir string) error {
+				noDocGo := `package actions
+
+type SomeFn struct{}`
+				return os.WriteFile(filepath.Join(dir, "nodoc.go"), []byte(noDocGo), 0644)
+			},
+			expected: "",
+		},
+		"returns empty string for empty directory": {
+			setup: func(dir string) error {
+				return nil
+			},
+			expected: "",
+		},
+		"handles files without package doc gracefully": {
+			setup: func(dir string) error {
+				file1 := `package actions
+
+type SomeFn struct{}`
+				file2 := `// Package actions has documentation
+package actions`
+
+				if err := os.WriteFile(filepath.Join(dir, "file1.go"), []byte(file1), 0644); err != nil {
+					return err
+				}
+				return os.WriteFile(filepath.Join(dir, "file2.go"), []byte(file2), 0644)
+			},
+			expected: "Package actions has documentation",
+		},
+	}
+
+	for name, test := range tests {
+		t.Run(name, func(t *testing.T) {
+			testDir := filepath.Join(tmpDir, strings.ReplaceAll(t.Name(), "/", "_"))
+			err := os.MkdirAll(testDir, 0755)
+			if err != nil {
+				t.Fatalf("Failed to create test directory: %v", err)
+			}
+
+			err = test.setup(testDir)
+			if err != nil {
+				t.Fatalf("Setup failed: %v", err)
+			}
+
+			result := getPackageDescription(testDir)
+			if result != test.expected {
+				t.Errorf("want %q, got %q", test.expected, result)
+			}
+		})
+	}
+}
+
+func TestGetPackageDescriptionNonExistentDir(t *testing.T) {
+	result := getPackageDescription("/nonexistent/directory")
+	if result != "" {
+		t.Errorf("Expected empty string for non-existent directory, got %q", result)
+	}
+}

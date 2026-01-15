@@ -23,6 +23,7 @@ import (
 
 type Page struct {
 	LastModification string
+	PackageDescription string
 	Actions          []Action
 }
 
@@ -78,6 +79,7 @@ func main() {
 
 	page := Page{
 		LastModification: time.Now().Format(time.RFC3339),
+		PackageDescription: getPackageDescription(root),
 	}
 
 	for _, file := range files {
@@ -216,4 +218,57 @@ func parseAction(name string, doc string) Action {
 		}
 	}
 	return d
+}
+
+// getPackageDescription extracts package-level documentation from the actions package.
+// It looks for doc.go first, then falls back to actions.go or any other .go file.
+func getPackageDescription(pkgPath string) string {
+	// Try to find doc.go first
+	docFile := filepath.Join(pkgPath, "doc.go")
+	if desc := extractPackageDoc(docFile); desc != "" {
+		return desc
+	}
+
+	// Fall back to actions.go
+	actionsFile := filepath.Join(pkgPath, "actions.go")
+	if desc := extractPackageDoc(actionsFile); desc != "" {
+		return desc
+	}
+
+	// Try any .go file in the package
+	files, err := filepath.Glob(filepath.Join(pkgPath, "*.go"))
+	if err != nil {
+		return ""
+	}
+
+	for _, file := range files {
+		if strings.HasSuffix(file, "_test.go") {
+			continue
+		}
+		if desc := extractPackageDoc(file); desc != "" {
+			return desc
+		}
+	}
+
+	return ""
+}
+
+// extractPackageDoc extracts package documentation from a specific Go file.
+func extractPackageDoc(filePath string) string {
+	src, err := os.ReadFile(filePath)
+	if err != nil {
+		return ""
+	}
+
+	fSet := token.NewFileSet()
+	f, err := parser.ParseFile(fSet, filePath, src, parser.ParseComments)
+	if err != nil {
+		return ""
+	}
+
+	if f.Doc != nil {
+		return strings.TrimSpace(f.Doc.Text())
+	}
+
+	return ""
 }
