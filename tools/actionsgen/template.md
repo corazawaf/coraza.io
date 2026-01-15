@@ -17,7 +17,7 @@ toc: true
 
 {{ if .PackageDescription -}}
 {{ .PackageDescription }}
-{{ else }}
+{{ else -}}
 Actions are defined as part of a `SecRule` or as parameter for `SecAction` or `SecDefaultAction`. A rule can have no or several actions which need to be separated by a comma.
 
 Actions can be categorized by how they affect overall processing:
