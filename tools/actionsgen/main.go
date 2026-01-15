@@ -55,8 +55,8 @@ func main() {
 	root := path.Join(os.Args[1], "internal/actions")
 	err = filepath.Walk(root, func(path string, info os.FileInfo, err error) error {
 		if err != nil {
-			fmt.Println(err)
-			return nil
+			log.Printf("error walking %q: %v", path, err)
+			return err
 		}
 
 		// get all files that are not test files
