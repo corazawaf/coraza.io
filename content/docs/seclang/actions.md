@@ -3,7 +3,7 @@ title: "Actions"
 description: "Actions available in Coraza"
 lead: "The action of a rule defines how to handle HTTP requests that have matched one or more rule conditions."
 date: 2020-10-06T08:48:57+00:00
-lastmod: "2026-01-15T14:26:37-03:00"
+lastmod: "2026-01-15T16:50:59-03:00"
 draft: false
 images: []
 menu:
@@ -27,7 +27,6 @@ Disruptive actions will NOT be executed if the `SecRuleEngine` is set to `Detect
 * **Flow actions** - These actions affect the rule flow (for example skip or skipAfter).
 * **Meta-data actions** - used to provide more information about rules. Examples include id, rev, severity and msg.
 * **Data actions** - Not really actions, these are mere containers that hold data used by other actions. For example, the status action holds the status that will be used for blocking (if it takes place).
-
 
 ## allow
 
