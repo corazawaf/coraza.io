@@ -3,7 +3,7 @@ title: "Actions"
 description: "Actions available in Coraza"
 lead: "The action of a rule defines how to handle HTTP requests that have matched one or more rule conditions."
 date: 2020-10-06T08:48:57+00:00
-lastmod: "2026-01-15T16:50:59-03:00"
+lastmod: "2026-01-16T15:04:02-03:00"
 draft: false
 images: []
 menu:
@@ -216,7 +216,7 @@ The default configuration, as well as the other transactions running in parallel
 
 ```
 # Parse requests with Content-Type "text/xml" as XML
-SecRule REQUEST_CONTENT_TYPE ^text/xml "nolog,pass,id:106,ctl:requestBodyProcessor=XML"
+SecRule REQUEST_CONTENT_TYPE ^text/xml "nolog,pass,id:106,phase:1,ctl:requestBodyProcessor=XML"
 # white-list the user parameter for rule #981260 when the REQUEST_URI is /index.php
 		SecRule REQUEST_URI "@beginsWith /index.php" "phase:1,t:none,pass,\
 	 	nolog,ctl:ruleRemoveTargetById=981260;ARGS:user"
