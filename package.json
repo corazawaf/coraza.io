@@ -36,12 +36,12 @@
     "@babel/cli": "7.28.3",
     "@babel/core": "7.28.5",
     "@babel/preset-env": "7.28.5",
-    "@fullhuman/postcss-purgecss": "6.0.0",
+    "@fullhuman/postcss-purgecss": "8.0.0",
     "auto-changelog": "2.5.0",
     "autoprefixer": "10.4.23",
     "bootstrap": "5.3.8",
     "clipboard": "2.0.11",
-    "eslint": "^9.39.2",
+    "eslint": "^10.0.0",
     "exec-bin": "1.0.0",
     "flexsearch": "0.8.147",
     "highlight.js": "11.11.1",
@@ -55,8 +55,8 @@
     "postcss-cli": "11.0.1",
     "purgecss-whitelister": "2.4.0",
     "shx": "0.4.0",
-    "stylelint": "16.26.1",
-    "stylelint-config-standard": "39.0.1"
+    "stylelint": "17.0.0",
+    "stylelint-config-standard": "40.0.0"
   },
   "hugo-bin": {
     "buildTags": "extended"
