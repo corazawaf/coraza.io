@@ -50,14 +50,17 @@ stopping processing of the current phase but also skipping over all other phases
 &lt;/ul&gt;
 &lt;h3 id="phase-2-request-body"&gt;Phase 2: Request Body &lt;a href="#phase-2-request-body" class="anchor" aria-hidden="true"&gt;#&lt;/a&gt;&lt;/h3&gt;
 &lt;p&gt;This phase will process rules with the following variables:&lt;/p&gt;</description></item><item><title>Operators</title><link>https://coraza.io/docs/seclang/operators/</link><pubDate>Tue, 06 Oct 2020 08:48:57 +0000</pubDate><guid>https://coraza.io/docs/seclang/operators/</guid><description>&lt;h2 id="beginswith"&gt;beginsWith &lt;a href="#beginswith" class="anchor" aria-hidden="true"&gt;#&lt;/a&gt;&lt;/h2&gt;
-&lt;p&gt;&lt;strong&gt;Description:&lt;/strong&gt; Returns true if the parameter string is found at the beginning of the input. Macro expansion is performed on the parameter string before comparison.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Description:&lt;/strong&gt; Matches if the parameter string appears at the beginning of the input.
+Supports macro expansion for dynamic string matching.&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;Example:&lt;/strong&gt;&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;# Detect request line that does not begin with &amp;quot;GET&amp;quot;
-SecRule REQUEST_LINE &amp;quot;!@beginsWith GET&amp;quot; &amp;quot;id:149&amp;quot;
+&lt;pre&gt;&lt;code&gt;# Block requests that don't start with GET
+SecRule REQUEST_LINE &amp;quot;!@beginsWith GET&amp;quot; &amp;quot;id:149,deny,log&amp;quot;
+# Check if URI starts with /admin
+SecRule REQUEST_URI &amp;quot;@beginsWith /admin&amp;quot; &amp;quot;id:151,deny&amp;quot;
 &lt;/code&gt;&lt;/pre&gt;
 &lt;h2 id="contains"&gt;contains &lt;a href="#contains" class="anchor" aria-hidden="true"&gt;#&lt;/a&gt;&lt;/h2&gt;
-&lt;p&gt;&lt;strong&gt;Description:&lt;/strong&gt; Returns true if the parameter string is found anywhere in the input. Macro expansion is performed on the parameter string before comparison.&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;Example:&lt;/strong&gt;&lt;/p&gt;</description></item><item><title>Transformations</title><link>https://coraza.io/docs/seclang/transformations/</link><pubDate>Tue, 06 Oct 2020 08:48:57 +0000</pubDate><guid>https://coraza.io/docs/seclang/transformations/</guid><description>&lt;p&gt;In the following example, the request parameter values are converted to lowercase before matching:&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Description:&lt;/strong&gt; Matches if the parameter string is found anywhere in the input.
+Supports macro expansion for dynamic string matching.&lt;/p&gt;</description></item><item><title>Transformations</title><link>https://coraza.io/docs/seclang/transformations/</link><pubDate>Tue, 06 Oct 2020 08:48:57 +0000</pubDate><guid>https://coraza.io/docs/seclang/transformations/</guid><description>&lt;p&gt;In the following example, the request parameter values are converted to lowercase before matching:&lt;/p&gt;
 &lt;pre&gt;&lt;code&gt;SecRule ARGS &amp;quot;xp_cmdshell&amp;quot; &amp;quot;t:lowercase,id:91&amp;quot;
 &lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;Multiple transformation actions can be used in the same rule, forming a transformation pipeline. The transformations will be performed in the order in which they appear in the rule.&lt;/p&gt;
