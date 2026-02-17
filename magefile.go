@@ -26,6 +26,10 @@ func Generate() error {
     return err
   }
 
+  if err := sh.RunV("go", "run", "tools/operatorsgen/main.go", ".vendor/github.com/corazawaf/coraza/v3"); err != nil {
+    return err
+  }
+
   // get all changes in content/docs
   allFilesChangedNames, err := sh.Output("git", "diff", "--name-only", "content/docs")
   if err != nil {

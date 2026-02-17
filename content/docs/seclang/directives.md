@@ -3,7 +3,7 @@ title: "Directives"
 Description: "The following section outlines all of the Coraza directives. "
 lead: "The following section outlines all of the Coraza directives. "
 date: 2020-10-06T08:48:57+00:00
-lastmod: "2026-01-15T08:47:10-03:00"
+lastmod: "2026-01-16T15:04:02-03:00"
 draft: false
 images: []
 menu:
@@ -88,7 +88,7 @@ SecAuditEngine RelevantOnly
 SecAuditLog logs/audit/audit.log
 SecAuditLogParts ABCFHZ
 SecAuditLogType concurrent
-SecAuditLogDir logs/audit
+SecAuditLogStorageDir logs/audit
 SecAuditLogRelevantStatus ^(?:5|4(?!04))
 ```
 
@@ -107,20 +107,6 @@ SecAuditLog "/path/to/audit.log"
 **Note:** This audit log file is opened on startup when the server typically still runs
 as root. You should not allow non-root users to have write privileges for this file
 or for the directory.
-
-## SecAuditLogDir
-
-**Description:** Configures the directory where concurrent audit log entries are stored.
-
-**Syntax:** `SecAuditLogDir [PATH_TO_LOG_DIR]`
-
-This directive is required only when concurrent audit logging is used. Ensure that you
-specify a file system location with adequate disk space.
-
-**Example:**
-```apache
-SecAuditLogDir /tmp/auditlogs/
-```
 
 ## SecAuditLogDirMode
 
@@ -191,8 +177,8 @@ response body, in which case the actual response body will contain the error mes
 - I: This part is a replacement for part C. It will log the same data as C in all cases except when
 `multipart/form-data` encoding in used. In this case, it will log a fake `application/x-www-form-urlencoded`
 body that contains the information about parameters but not about the files. This is handy if
-you don’t want to have (often large) files stored in your audit logs.
-- J: This part contains information about the files uploaded using `multipart/form-data` encoding.
+you don’t want to have (often large) files stored in your audit logs; not implemented yet.
+- J: This part contains information about the files uploaded using `multipart/form-data` encoding; not implemented yet.
 - K: This part contains a full list of every rule that matched (one per line) in the order they were
 matched. The rules are fully qualified and will thus show inherited actions and default operators.
 - Z: Final boundary, signifies the end of the entry (mandatory).
@@ -220,6 +206,55 @@ except for 404s. Although you could achieve the same effect with a rule in phase
 is present by default in rules, this will make the engine bypass the [`SecAuditLogRelevantStatus`](#secauditlogrelevantstatus)
 and send rule matches to the audit log regardless of status. You must specify noauditlog in the
 rules manually or set it in [`SecDefaultAction`](#secdefaultaction).
+
+## SecAuditLogStorageDir
+
+**Description:** Configures the directory where concurrent audit log entries are stored.
+
+**Syntax:** `SecAuditLogStorageDir [PATH_TO_LOG_DIR]`
+
+This directive is required only when concurrent audit logging is used. Ensure that you
+specify a file system location with adequate disk space.
+
+**Example:**
+```apache
+SecAuditLogStorageDir /tmp/auditlogs/
+```
+
+## SecAuditLogType
+
+**Description:** Configures the type of audit logging mechanism to be used.
+
+**Syntax:** `SecAuditLogType Serial|Concurrent|HTTPS|Syslog`
+
+The possible values are:
+
+  - Serial : Audit log entries will be stored in a single file, specified by SecAuditLog.
+    This is convenient for casual use, but it can slow down the server, because only
+    one audit log entry can be written to the file at any one time.
+  - Concurrent : One file per transaction is used for audit logging. This approach is more
+    scalable when heavy logging is required (multiple transactions can be recorded in parallel)
+  - HTTPS : Audit log entries will be sent to the target URL, specified by SecAuditLog.
+  - Syslog : Audit log entries will be sent to the syslog server, specified by SecAuditLog
+    in one of formats: "ADDRESS:PORT" (TCP), "udp://ADDRESS:PORT", or "unixgram:///var/run/syslog".
+
+**Example:**
+```apache
+SecAuditLogType Serial
+```
+
+## SecComponentSignature
+
+**Description:** Appends component signature to the Coraza signature.
+
+**Syntax:** `SecComponentSignature "COMPONENT_NAME/X.Y.Z (COMMENT)"`
+
+Appends component signature to the Coraza signature.
+
+**Example:**
+```apache
+SecComponentSignature "OWASP_CRS/4.18.0"
+```
 
 ## SecDebugLog
 
@@ -340,8 +375,10 @@ the request body will start to be streamed into a temporary file on disk.
 
 **Default:** `134217728 (128 Mib)`
 
-Anything over the limit will be rejected with status code 413 (Request Entity Too Large).
-There is a hard limit of 1 GB.
+Depends on [`SecRequestBodyLimitAction`](#secrequestbodylimitaction)
+- Reject: Anything over this limit will be rejected with status code 413 (Request Entity Too Large).
+- ProcessPartial: The first N bytes of the request body will be processed.
+There is a hard limit of 1 GiB.
 
 ## SecRequestBodyLimitAction
 
@@ -364,7 +401,7 @@ avoid OOM issues while buffering the request body prior the inspection.
 
 Generally speaking, the default value is not small enough. For most applications, you
 should be able to reduce it down to 128 KB or lower. Anything over the limit will be
-rejected with status code 413 (Request Entity Too Large). There is a hard limit of 1 GB.
+rejected with status code 413 (Request Entity Too Large). There is a hard limit of 1 GiB.
 **Note:** not implemented yet
 
 ## SecResponseBodyAccess
@@ -389,9 +426,11 @@ configured with [`SecResponseBodyMimeType`](#secresponsebodymimetype)).
 
 **Default:** `524288 (512 Kib)`
 
-Anything over this limit will be rejected with status code 500 (Internal Server Error).
+Depends on [`SecResponseBodyLimitAction`](#secresponsebodylimitaction)
+- Reject: Anything over this limit will be rejected with status code 500 (Internal Server Error).
+- ProcessPartial: The first N bytes of the response body will be processed.
 This setting will not affect the responses with MIME types that are not selected for
-buffering. There is a hard limit of 1 GB.
+buffering. There is a hard limit of 1 GiB.
 
 ## SecResponseBodyLimitAction
 
@@ -412,6 +451,27 @@ which the attacker controls the output (e.g., can make it arbitrary long). In su
 cases, however, it is not possible to prevent leakage anyway. The attacker could
 compress, obfuscate, or even encrypt data before it is sent back, and therefore
 bypass any monitoring device.
+
+## SecResponseBodyMimeType
+
+**Description:** Configures which MIME types are to be considered for response body buffering.
+
+**Syntax:** `SecResponseBodyMimeType MIMETYPE MIMETYPE ...`
+
+Multiple SecResponseBodyMimeType directives can be used to add MIME types.
+Use SecResponseBodyMimeTypesClear to clear previously configured MIME types and start over.
+
+**Example:**
+```apache
+SecResponseBodyMimeType text/plain text/html text/xml
+```
+
+## SecResponseBodyMimeTypesClear
+
+**Description:** Clears the list of MIME types considered for response body buffering, allowing you to start populating the list from scratch.
+
+**Syntax:** `SecResponseBodyMimeTypesClear`
+
 
 ## SecRule
 
@@ -451,6 +511,21 @@ The possible values are:
 
 **Syntax:** `SecRuleRemoveById ...[ID OR RANGE]`
 
+
+## SecRuleRemoveByMsg
+
+**Description:** Removes the matching rules from the current configuration context.
+
+**Syntax:** `SecRuleRemoveByMsg MESSAGE`
+
+Normally, you would use [`SecRuleRemoveById`](#secruleremovebyid) to remove rules, but it may occasionally
+be easier to disable one or more rules with [`SecRuleRemoveByMsg`](#secruleremovebymsg). Matching is
+by case-sensitive string equality.
+
+**Example:**
+```apache
+SecRuleRemoveByMsg "Directory Listing"
+```
 
 ## SecRuleRemoveByTag
 
