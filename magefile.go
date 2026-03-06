@@ -8,6 +8,7 @@ package main
 
 import (
   "bufio"
+  "fmt"
   "strings"
 
   "github.com/magefile/mage/sh"
@@ -107,4 +108,40 @@ func diff(list1 []string, list2 []string) []string {
 
 func Test() error {
   return sh.RunV("go", "test", "./...")
+}
+
+// CI runs the full CI pipeline locally: test, generate, npm install, hugo build.
+func CI() error {
+  fmt.Println("==> Running tests...")
+  if err := Test(); err != nil {
+    return fmt.Errorf("tests failed: %w", err)
+  }
+
+  fmt.Println("==> Generating content...")
+  if err := Generate(); err != nil {
+    return fmt.Errorf("generate failed: %w", err)
+  }
+
+  fmt.Println("==> Checking for uncommitted generated changes...")
+  if out, err := sh.Output("git", "diff", "--exit-code"); err != nil {
+    return fmt.Errorf("generated files have uncommitted changes:\n%s", out)
+  }
+
+  fmt.Println("==> Installing npm dependencies...")
+  if err := sh.RunV("npm", "install"); err != nil {
+    return fmt.Errorf("npm install failed: %w", err)
+  }
+
+  fmt.Println("==> Building site with Hugo...")
+  if err := sh.RunV("hugo", "--minify"); err != nil {
+    return fmt.Errorf("hugo build failed: %w", err)
+  }
+
+  fmt.Println("==> CI passed!")
+  return nil
+}
+
+// Lint runs all linters (scripts, styles, markdown).
+func Lint() error {
+  return sh.RunV("npm", "run", "lint")
 }

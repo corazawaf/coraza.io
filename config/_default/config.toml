@@ -99,7 +99,3 @@ rel  = "sitemap"
   [[module.mounts]]
     source = "node_modules/mermaid"
     target = "assets/js/vendor/mermaid"
-[caches]
-  [caches.getjson]
-    dir = ":cacheDir/:project"
-    maxAge = "10m"
