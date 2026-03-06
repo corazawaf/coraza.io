@@ -6,8 +6,13 @@ date: {{ .Date }}
 lastmod: {{ .Date }}
 draft: true
 images: []
-author: ""
-repo: ""
-official: false
-compatibility: [v3.x]
+contributors: []
+tags: []
+categories: []
 ---
+
+## Introduction
+
+## Details
+
+## Conclusion

@@ -18,7 +18,7 @@ domainTLD = "coraza.io"
 titleHome = "OWASP Coraza"
 
 ## Twitter Cards
-twitterSite = "@corazatech"
+twitterSite = "@corazaio"
 twitterCreator = "@jptosso"
 
 ## JSON-LD
@@ -26,7 +26,7 @@ twitterCreator = "@jptosso"
 schemaType = "Person"
 schemaName = "OWASP Coraza WAF"
 schemaAuthor = "Juan Pablo Tosso and Coraza contributors"
-schemaAuthorTwitter = "https://twitter.com/jptosso"
+schemaAuthorTwitter = "https://x.com/jptosso"
 schemaAuthorLinkedIn = "https://www.linkedin.com/in/jptosso/"
 schemaAuthorGitHub = "https://github.com/corazawaf"
 schemaLocale = "en-US"
@@ -36,7 +36,7 @@ schemaLogoHeight = 512
 schemaImage = "doks.png"
 schemaImageWidth = 1280
 schemaImageHeight = 640
-schemaTwitter = "https://twitter.com/jptosso"
+schemaTwitter = "https://x.com/corazaio"
 schemaLinkedIn = ""
 schemaGitHub = "https://github.com/corazawaf/coraza"
 schemaSection = "blog"

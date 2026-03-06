@@ -6,8 +6,10 @@ date: {{ .Date }}
 lastmod: {{ .Date }}
 draft: true
 images: []
-author: ""
 repo: ""
 official: false
 compatibility: [v3.x]
+menu:
+  connectors:
+    parent: "connectors"
 ---
