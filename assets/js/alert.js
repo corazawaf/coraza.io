@@ -1,8 +1,8 @@
-var announcement = document.getElementById('announcement');
+const announcement = document.getElementById('announcement');
 
 if (announcement !== null) {
 
-  var id = announcement.dataset.id;
+  const id = announcement.dataset.id;
 
   Object.keys(localStorage).forEach(function(key) {
     if (/^global-alert-/.test(key)) {
