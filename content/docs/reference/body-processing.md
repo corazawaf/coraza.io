@@ -1,7 +1,7 @@
 ---
 title: "Body Processing"
-description: ""
-lead: ""
+description: "How Coraza handles request and response body processing, including supported body processors."
+lead: "Coraza buffers request and response bodies to enable reliable inspection and blocking. This page explains the body processing pipeline and available processors."
 date: 2020-10-06T08:48:57+00:00
 lastmod: 2020-10-06T08:48:57+00:00
 draft: false
@@ -32,3 +32,25 @@ Body processors are designed to handle requests and responses in the same contex
 | Multipart                 | Yes     | No       | No          | Yes            |
 | JSON                      | Yes     | Yes      | No          | Yes            |
 | GraphQL                   | TBD     | TBD      | Yes         | TBD            |
+
+```mermaid
+flowchart TD
+    A[Request Arrives] --> B{RequestBodyAccess On?}
+    B -->|No| G[Skip to Phase 3]
+    B -->|Yes| C{Content-Type?}
+    C -->|application/x-www-form-urlencoded| D[URLEncoded Processor]
+    C -->|multipart/form-data| E[Multipart Processor]
+    C -->|application/json| F[JSON Processor]
+    C -->|application/xml| F2[XML Processor]
+    C -->|Other| H{ForceRequestBodyVariable?}
+    H -->|Yes| D
+    H -->|No| G
+    D --> I[Populate ARGS_POST, REQUEST_BODY]
+    E --> J[Populate FILES, FILES_NAMES, etc.]
+    F --> K[Populate REQUEST_BODY]
+    F2 --> L[Populate XML variables]
+    I --> M[Evaluate Phase 2 Rules]
+    J --> M
+    K --> M
+    L --> M
+```

@@ -1,7 +1,7 @@
 ---
 title: "Internals"
-description: ""
-lead: ""
+description: "Deep dive into Coraza WAF internals: engine architecture, rule evaluation, collections, and phases."
+lead: "Understanding how Coraza WAF works internally helps you write better rules and build more effective integrations."
 date: 2020-10-06T08:48:57+00:00
 lastmod: 2020-10-06T08:48:57+00:00
 draft: false
@@ -42,6 +42,23 @@ Different from ModSecurity, each rule is a unique struct in Coraza and is shared
 
 Once a rule is triggered, it will follow the following flow:
 
+```mermaid
+flowchart TD
+    A[Rule Triggered] --> B{Removed for this TX?}
+    B -->|Yes| Z[Skip]
+    B -->|No| C[Fill RULE variable]
+    C --> D[Apply removed targets]
+    D --> E[Compile variables]
+    E --> F[Apply transformations]
+    F --> G[Execute operator]
+    G --> H{Any match?}
+    H -->|No| Z
+    H -->|Yes| I[Non-disruptive actions]
+    I --> J[Evaluate chains]
+    J --> K[Log if requested]
+    K --> L[Disruptive/flow actions]
+```
+
 1. Skip if this rule is removed for the current transaction
 2. Fill the ``RULE`` variable data which contains fields from the current rule
 3. Apply removed targets for this transaction
@@ -66,7 +83,7 @@ Operators are stored in ``github.com/corazawaf/coraza/tree/v3/dev/internal/opera
 
 ### Actions
 
-Actions are stored in ``github.com/coraza-waf/coraza/v2/actions`` and contains an initializer and an evaluation function, the initializers are evaluated during compilation, for example, ``id:4`` will run ``act.Init("4")``. Depending on the ``Type()`` of each action, it will run on different phases.
+Actions are stored in ``github.com/corazawaf/coraza/v3/internal/actions`` and contains an initializer and an evaluation function, the initializers are evaluated during compilation, for example, ``id:4`` will run ``act.Init("4")``. Depending on the ``Type()`` of each action, it will run on different phases.
 
 * **Non-Disruptive:** Do something, but that something does not and cannot affect the rule processing flow. Setting a variable, or changing its value is an example of a non-disruptive action. Non-disruptive action can appear in any rule, including each rule belonging to a chain. **Non-disruptive rules are evaluated after the rule matches some data**.
 * **Flow actions:** These actions affect the rule flow (for example skip or skipAfter). Flow actions are evaluated after the rule successfully matched and will only run for the parent rule of a chain.
@@ -115,7 +132,7 @@ Phases are used by ``RuleGroup`` to filter between execution phases on HTTP/1.1 
 
 **Phase 1: Request Headers**
 
-This phase process theorically consists in three phases:
+This phase process theoretically consists in three phases:
 
 * Connection (```tx.ProcessConnection()```): Request address and port
 * Request line (```tx.ProcessURI()```): Request URL, does not include GET arguments
@@ -148,10 +165,10 @@ This is a special phase, it will always run but it must be handled by the client
 
 ## Body handling
 
-BodyBuffer is a struct that will manage the request or response buffer and store the data to temprary files if required. BodyBuffer will apply a few rules to decide whether to buffer the data in memory or write a temporary file, it will also return a ```Reader``` to the memory buffer or the temporary file created. Temporary files must be deleted by ```tx.ProccessLoging```.
+BodyBuffer is a struct that will manage the request or response buffer and store the data to temporary files if required. BodyBuffer will apply a few rules to decide whether to buffer the data in memory or write a temporary file, it will also return a ```Reader``` to the memory buffer or the temporary file created. Temporary files must be deleted by ```tx.ProcessLogging```.
 
 ## Persistent Collections
 
-Not working yet.
+Persistent collections (e.g. `IP`, `SESSION`, `RESOURCE`) are currently not supported in Coraza v3. This feature is tracked in the [Coraza GitHub repository](https://github.com/corazawaf/coraza/issues).
 
 ## The ```tx.ProcessRequest(req)``` helper

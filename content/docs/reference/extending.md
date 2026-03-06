@@ -25,9 +25,9 @@ The plugin interface provides three functions to extend rule operators, transfor
 
 After defining the plugins, we must register them using the ```plugins.Register...``` function inside the init function ```func init(){}```.
 
-- **Operators**: ```operators.RegisterPlugin(operator PluginOperatorWrapper)```
-- **Actions**: ```actions.RegisterPlugin(action PluginActionWrapper)```
-- **Transformations**: ```transformations.RegisterPlugin(transformation transformations.Transformation)```
+- **Operators**: ```plugins.RegisterOperator(name, operator)```
+- **Actions**: ```plugins.RegisterAction(name, action)```
+- **Transformations**: ```plugins.RegisterTransformation(name, transformation)```
 
 **Important:** Some integrations like Traefik does not support plugins, because we cannot control how the integration is compiled by Pilot.
 
@@ -207,17 +207,14 @@ There are no special helpers to test plugins but you may use the seclang compile
 
 ```go
 import(
-    "github.com/corazawaf/coraza/v3/experimental/plugins/seclang"
-    "github.com/corazawaf/coraza/v3/experimental/plugins/types"
-    "github.com/corazawaf/coraza/v3/experimental/plugins/transformations"
+    "github.com/corazawaf/coraza/v3"
     "strings"
     "testing"
 )
 
 func TestToLower2(t *testing.T){
-  waf := coraza.NewWaf()
-  parser, _ := seclang.NewParser(waf)
-  if err := parser.FromString(`SecRule ARGS:id "lowercase" "id:1, t:tolower2"`); err != nil{
+  waf, err := coraza.NewWAF(coraza.NewWAFConfig().WithDirectives(`SecRule ARGS:id "lowercase" "id:1, t:tolower2"`))
+  if err != nil {
     t.Error(err)
   }
   str := "TOLowEr"
