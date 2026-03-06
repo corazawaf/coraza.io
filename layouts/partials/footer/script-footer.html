@@ -96,8 +96,8 @@
   {{ $index := $index | minify | fingerprint "sha512" -}}
   {{ $bs := $bs | minify | fingerprint "sha512" -}}
   {{ $highlight := $highlight | minify | fingerprint "sha512" -}}
-  {{ $katex := $katex | minify | fingerprint "sha512" -}}
-  {{ $katexAutoRender := $katexAutoRender | minify | fingerprint "sha512" -}}
+  {{ if .Site.Params.options.kaTex -}}{{ $katex := $katex | minify | fingerprint "sha512" -}}
+  {{ $katexAutoRender := $katexAutoRender | minify | fingerprint "sha512" -}}{{ end -}}
   {{ $mermaid := $mermaid | minify | fingerprint "sha512" -}}
   {{ if .Site.Params.options.bootStrapJs -}}
     <script src="{{ $bs.RelPermalink }}" integrity="{{ $bs.Data.Integrity }}" crossorigin="anonymous" defer></script>

@@ -146,7 +146,6 @@ go run mage.go format
 ## Contribute
 
 Contributions are welcome! Please refer to [CONTRIBUTING.md](./CONTRIBUTING.md) for guidance.
-<!-- @TODO: Add CONTRIBUTING.md -->
 
 ## Thanks
 

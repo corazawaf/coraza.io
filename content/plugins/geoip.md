@@ -8,5 +8,5 @@ logo: false
 author: bxlxx
 repo: https://github.com/corazawaf/coraza-geoip
 official: true
-compatibility: [v2.x]
+compatibility: [v3.x]
 ---

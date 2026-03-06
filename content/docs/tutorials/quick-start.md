@@ -15,7 +15,7 @@ toc: true
 
 If you are not looking to use Coraza WAF as a library and you want a working WAF implementation or integration, check the integrations page.
 
-<!-- @TODO: Update links for integration page -->
+Check out the [Connectors](/connectors/) page for available integrations.
 
 ## Requirements
 
