@@ -52,8 +52,8 @@ Clone the coraza-spoa repository:
 git clone https://github.com/corazawaf/coraza-spoa.git
 ```
 
-To compile a development version of coraza-spoa, run `make`. This will download
-all dependencies and compile a `coraza-spoa` binary.
+To compile a development version of coraza-spoa, run `go run mage.go build`.
+This will download all dependencies and compile a `coraza-spoa` binary.
 
 ## Configuration Overview
 
@@ -96,19 +96,36 @@ defaults
 frontend test
     mode http
     bind *:80
-    unique-id-format %[uuid()]
-    unique-id-header X-Unique-ID
-    log-format "%ci:%cp\ [%t]\ %ft\ %b/%s\ %Th/%Ti/%TR/%Tq/%Tw/%Tc/%Tr/%Tt\ %ST\ %B\ %CC\ %CS\ %tsc\ %ac/%fc/%bc/%sc/%rc\ %sq/%bq\ %hr\ %hs\ %{+Q}r\ %ID\ spoa-error:\ %[var(txn.coraza.error)]\ waf-hit:\ %[var(txn.coraza.fail)]"
+    log-format "%ci:%cp\ [%t]\ %ft\ %b/%s\ %Th/%Ti/%TR/%Tq/%Tw/%Tc/%Tr/%Tt\ %ST\ %B\ %CC\ %CS\ %tsc\ %ac/%fc/%bc/%sc/%rc\ %sq/%bq\ %hr\ %hs\ %{+Q}r\ %[var(txn.coraza.id)]\ spoa-error:\ %[var(txn.coraza.error)]\ waf-hit:\ %[var(txn.coraza.status)]"
 
-    filter spoe engine coraza config coraza.cfg
+    # Emulate Apache behavior by only allowing http 1.0, 1.1, 2.0
+    http-request deny deny_status 400 if !HTTP
+    http-request deny deny_status 400 if !HTTP_1.0 !HTTP_1.1 !HTTP_2.0
 
-    # Deny for Coraza WAF hits
-    http-request deny if { var(txn.coraza.fail) -m int eq 1 }
-    http-response deny if { var(txn.coraza.fail) -m int eq 1 }
+    # Set coraza app in HAProxy config to allow customized configs per host.
+    # You can also just leave this as is or even replace the use of a variable
+    # inside the coraza.cfg.
+    http-request set-var(txn.coraza.app) str(sample_app)
+
+    # !! Every http-request line will be executed before this !!
+    # Execute coraza request check.
+    filter spoe engine coraza config /etc/haproxy/coraza.cfg
+    http-request send-spoe-group coraza coraza-req
+
+    # Currently haproxy cannot use variables to set the code or deny_status, so this needs to be manually configured here
+    http-request redirect code 302 location %[var(txn.coraza.data)] if { var(txn.coraza.action) -m str redirect }
+    http-response redirect code 302 location %[var(txn.coraza.data)] if { var(txn.coraza.action) -m str redirect }
+
+    http-request deny deny_status 403 hdr waf-block "request"  if { var(txn.coraza.action) -m str deny }
+    http-response deny deny_status 403 hdr waf-block "response" if { var(txn.coraza.action) -m str deny }
+
+    http-request silent-drop if { var(txn.coraza.action) -m str drop }
+    http-response silent-drop if { var(txn.coraza.action) -m str drop }
 
     # Deny in case of an error, when processing with the Coraza SPOA
-    http-request deny deny_status 504 if { var(txn.coraza.error) -m int gt 0 }
-    http-response deny deny_status 504 if { var(txn.coraza.error) -m int gt 0 }
+    http-request deny deny_status 500 if { var(txn.coraza.error) -m int gt 0 }
+    http-response deny deny_status 500 if { var(txn.coraza.error) -m int gt 0 }
+
     use_backend test_backend
 
 backend test_backend
@@ -116,14 +133,15 @@ backend test_backend
     http-request return status 200 content-type "text/plain" string "Welcome!\n"
 
 backend coraza-spoa
+    option spop-check
     mode tcp
-    server s1 127.0.0.1:9000
+    server s1 127.0.0.1:9000 check
 ```
 
 The HAProxy SPOE gets activated by the `filter` statement in `frontent test`.
 
 Configuration of the SPOE behavior is then defined in `coraza.cfg`. This
-includes messages to exchange, which backend HAPRoxy should use internally to
+includes messages to exchange, which backend HAProxy should use internally to
 exchange messages with the SPOA, and some other details.
 
 After a HTTP Request or Response has been scanned by the Coraza Engine, it will
@@ -136,7 +154,7 @@ configuration via the `http-request deny` and `http-response deny`
 statements.
 
 Additionally in case the Coraza SPOA failed processing the request, it will get
-blocked with a `deny_status 504`. By default HAProxy would just disable the
+blocked with a `deny_status 500`. By default HAProxy would just disable the
 `filter` if Coraza takes too long to process the request.
 
 ## HAProxy SPOE Configuration
@@ -145,59 +163,94 @@ The HAProxy SPOE is configured in the `/etc/haproxy/coraza.cfg`:
 
 ```conf
 # https://github.com/haproxy/haproxy/blob/master/doc/SPOE.txt
+# /usr/local/etc/haproxy/coraza.cfg
 [coraza]
 spoe-agent coraza-agent
-    messages coraza-req coraza-res
-    option var-prefix coraza
-    option set-on-error error
-    timeout hello      100ms
-    timeout idle       2m
-    timeout processing 500ms
+    # Process HTTP requests only (the responses are not evaluated)
+    messages    coraza-req
+    # Comment the previous line and add coraza-res, to process responses also.
+    #messages   coraza-req     coraza-res
+    groups      coraza-req      coraza-res
+    option      var-prefix      coraza
+    option      set-on-error    error
+    timeout     hello           2s
+    timeout     idle            2m
+    timeout     processing      500ms
     use-backend coraza-spoa
-    log global
+    log         global
 
 spoe-message coraza-req
-    args id=unique-id src-ip=src method=method path=path query=query version=req.ver headers=req.hdrs body=req.body
+    # Arguments are required to be in this order
+    args app=var(txn.coraza.app) src-ip=src src-port=src_port dst-ip=dst dst-port=dst_port method=method path=path query=query version=req.ver headers=req.hdrs body=req.body
     event on-frontend-http-request
 
 spoe-message coraza-res
-    args id=unique-id version=res.ver status=status headers=res.hdrs body=res.body
+    # Arguments are required to be in this order
+    args app=var(txn.coraza.app) id=var(txn.coraza.id) version=res.ver status=status headers=res.hdrs body=res.body
     event on-http-response
+
+spoe-group coraza-req
+    messages coraza-req
+
+spoe-group coraza-res
+    messages coraza-res
+
 ```
 
 It defines processing timeouts and the messages to exchange via the SPOP protocol.
 
-Thats it for the HAProxy side, lets configure the `coraza-spoa` service, which
-should listen on `127.0.0.1:9000` to exchange the `spoe-message` with HAProxy.
+That's it for the HAProxy side, let's configure the `coraza-spoa` service,
+which should listen on `127.0.0.1:9000` to exchange the `spoe-message` with
+HAProxy.
 
 ## Coraza Configuration
 
 Coraza SPOA is configured via the `/etc/coraza-spoa/config.yml`:
 
 ```yaml
-log:
-  # The log level configuration, one of: debug/info/warn/error/panic/fatal
-  level: info
-  # The log file dir of the coraza-spoa
-  dir: /var/log/coraza-spoa
+# The SPOA server bind address
+bind: 127.0.0.1:9000
 
-spoa:
-  # The SPOA server bind address
-  bind: "127.0.0.1:9000"
+# The log level configuration, one of: debug/info/warn/error/panic/fatal
+log_level: info
+# The log file path
+log_file: /var/log/coraza-spoa/server.log
+# The log format, one of: console/json
+log_format: console
 
-  # Get the coraza.conf from https://github.com/corazawaf/coraza
-  #
-  # Download the OWASP CRS from https://github.com/coreruleset/coreruleset/releases
-  # and copy crs-setup.conf, the rules & plugins directories to /etc/coraza-spoa
-  include:
-    - /etc/coraza-spoa/coraza.conf
-    - /etc/coraza-spoa/crs-setup.conf
-    - /etc/coraza-spoa/rules/*.conf
+# Optional default application to use when the app from the request
+# does not match any of the declared application names
+default_application: sample_app
 
-  # The transaction cache lifetime(ms)
-  transaction_ttl: 60000
-  # The transaction cache limit
-  transaction_active_limit: 100000
+applications:
+  # name is used as key to identify the directives
+  - name: sample_app
+    # Get the coraza.conf from https://github.com/corazawaf/coraza
+    #
+    # Download the OWASP CRS from https://github.com/coreruleset/coreruleset/releases
+    # and copy crs-setup.conf, the rules & plugins directories to /etc/coraza-spoa
+    directives: |
+      Include /etc/coraza-spoa/coraza.conf
+      Include /etc/coraza-spoa/crs-setup.conf
+      SecRuleEngine On
+      Include /etc/coraza-spoa/plugins/*-config.conf
+      Include /etc/coraza-spoa/plugins/*-before.conf
+      Include /etc/coraza-spoa/rules/*.conf
+      Include /etc/coraza-spoa/plugins/*-after.conf
+
+    # HAProxy configured to send requests only, that means no cache required
+    response_check: false
+
+    # The transaction cache lifetime in milliseconds (60000ms = 60s)
+    transaction_ttl_ms: 60000
+
+    # The log level configuration, one of: debug/info/warn/error/panic/fatal
+    log_level: info
+    # The log file path
+    log_file: /var/log/coraza-spoa/coraza-agent.log
+    # The log format, one of: console/json
+    log_format: console
+
 ```
 
 Since Coraza SPOA is only a daemon which exchanges SPOP protocol messages with
@@ -213,7 +266,7 @@ listed in the `include` section:
 - [/etc/coraza-spoa/plugins/*.conf](https://github.com/coreruleset/coreruleset/tree/v4.0/dev/plugins) - Core Ruleset Plugins
 
 Once the coraza-spoa daemon is running you can begin with the
-[Coraza Engine](http://localhost:1313/docs/seclang/directives/) and
+[Coraza Engine](https://coraza.io/docs/seclang/directives/) and
 [Coreruleset configuration](https://coreruleset.org/docs/).
 
 ## HELP
