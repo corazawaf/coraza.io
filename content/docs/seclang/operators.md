@@ -3,7 +3,7 @@ title: "Operators"
 description: "This section documents the operators currently available in Coraza."
 lead: "This section documents the operators currently available in Coraza."
 date: 2020-10-06T08:48:57+00:00
-lastmod: "2026-01-16T16:03:09-03:00"
+lastmod: "2026-03-12T22:31:01+01:00"
 draft: false
 images: []
 menu:
@@ -325,6 +325,24 @@ This is a case-sensitive exact match operator. Supports macro expansion for dyna
 SecRule ARGS:foo "!@streq bar" "id:176,deny,log"
 # Check if request method is exactly POST
 SecRule REQUEST_METHOD "@streq POST" "id:177,deny"
+```
+
+
+
+## strmatch
+
+**Description:** Performs case-sensitive substring matching to check if the parameter string appears anywhere in the input.
+This operator is compatible with ModSecurity's @strmatch operator. Supports macro expansion for dynamic string matching.
+To perform case-insensitive matching, use the t:lowercase transformation.
+
+
+**Example:**
+
+```
+# Block requests with WebZIP user agent
+SecRule REQUEST_HEADERS:User-Agent "@strmatch WebZIP" "id:1,deny"
+# Detect suspicious patterns in URI
+SecRule REQUEST_URI "@strmatch ../../../" "id:2,deny,log"
 ```
 
 

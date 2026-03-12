@@ -3,7 +3,7 @@ title: "Directives"
 Description: "The following section outlines all of the Coraza directives. "
 lead: "The following section outlines all of the Coraza directives. "
 date: 2020-10-06T08:48:57+00:00
-lastmod: "2026-01-16T15:04:02-03:00"
+lastmod: "2026-03-12T22:31:00+01:00"
 draft: false
 images: []
 menu:
@@ -367,6 +367,16 @@ blocking possible. The possible values are:
 When a `multipart/form-data` request is being processed, once the in-memory limit is reached,
 the request body will start to be streamed into a temporary file on disk.
 
+## SecRequestBodyJsonDepthLimit
+
+**Description:** Configures the maximum JSON recursion depth limit Coraza will accept.
+
+**Syntax:** `SecRequestBodyJsonDepthLimit [LIMIT]`
+
+**Default:** `1024`
+
+Anything over the limit will generate a REQBODY_ERROR in the JSON body processor.
+
 ## SecRequestBodyLimit
 
 **Description:** Configures the maximum request body size Coraza will accept for buffering.
@@ -558,6 +568,7 @@ The following example demonstrates how [`SecRuleUpdateActionById`](#secruleupdat
 ```apache
 SecRuleUpdateActionById 12345 "deny,status:403"
 ```
+The rule ID can be single IDs or ranges of IDs. The targets are separated by a pipe character.
 
 ## SecRuleUpdateTargetByID
 
