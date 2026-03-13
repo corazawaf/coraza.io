@@ -19,7 +19,7 @@ func TestParseOperator(t *testing.T) {
 			expected: Operator{
 				Name:        "contains",
 				Description: "Returns true if the parameter string is found anywhere in the input.",
-				Example:     "\n```\nSecRule REQUEST_LINE \"@contains .php\" \"id:150\"\n```",
+				Example:     "\n```modsecurity\nSecRule REQUEST_LINE \"@contains .php\" \"id:150\"\n```",
 			},
 		},
 		"operator with note": {
@@ -28,7 +28,7 @@ func TestParseOperator(t *testing.T) {
 			expected: Operator{
 				Name:        "detectSQLi",
 				Description: "Returns true if SQL injection payload is found.",
-				Example:     "\n```\nSecRule REQUEST_URI \"@detectSQLi\" \"id:152\"\n```",
+				Example:     "\n```modsecurity\nSecRule REQUEST_URI \"@detectSQLi\" \"id:152\"\n```",
 				Note:        "This operator supports the \"capture\" action.",
 			},
 		},
@@ -38,7 +38,7 @@ func TestParseOperator(t *testing.T) {
 			expected: Operator{
 				Name:        "rx",
 				Description: "Performs regular expression matching.\nSupports capture groups for extracting matched patterns.\n- Up to 9 capture groups\n- Uses RE2 syntax",
-				Example:     "\n```\nSecRule ARGS \"@rx ^[0-9]+$\" \"id:100\"\n```",
+				Example:     "\n```modsecurity\nSecRule ARGS \"@rx ^[0-9]+$\" \"id:100\"\n```",
 			},
 		},
 		"operator with description on separate line": {
@@ -47,7 +47,7 @@ func TestParseOperator(t *testing.T) {
 			expected: Operator{
 				Name:        "pm",
 				Description: "Performs parallel matching using Aho-Corasick algorithm.",
-				Example:     "\n```\nSecRule ARGS \"@pm word1 word2 word3\" \"id:200\"\n```",
+				Example:     "\n```modsecurity\nSecRule ARGS \"@pm word1 word2 word3\" \"id:200\"\n```",
 			},
 		},
 		"operator with multiline note": {
@@ -56,7 +56,7 @@ func TestParseOperator(t *testing.T) {
 			expected: Operator{
 				Name:        "detectXSS",
 				Description: "Returns true if XSS injection is found.",
-				Example:     "\n```\nSecRule REQUEST_BODY \"@detectXSS\" \"id:12345,log,deny\"\n```",
+				Example:     "\n```modsecurity\nSecRule REQUEST_BODY \"@detectXSS\" \"id:12345,log,deny\"\n```",
 				Note:        "This operator supports the \"capture\" action.\nIt uses LibInjection for detection.",
 			},
 		},
@@ -113,7 +113,7 @@ func newContains(options plugintypes.OperatorOptions) (plugintypes.Operator, err
 				{
 					Name:        "contains",
 					Description: "Returns true if the parameter string is found anywhere in the input.",
-					Example:     "\n" + "```" + "\nSecRule REQUEST_LINE \"@contains .php\" \"id:150\"\n" + "```",
+					Example:     "\n" + "```modsecurity" + "\nSecRule REQUEST_LINE \"@contains .php\" \"id:150\"\n" + "```",
 				},
 			},
 		},
@@ -140,7 +140,7 @@ func newDetectSQLi(options plugintypes.OperatorOptions) (plugintypes.Operator, e
 				{
 					Name:        "detectSQLi",
 					Description: "Returns true if SQL injection payload is found.",
-					Example:     "\n" + "```" + "\nSecRule REQUEST_URI \"@detectSQLi\" \"id:152\"\n" + "```",
+					Example:     "\n" + "```modsecurity" + "\nSecRule REQUEST_URI \"@detectSQLi\" \"id:152\"\n" + "```",
 					Note:        "This operator supports the \"capture\" action.",
 				},
 			},

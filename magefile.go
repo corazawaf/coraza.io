@@ -30,14 +30,18 @@ func Generate() error {
     return err
   }
 
-  // get all changes in content/docs
-  allFilesChangedNames, err := sh.Output("git", "diff", "--name-only", "content/docs")
+  if err := sh.RunV("go", "run", "tools/readmesync/main.go"); err != nil {
+    return err
+  }
+
+  // get all changes in content/en/docs
+  allFilesChangedNames, err := sh.Output("git", "diff", "--name-only", "content/en/docs")
   if err != nil {
     return err
   }
 
-  // get those changes in content/docs that are not lastmod changes only
-  actuallyChangedDiff, err := sh.Output("git", "diff", "-I", "lastmod:", "content/docs")
+  // get those changes in content/en/docs that are not lastmod changes only
+  actuallyChangedDiff, err := sh.Output("git", "diff", "-I", "lastmod:", "content/en/docs")
   if err != nil {
     return err
   }
@@ -46,6 +50,9 @@ func Generate() error {
   // in docs when they are actually not changed.
   actuallyUnmodifiedFiles := diff(strings.Split(allFilesChangedNames, "\n"), diffToFilenames(actuallyChangedDiff))
   for _, file := range actuallyUnmodifiedFiles {
+    if strings.TrimSpace(file) == "" {
+      continue
+    }
     if err := sh.RunV("git", "checkout", "-q", file); err != nil {
       return err
     }

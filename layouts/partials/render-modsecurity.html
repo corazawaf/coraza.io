@@ -1,0 +1,16 @@
+{{- $inner := .Inner | strings.TrimSpace -}}
+{{- $title := .Attributes.title -}}
+{{- $titleClass := "" -}}
+{{- with $title }}{{ $titleClass = " has-title" }}{{ end -}}
+
+<div class="expressive-code">
+  <figure class="frame{{ $titleClass }} not-content">
+  <figcaption class="header">
+    <span class="title">
+      {{- with $title -}}{{ . }}{{- end -}}
+    </span>
+  </figcaption>
+  <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-modsecurity" data-lang="modsecurity">{{ $inner | htmlEscape | safeHTML }}</code></pre></div>
+  </figure>
+</div>
+{{- /**/ -}}
