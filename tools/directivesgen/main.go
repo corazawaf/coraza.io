@@ -39,7 +39,7 @@ type Directive struct {
 //go:embed template.md
 var contentTemplate string
 
-const dstFile = "./content/docs/seclang/directives.md"
+const dstFile = "./content/en/docs/seclang/directives.md"
 
 func main() {
 	tmpl, err := template.New("directive").Parse(contentTemplate)
@@ -155,6 +155,8 @@ func parseDirective(name string, doc string) Directive {
 
 	d.Description = addsLinksToDirectives(d.Description)
 	d.Content = addsLinksToDirectives(d.Content)
+	// Replace apache language hints with modsecurity for proper syntax highlighting
+	d.Content = strings.ReplaceAll(d.Content, "```apache", "```modsecurity")
 
 	return d
 }

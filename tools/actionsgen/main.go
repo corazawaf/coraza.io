@@ -38,7 +38,7 @@ type Action struct {
 //go:embed template.md
 var contentTemplate string
 
-const dstFile = "./content/docs/seclang/actions.md"
+const dstFile = "./content/en/docs/seclang/actions.md"
 
 func main() {
 	tmpl, err := template.New("action").Parse(contentTemplate)
@@ -152,6 +152,21 @@ func getActionFromFile(file string, page Page) Page {
 	return page
 }
 
+// addModsecurityLang replaces plain opening code fences with ```modsecurity
+func addModsecurityLang(s string) string {
+	lines := strings.Split(s, "\n")
+	inCode := false
+	for i, line := range lines {
+		if strings.TrimSpace(line) == "```" {
+			if !inCode {
+				lines[i] = "```modsecurity"
+			}
+			inCode = !inCode
+		}
+	}
+	return strings.Join(lines, "\n")
+}
+
 func parseAction(name string, doc string) Action {
 	var key string
 	var value string
@@ -217,6 +232,7 @@ func parseAction(name string, doc string) Action {
 			log.Fatalf("unknown field %q", key)
 		}
 	}
+	d.Example = addModsecurityLang(d.Example)
 	return d
 }
 

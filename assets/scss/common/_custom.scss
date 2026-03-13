@@ -1,0 +1,12 @@
+// Put your custom SCSS code here
+
+// Sticky footer
+body {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.wrap {
+  flex: 1;
+}

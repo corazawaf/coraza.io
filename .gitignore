@@ -1,9 +1,21 @@
-bin
+.env
+.netlify
+.hugo_build.lock
 node_modules
 public
 resources
+
+# OS files
 .DS_Store
-# Local Netlify folder
-.netlify
-TODO
-.vendor
+
+# Go build output — never build binaries inside the project directory
+/readmesync
+/tools/*/bin/
+*.exe
+
+# Go vendor (use module cache instead)
+.vendor/
+vendor/
+
+# Hugo stats
+hugo_stats.json
