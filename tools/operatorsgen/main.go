@@ -36,7 +36,7 @@ type Operator struct {
 //go:embed template.md
 var contentTemplate string
 
-const dstFile = "./content/docs/seclang/operators.md"
+const dstFile = "./content/en/docs/seclang/operators.md"
 
 func main() {
 	tmpl, err := template.New("operator").Parse(contentTemplate)
@@ -164,6 +164,21 @@ func getOperatorFromFile(file string, page Page) Page {
 	return page
 }
 
+// addModsecurityLang replaces plain opening code fences with ```modsecurity
+func addModsecurityLang(s string) string {
+	lines := strings.Split(s, "\n")
+	inCode := false
+	for i, line := range lines {
+		if strings.TrimSpace(line) == "```" {
+			if !inCode {
+				lines[i] = "```modsecurity"
+			}
+			inCode = !inCode
+		}
+	}
+	return strings.Join(lines, "\n")
+}
+
 func parseOperator(name string, doc string) Operator {
 	var key string
 	var value string
@@ -236,5 +251,6 @@ func parseOperator(name string, doc string) Operator {
 		}
 		// If key is empty and previousKey is empty, just skip the line
 	}
+	o.Example = addModsecurityLang(o.Example)
 	return o
 }

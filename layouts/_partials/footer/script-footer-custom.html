@@ -1,0 +1,4 @@
+{{/* Scarf analytics — only in production */}}
+{{ if eq (hugo.Environment) "production" -}}
+<img referrerpolicy="no-referrer-when-downgrade" src="https://static.scarf.sh/a.png?x-pxid=TODO_REPLACE_WITH_SCARF_PIXEL_ID" alt="" width="1" height="1" style="position:absolute;left:-9999px;" />
+{{ end -}}

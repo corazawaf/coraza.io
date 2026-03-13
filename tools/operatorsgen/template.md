@@ -6,9 +6,6 @@ date: 2020-10-06T08:48:57+00:00
 lastmod: "{{ .LastModification }}"
 draft: false
 images: []
-menu:
-  docs:
-    parent: "seclang"
 weight: 100
 toc: true
 ---

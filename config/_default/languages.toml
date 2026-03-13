@@ -1,0 +1,19 @@
+[en]
+  contentDir = "content/en"
+  disabled = false
+  languageCode = "en-US"
+  languageDirection = "ltr"
+  languageName = "English"
+  weight = 10
+  [en.params]
+    footer = 'Powered by a lot of love ❤️ (and code) - By Juan Pablo Tosso and Coraza Contributors'
+
+[es]
+  contentDir = "content/es"
+  disabled = false
+  languageCode = "es"
+  languageDirection = "ltr"
+  languageName = "Español"
+  weight = 20
+  [es.params]
+    footer = 'Powered by a lot of love ❤️ (and code) - By Juan Pablo Tosso and Coraza Contributors'

@@ -1,81 +1,119 @@
-# Meta Data for SEO
+# Coraza
+goVersion = "1.24"
 
-## Homepage
+# Hugo
 title = "OWASP Coraza"
-titleSeparator = "-"
-titleAddition = "Enterprise-grade open source web application firewall library"
-description = "OWASP Coraza is an enterprise-grade, open-source, and high-performance Web Application Firewall library ready to protect your beloved applications."
+description = "OWASP Coraza is an open source, enterprise-grade, high performance Web Application Firewall ready to protect your beloved applications."
+images = ["cover.png"]
 
-# Alert
-alert = false
-alertDismissable = true
-alertText = "Coraza v3 <a class=\"alert-link\" href=\"https://github.com/corazawaf/coraza/releases\">available here!</a>"
+mainSections = ["docs"]
+[social]
+  twitter = "corazaio"
 
-## Open Graph
-images = ["images/logo_animal_only.png"]
-ogLocale = "en_US"
-domainTLD = "coraza.io"
-titleHome = "OWASP Coraza"
+# Doks (@thulite/doks-core)
+[doks]
+  # Multilingual
+  multilingualMode = true
+  showMissingLanguages = true
 
-## Twitter Cards
-twitterSite = "@corazatech"
-twitterCreator = "@jptosso"
+  # Color mode
+  colorMode = "auto"
+  colorModeToggler = true
 
-## JSON-LD
-# schemaType = "Organization"
-schemaType = "Person"
-schemaName = "OWASP Coraza WAF"
-schemaAuthor = "Juan Pablo Tosso and Coraza contributors"
-schemaAuthorTwitter = "https://twitter.com/jptosso"
-schemaAuthorLinkedIn = "https://www.linkedin.com/in/jptosso/"
-schemaAuthorGitHub = "https://github.com/corazawaf"
-schemaLocale = "en-US"
-schemaLogo = "logo-doks.png"
-schemaLogoWidth = 512
-schemaLogoHeight = 512
-schemaImage = "doks.png"
-schemaImageWidth = 1280
-schemaImageHeight = 640
-schemaTwitter = "https://twitter.com/jptosso"
-schemaLinkedIn = ""
-schemaGitHub = "https://github.com/corazawaf/coraza"
-schemaSection = "blog"
-
-## Sitelinks Search Box
-siteLinksSearchBox = false
-
-## Chrome Browser
-themeColor = "#fff"
-
-# Images
-quality = 85
-bgColor = "#fff"
-landscapePhotoWidths = [900, 800, 700, 600, 500]
-portraitPhotoWidths = [800, 700, 600, 500]
-lqipWidth = "20x"
-
-# Footer
-footer = "Powered by a lot of love ❤️ (and code) - By Juan Pablo Tosso and Coraza Contributors"
-copyRight = ""
-
-# Edit Page
-docsRepo = "https://github.com/corazawaf/coraza.io"
-editPage = true
-
-[options]
-  lazySizes = true
-  clipBoard = true
-  instantPage = true
-  flexSearch = true
-  searchSectionsShow = []
-  searchSectionsIndex = []
-  darkMode = true
-  bootStrapJs = true
-  breadCrumb = true
-  highLight = true
-  kaTex = false
-  multilingualMode = false
-  docsVersioning = false
-  fullWidth = false
+  # Navbar
   navbarSticky = true
+  containerBreakpoint = "fluid"
+
+  ## Button
+  navBarButton = false
+  navBarButtonUrl = "/docs/tutorials/quick-start/"
+  navBarButtonText = "Get started"
+
+  # FlexSearch
+  flexSearch = true
+  searchExclKinds = []
+  searchExclTypes = []
+  showSearch = []
+  indexSummary = false
+
+  ## Search results
+  showDate = false
+  showSummary = true
+  searchLimit = 99
+
+  # Global alert
+  alert = false
+  alertDismissable = true
+
+  # Bootstrap
+  bootstrapJavascript = false
+
+  # Nav
+  sectionNav = ["docs"]
   toTopButton = true
+  breadcrumbTrail = false
+  headlineHash = true
+  scrollSpy = true
+
+  # Versioning
+  docsVersioning = false
+  docsVersion = "1.0"
+
+  # UX
+  headerBar = false
+  backgroundDots = true
+
+  # Homepage
+  sectionFooter = false
+
+  # Blog
+  relatedPosts = false
+  imageList = true
+  imageSingle = true
+
+  # Repository
+  editPage = false
+  lastMod = true
+  repoHost = "GitHub"
+  docsRepo = "https://github.com/corazawaf/coraza"
+  docsRepoBranch = "main"
+  docsRepoSubPath = ""
+
+# Debug
+[render_hooks.image]
+  errorLevel = 'ignore'
+
+[render_hooks.link]
+  errorLevel = 'ignore'
+  highlightBroken = false
+
+# Images (@thulite/images)
+[thulite_images]
+  [thulite_images.defaults]
+    decoding = "async"
+    fetchpriority = "auto"
+    loading = "lazy"
+    widths = [480, 576, 768, 1025, 1200, 1440]
+    sizes = "auto"
+    process = ""
+    lqip = "16x webp q20"
+
+# Inline SVG (@thulite/inline-svg)
+[inline_svg]
+  iconSetDir = "tabler-icons"
+  iconSetVariant = "outline"
+
+# SEO (@thulite/seo)
+[seo]
+  [seo.title]
+    separator = " | "
+    suffix = "OWASP Coraza"
+  [seo.favicons]
+    icon = "favicon.png"
+    svgIcon = "favicon.svg"
+  [seo.schemas]
+    type = "Organization"
+    name = "OWASP Coraza"
+    sameAs = ["https://github.com/corazawaf/coraza", "https://x.com/corazaio"]
+    images = ["cover.png"]
+    blogPosting = ["blog"]

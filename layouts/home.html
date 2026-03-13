@@ -1,0 +1,79 @@
+{{ define "main" }}
+<section class="section container-fluid mt-n3 pb-3">
+  <div class="row justify-content-center">
+    <div class="col-lg-12 text-center">
+      <h1>{{ .Title }}</h1>
+    </div>
+    <div class="col-lg-9 col-xl-8 text-center">
+      <p class="lead">{{ .Params.lead | safeHTML }}</p>
+      <div class="d-flex justify-content-center gap-3 my-3 flex-wrap">
+        <a class="btn btn-primary btn-cta rounded-pill btn-lg" href="/docs/tutorials/quick-start/" role="button">Get Started</a>
+        <a class="btn btn-outline-primary rounded-pill btn-lg" href="/docs/tutorials/introduction/" role="button">Learn More</a>
+      </div>
+    </div>
+  </div>
+</section>
+{{ end }}
+
+{{ define "sidebar-prefooter" }}
+  {{ if site.Params.doks.backgroundDots -}}
+  <div class="d-flex justify-content-start">
+    <div class="bg-dots"></div>
+  </div>
+  {{ end -}}
+
+  {{/* Built for APIs & Web Applications */}}
+  <section class="section section-md">
+    <div class="container">
+      <div class="row justify-content-center text-center mb-4">
+        <div class="col-lg-8">
+          <h2 class="mt-0">Built for APIs &amp; Web Applications</h2>
+          <p class="lead text-body-secondary">Whether you're running a legacy SOAP service, a REST API, a GraphQL endpoint, or a full-stack web app &mdash; Coraza inspects and protects HTTP traffic at any layer.</p>
+        </div>
+      </div>
+      <div class="row justify-content-center text-center">
+        <div class="col-md-4 mb-4">
+          <div class="card h-100 border-0 shadow-sm">
+            <div class="card-body">
+              <h3 class="h5">Modern APIs</h3>
+              <p class="text-body-secondary mb-0">Protect REST, GraphQL, gRPC-Web, and WebSocket endpoints with fine-grained rules that understand modern API patterns.</p>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4 mb-4">
+          <div class="card h-100 border-0 shadow-sm">
+            <div class="card-body">
+              <h3 class="h5">Web Applications</h3>
+              <p class="text-body-secondary mb-0">Guard traditional and single-page applications against the OWASP Top 10, bot abuse, and application-layer attacks.</p>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4 mb-4">
+          <div class="card h-100 border-0 shadow-sm">
+            <div class="card-body">
+              <h3 class="h5">Legacy Systems</h3>
+              <p class="text-body-secondary mb-0">Drop Coraza in front of legacy HTTP services to add a security layer without changing a single line of application code.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  {{/* Core strengths */}}
+  <section class="section section-md section-features">
+    <div class="container">
+      <div class="row justify-content-center text-center mb-4">
+        <div class="col-lg-8">
+          <h2 class="mt-0">Why Coraza</h2>
+        </div>
+      </div>
+      <div class="row justify-content-center text-center">
+        {{ .Content }}
+      </div>
+    </div>
+  </section>
+{{ end }}
+
+{{ define "sidebar-footer" }}
+{{ end }}
