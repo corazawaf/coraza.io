@@ -60,8 +60,8 @@ The Coraza Project maintains implementations and plugins for the following serve
 * [HAProxy SPOE Plugin](https://github.com/corazawaf/coraza-spoa) - preview
 * [Traefik Proxy Plugin](https://github.com/jptosso/coraza-traefik) - preview, needs maintainer
 * [Gin Web Framework Middleware](https://github.com/jptosso/coraza-gin) - preview, needs maintainer
-* [Apache HTTP Server](https://github.com/corazawaf/coraza-server) - experimental
-* [Nginx](https://github.com/corazawaf/coraza-server) - experimental
+* [Apache HTTP Server](https://github.com/corazawaf/coraza-apache) - experimental
+* [Nginx](https://github.com/corazawaf/coraza-nginx) - experimental
 * [Coraza C Library](https://github.com/corazawaf/libcoraza) - experimental
 
 ## Plugins
