@@ -8,13 +8,19 @@ on:
       - "LICENSE"
       - "README.md"
   pull_request:
+    branches:
+      - "main"
     paths-ignore:
       - "LICENSE"
       - "README.md"
 
+permissions: {}
+
 jobs:
   test:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     steps:
       - name: Install Go
         uses: actions/setup-go@4dc6199c7b1a012772edbd06daecab0f50c9053c # v6

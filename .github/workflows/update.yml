@@ -6,13 +6,14 @@ on:
       - .github/workflows/update.yml
   workflow_dispatch:
 
-permissions:
-  contents: write
-  pull-requests: write
+permissions: {}
 
 jobs:
   create-pr:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
     steps:
       - name: Install Go
         uses: actions/setup-go@4dc6199c7b1a012772edbd06daecab0f50c9053c # v6
@@ -32,10 +33,12 @@ jobs:
           echo "short=$(gh api repos/corazawaf/coraza/commits/main -q .sha | cut -c 1-8)" >> $GITHUB_OUTPUT
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-  
+
       - name: Pull latest coraza
+        env:
+          CORAZA_COMMIT: ${{ steps.coraza-latest-commit.outputs.long }}
         run: |
-          go get -u github.com/corazawaf/coraza/v3@${{ steps.coraza-latest-commit.outputs.long }}
+          go get -u github.com/corazawaf/coraza/v3@"${CORAZA_COMMIT}"
           go mod tidy
 
       - name: Tests and coverage
@@ -57,17 +60,20 @@ jobs:
         if: ${{ github.event_name == 'pull_request' }}
         env:
           CHANGED_FILES: ${{ steps.verify-changed-files.outputs.changed_files }}
+          CORAZA_SHORT: ${{ steps.coraza-latest-commit.outputs.short }}
+          CORAZA_LONG: ${{ steps.coraza-latest-commit.outputs.long }}
+          ACTOR: ${{ github.actor }}
         run: |
           cat <<EOF > $GITHUB_STEP_SUMMARY
           # Changed files:
           $CHANGED_FILES
 
           # PR information:
-          **commit-message**: docs: upgrades coraza docs to github.com/corazawaf/coraza/v3@${{ steps.coraza-latest-commit.outputs.short }}
-          **branch**: upgrades_coraza_${{ steps.coraza-latest-commit.outputs.short }}
+          **commit-message**: docs: upgrades coraza docs to github.com/corazawaf/coraza/v3@${CORAZA_SHORT}
+          **branch**: upgrades_coraza_${CORAZA_SHORT}
           **title**: docs: upgrades to latest coraza
-          **assignees**: ${{ github.actor }}
-          **body**: This PR upgrades the docs to latest coraza commit namely [${{ steps.coraza-latest-commit.outputs.short }}](https://github.com/corazawaf/coraza/tree/${{ steps.coraza-latest-commit.outputs.long }})
+          **assignees**: ${ACTOR}
+          **body**: This PR upgrades the docs to latest coraza commit namely [${CORAZA_SHORT}](https://github.com/corazawaf/coraza/tree/${CORAZA_LONG})
           EOF
 
       - name: Create Pull Request
@@ -86,5 +92,7 @@ jobs:
 
       - name: Check outputs
         if: ${{ github.event_name != 'pull_request' && steps.create-pr.outputs.pull-request-number }}
+        env:
+          PR_URL: ${{ steps.create-pr.outputs.pull-request-url }}
         run: |
-          echo "Created PR at ${{ steps.create-pr.outputs.pull-request-url }}" >> $GITHUB_STEP_SUMMARY
+          echo "Created PR at ${PR_URL}" >> $GITHUB_STEP_SUMMARY
