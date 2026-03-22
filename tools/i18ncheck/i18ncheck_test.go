@@ -23,7 +23,8 @@ func contentLanguages(t *testing.T, contentBase string) []string {
 
 	var langs []string
 	for _, e := range entries {
-		if e.IsDir() {
+		// Only consider two-letter directory names (ISO 639-1 language codes)
+		if e.IsDir() && len(e.Name()) == 2 {
 			langs = append(langs, e.Name())
 		}
 	}
