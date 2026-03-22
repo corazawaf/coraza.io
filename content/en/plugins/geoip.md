@@ -31,7 +31,7 @@ This plugin enables GeoIP lookup functionality for Coraza Web Application Firewa
 1. Add the go module to your project:
 
    ```bash
-   go get github.com/corazawaf/coraza-geoip
+   go get https://github.com/corazawaf/coraza-geoip
    ```
 
 2. Import the plugin in your project and configure it (supported database types: `country`, `city`):

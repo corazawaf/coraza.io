@@ -3,7 +3,7 @@ title: "Actions"
 description: "Actions available in Coraza"
 lead: "The action of a rule defines how to handle HTTP requests that have matched one or more rule conditions."
 date: 2020-10-06T08:48:57+00:00
-lastmod: "2026-03-12T22:31:00+01:00"
+lastmod: "2026-03-22T11:55:19-03:00"
 draft: false
 images: []
 weight: 100
@@ -176,8 +176,8 @@ All the other variables contain the captured values, in the order in which the c
 
 
 ```modsecurity
-SecRule REQUEST_BODY "^username=(\w{25,})" phase:2,capture,t:none,chain,id:105
-SecRule TX:1 "(?:(?:a(dmin|nonymous)))"
+	  SecRule REQUEST_BODY "^username=(\w{25,})" "phase:2,capture,t:none,chain,id:105"
+		   SecRule TX:1 "(?:(?:a(dmin|nonymous)))"
 ```
 
 

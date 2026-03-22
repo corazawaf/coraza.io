@@ -24,7 +24,7 @@ If you have any doubts, please read the [GitHub build Action](https://github.com
 Before compiling this software make sure that you have libcoraza installed.
 You can download it from the [libcoraza git repository](https://github.com/corazawaf/libcoraza). For information pertaining to the compilation and installation of libcoraza please consult the documentation provided along with it.
 
-To build libcoraza from source (requires Go {{< goversion >}}+):
+To build libcoraza from source (requires Go 1.21+):
 
 ```
 cd /path/to/libcoraza
