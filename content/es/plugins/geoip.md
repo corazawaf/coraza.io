@@ -31,7 +31,7 @@ Este plugin habilita la funcionalidad de búsqueda GeoIP para Coraza Web Applica
 1. Añada el módulo Go a su proyecto:
 
    ```bash
-   go get https://github.com/corazawaf/coraza-geoip
+   go get github.com/corazawaf/coraza-geoip
    ```
 
 2. Importe el plugin en su proyecto y configúrelo (tipos de base de datos admitidos: `country`, `city`):

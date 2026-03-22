@@ -22,9 +22,9 @@
   target = "layouts"
 
 [[mounts]]
-  files = ['! home.html']
   source = "node_modules/@thulite/doks-core/layouts"
   target = "layouts"
+  excludeFiles = ["home.html"]
 
 [[mounts]]
   source = "node_modules/@thulite/core/layouts"

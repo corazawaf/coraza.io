@@ -73,5 +73,5 @@ make
 If you didn't installed the builded library (skipped the `sudo make install` step), you should set the LD_LIBRARY_PATH:
 
 ```
-export LD_LIBRARY_PATH=../:$LID_LIBRARY_PATH
+export LD_LIBRARY_PATH=../:$LD_LIBRARY_PATH
 ```

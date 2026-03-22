@@ -22,6 +22,12 @@ jobs:
         with:
           node-version: '22'
 
+      - name: Setup Hugo
+        uses: peaceiris/actions-hugo@75d2a84824a0ea66e4e5408dc63c2c86eba7e323 # v3
+        with:
+          hugo-version: '0.145.0'
+          extended: true
+
       - name: Install deps
         run: npm install
 

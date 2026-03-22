@@ -11,7 +11,7 @@ summarylength = 20
 defaultContentLanguage = "en"
 defaultContentLanguageInSubdir = false
 
-copyRight = "Copyright (c) 2021-2026 OWASP Coraza"
+copyright = "Copyright (c) 2021-2026 OWASP Coraza"
 
 [build.buildStats]
   enable = true

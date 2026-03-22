@@ -1,5 +1,5 @@
-import autoprefixer from 'autoprefixer';
-import purgeCSSPlugin from '@fullhuman/postcss-purgecss';
+const autoprefixer = require('autoprefixer');
+const purgeCSSPlugin = require('@fullhuman/postcss-purgecss');
 
 const purgecss = purgeCSSPlugin({
     content: ['./hugo_stats.json'],
@@ -36,7 +36,7 @@ const purgecss = purgeCSSPlugin({
         'lazyload',
         'lazyloaded',
         'alert-link',
-        'container-fw ',
+        'container-fw',
         'container-lg',
         'container-fluid',
         'offcanvas-backdrop',
@@ -53,7 +53,7 @@ const purgecss = purgeCSSPlugin({
     ]
 });
 
-export default {
+module.exports = {
   plugins: [
     autoprefixer(),
     ...(process.env.HUGO_ENVIRONMENT === "production" ? [purgecss] : []),
