@@ -27,6 +27,10 @@
   excludeFiles = ["home.html"]
 
 [[mounts]]
+  source = "node_modules/@thulite/doks-core/layouts/_shortcodes"
+  target = "layouts/shortcodes"
+
+[[mounts]]
   source = "node_modules/@thulite/core/layouts"
   target = "layouts"
 
