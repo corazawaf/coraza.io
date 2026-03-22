@@ -1,0 +1,272 @@
+{{ define "main" }}
+<section class="home-hero container-fluid">
+  <div class="home-hero-glow" aria-hidden="true"></div>
+  <div class="container">
+    <div class="home-hero-inner text-center mx-auto">
+      <div class="home-hero-badge d-inline-flex align-items-center gap-2 mb-4">
+        <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="currentColor" class="text-primary" aria-hidden="true"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4z"/></svg>
+        <span>OWASP Production Project</span>
+      </div>
+      <h1 class="home-hero-title">OWASP <span class="text-primary">Coraza</span> WAF</h1>
+      <p class="home-hero-lead">{{ .Params.lead | safeHTML }}</p>
+      <div class="d-flex flex-wrap justify-content-center gap-3">
+        <a class="btn btn-primary btn-lg rounded-pill px-5" href="/docs/tutorials/quick-start/">Get Started</a>
+        <a class="btn btn-outline-secondary btn-lg rounded-pill px-5" href="/docs/tutorials/introduction/">Learn More</a>
+      </div>
+    </div>
+  </div>
+</section>
+{{ end }}
+
+{{ define "sidebar-prefooter" }}
+
+{{/* Built for Modern APIs — Bento Grid */}}
+<section class="home-section home-bento py-5">
+  <div class="container-lg px-4">
+    <div class="bento-grid">
+
+      <div class="bento-card bento-main">
+        <div class="bento-bg-icon" aria-hidden="true">
+          <svg xmlns="http://www.w3.org/2000/svg" width="160" height="160" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="0.6"><rect x="3" y="3" width="6" height="6" rx="1"/><rect x="15" y="3" width="6" height="6" rx="1"/><rect x="3" y="15" width="6" height="6" rx="1"/><rect x="15" y="15" width="6" height="6" rx="1"/><line x1="9" y1="6" x2="15" y2="6"/><line x1="6" y1="9" x2="6" y2="15"/><line x1="18" y1="9" x2="18" y2="15"/><line x1="9" y1="18" x2="15" y2="18"/></svg>
+        </div>
+        <div class="mt-auto">
+          <h2 class="h2 fw-bold mb-3">Built for Modern APIs</h2>
+          <p class="text-body-secondary mb-0" style="max-width: 480px;">High-performance protection for REST, GraphQL, and gRPC endpoints. Coraza handles massive throughput with minimal latency impact.</p>
+        </div>
+      </div>
+
+      <div class="bento-card bento-enterprise">
+        <div class="mb-auto">
+          <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4z"/></svg>
+        </div>
+        <div class="mt-auto">
+          <h3 class="h4 fw-bold mb-2">Enterprise Ready</h3>
+          <p class="mb-0" style="opacity:.8;">Hardened for mission-critical infrastructure and high-availability environments.</p>
+        </div>
+      </div>
+
+      <div class="bento-card bento-legacy">
+        <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-primary mb-3" aria-hidden="true"><polyline points="4 17 10 11 4 5"/><line x1="12" y1="19" x2="20" y2="19"/></svg>
+        <h3 class="h5 fw-bold mb-2">Legacy Systems</h3>
+        <p class="text-body-secondary mb-0 small">Drop-in replacement for ModSecurity, supporting existing rule sets and workflows.</p>
+      </div>
+
+      <div class="bento-card bento-universal d-flex align-items-center justify-content-between gap-4">
+        <div>
+          <h3 class="h5 fw-bold mb-2">Universal Deployment</h3>
+          <p class="text-body-secondary mb-0 small">Run as a sidecar, proxy, or library in Go, C++, and WebAssembly.</p>
+        </div>
+        <div class="d-flex gap-2 flex-shrink-0">
+          <div class="deploy-bubble">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17.5 19H9a7 7 0 1 1 6.71-9h1.79a4.5 4.5 0 1 1 0 9z"/></svg>
+          </div>
+          <div class="deploy-bubble">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="2" width="20" height="8" rx="2"/><rect x="2" y="14" width="20" height="8" rx="2"/><line x1="6" y1="6" x2="6.01" y2="6"/><line x1="6" y1="18" x2="6.01" y2="18"/></svg>
+          </div>
+          <div class="deploy-bubble">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83"/></svg>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+{{/* Why Security Teams Choose Coraza */}}
+<section class="home-section home-why py-5">
+  <div class="container">
+    <div class="text-center mb-5">
+      <h2 class="fw-bold">Why Security Teams Choose Coraza</h2>
+      <p class="text-body-secondary">Engineered for the modern security landscape.</p>
+    </div>
+    <div class="row row-cols-1 row-cols-md-3 g-4 text-center">
+      <div class="col">
+        <div class="feature-icon-box mx-auto mb-4">
+          <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4z"/></svg>
+        </div>
+        <h3 class="h5 fw-bold text-primary mb-3">Security First</h3>
+        <p class="text-body-secondary">Rigorous testing and full OWASP CRS compatibility ensure your applications are protected against top threats from day one.</p>
+      </div>
+      <div class="col">
+        <div class="feature-icon-box mx-auto mb-4">
+          <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+        </div>
+        <h3 class="h5 fw-bold text-primary mb-3">High Performance</h3>
+        <p class="text-body-secondary">Written in Go with an optimized engine, Coraza delivers microsecond-level inspection even at peak traffic loads.</p>
+      </div>
+      <div class="col">
+        <div class="feature-icon-box mx-auto mb-4">
+          <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.24 12.24a6 6 0 0 0-8.49-8.49L5 10.5V19h8.5z"/><line x1="16" y1="8" x2="2" y2="22"/><line x1="17.5" y1="15" x2="9" y2="15"/></svg>
+        </div>
+        <h3 class="h5 fw-bold text-primary mb-3">Extensible</h3>
+        <p class="text-body-secondary">A modular plugin architecture allows you to create custom rules, operators, and logging backends tailored to your needs.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+{{/* Deploy Anywhere */}}
+<section class="home-section home-deploy py-5">
+  <div class="container-lg px-4">
+    <div class="mb-5">
+      <h2 class="fw-bold mb-3">Deploy Anywhere</h2>
+      <p class="text-body-secondary" style="max-width: 560px;">Coraza isn't just a standalone service. Integrate it directly into your infrastructure using our versatile connectors and SDKs.</p>
+    </div>
+    <div class="row g-4 align-items-stretch" style="min-height: 420px;">
+      <div class="col-lg-5">
+        <div class="d-flex flex-column gap-2 h-100">
+          <button class="connector-tab active" onclick="selectConnector('envoy', this)" type="button">
+            <div class="connector-logo">
+              <img src="/images/connectors/envoy.svg" alt="" width="24" height="24" loading="lazy">
+            </div>
+            <div class="text-start">
+              <div class="fw-semibold">Envoy Proxy</div>
+              <div class="small text-body-secondary">Istio &amp; Cloud Native</div>
+            </div>
+          </button>
+          <button class="connector-tab" onclick="selectConnector('caddy', this)" type="button">
+            <div class="connector-logo">
+              <img src="/images/connectors/caddy.svg" alt="" width="24" height="24" loading="lazy">
+            </div>
+            <div class="text-start">
+              <div class="fw-semibold">Caddy Server</div>
+              <div class="small text-body-secondary">Automatic HTTPS</div>
+            </div>
+          </button>
+          <button class="connector-tab" onclick="selectConnector('nginx', this)" type="button">
+            <div class="connector-logo">
+              <img src="/images/connectors/nginx.svg" alt="" width="24" height="24" loading="lazy">
+            </div>
+            <div class="text-start">
+              <div class="fw-semibold">NGINX</div>
+              <div class="small text-body-secondary">High-Performance Proxy</div>
+            </div>
+          </button>
+          <button class="connector-tab" onclick="selectConnector('haproxy', this)" type="button">
+            <div class="connector-logo">
+              <img src="/images/connectors/haproxy.svg" alt="" width="24" height="24" loading="lazy">
+            </div>
+            <div class="text-start">
+              <div class="fw-semibold">HAProxy</div>
+              <div class="small text-body-secondary">Load Balancing</div>
+            </div>
+          </button>
+        </div>
+      </div>
+      <div class="col-lg-11">
+        <div class="code-panel h-100 d-flex flex-column">
+          <div class="code-panel-header d-flex align-items-center justify-content-between">
+            <div class="d-flex align-items-center gap-3">
+              <div class="code-dots">
+                <span></span><span></span><span></span>
+              </div>
+              <span class="small" id="cp-filename">envoy.yaml</span>
+            </div>
+            <button class="btn btn-link btn-sm p-0 text-decoration-none" id="cp-copy-btn" onclick="copyConnectorCode()" type="button">Copy Code</button>
+          </div>
+          <div class="code-panel-body flex-grow-1 overflow-auto">
+            <pre class="mb-0" id="cp-code"></pre>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+(function () {
+  var configs = {
+    envoy: {
+      file: 'envoy.yaml',
+      lang: 'yaml',
+      code: '# Envoy Coraza WAF Filter\nhttp_filters:\n  - name: envoy.filters.http.golang\n    typed_config:\n      "@type": type.googleapis.com/envoy.extensions.filters.http.golang.v3alpha.Config\n      library_id: coraza-waf\n      library_path: /etc/envoy/coraza-waf.so\n      plugin_name: coraza-waf\n      plugin_config:\n        "@type": type.googleapis.com/xds.type.v3.TypedStruct\n        value:\n          directives: |\n            SecRuleEngine On\n            Include @coraza.conf-recommended\n            Include @crs-setup.conf.example\n            Include @owasp_crs/*.conf'
+    },
+    caddy: {
+      file: 'Caddyfile',
+      lang: 'caddy',
+      code: '# Caddy Coraza Module\n{\n    order coraza_waf first\n}\n\nexample.com {\n    coraza_waf {\n        directives `\n            SecRuleEngine On\n            Include @coraza.conf-recommended\n            Include @crs-setup.conf.example\n            Include @owasp_crs/*.conf\n        `\n    }\n    reverse_proxy localhost:8080\n}'
+    },
+    nginx: {
+      file: 'nginx.conf',
+      lang: 'nginx',
+      code: '# NGINX Coraza Module\nload_module modules/ngx_http_coraza_module.so;\n\nhttp {\n    coraza_rules_file /etc/coraza/coraza.conf;\n    coraza_rules_file /etc/coraza/crs-setup.conf;\n    coraza_rules_file /etc/coraza/rules/*.conf;\n\n    server {\n        listen 80;\n        location / {\n            coraza_enable on;\n            proxy_pass http://backend;\n        }\n    }\n}'
+    },
+    haproxy: {
+      file: 'haproxy.cfg',
+      lang: 'haproxy',
+      code: '# HAProxy Coraza SPOA\nfrontend http-in\n    bind *:80\n    filter spoe engine coraza config /etc/haproxy/coraza.cfg\n    http-request deny if { var(txn.coraza.action) -m str deny }\n    http-request deny if { var(txn.coraza.action) -m str drop }\n    default_backend servers\n\nbackend servers\n    server app1 127.0.0.1:8080 check'
+    }
+  };
+
+  var current = 'envoy';
+
+  function renderCode(id) {
+    var el = document.getElementById('cp-code');
+    var cfg = configs[id];
+    if (window.highlightConnectorCode) {
+      el.innerHTML = window.highlightConnectorCode(cfg.code, cfg.lang);
+    } else {
+      el.textContent = cfg.code;
+    }
+  }
+
+  window.selectConnector = function (id, btn) {
+    current = id;
+    document.querySelectorAll('.connector-tab').forEach(function (t) {
+      t.classList.remove('active');
+    });
+    btn.classList.add('active');
+    document.getElementById('cp-filename').textContent = configs[id].file;
+    renderCode(id);
+  };
+
+  window.copyConnectorCode = function () {
+    var btn = document.getElementById('cp-copy-btn');
+    navigator.clipboard.writeText(configs[current].code).then(function () {
+      btn.textContent = 'Copied!';
+      setTimeout(function () { btn.textContent = 'Copy Code'; }, 2000);
+    });
+  };
+
+  // Initialize after highlighter bundle is ready
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', function () { renderCode('envoy'); });
+  } else {
+    renderCode('envoy');
+  }
+})();
+</script>
+
+{{/* Community */}}
+<section class="home-section home-community py-5 text-center">
+  <div class="container">
+    <p class="home-eyebrow mb-3">Community Driven</p>
+    <h2 class="fw-bold mb-5 mx-auto" style="max-width: 560px;">Join the open source security movement.</h2>
+    <div class="community-logos mb-5">
+      <a href="https://owasp.org/www-project-coraza-web-application-firewall/" target="_blank" rel="noopener" class="community-logo-pill text-decoration-none gap-2">
+        <img src="/images/owasp-logo.png" alt="" height="18" style="object-fit:contain;opacity:.8;">
+        OWASP
+      </a>
+      <a href="https://github.com/corazawaf/coraza" target="_blank" rel="noopener" class="community-logo-pill text-decoration-none gap-2">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/></svg>
+        GitHub
+      </a>
+      <span class="community-logo-pill">Open Source</span>
+    </div>
+    <div class="d-flex flex-wrap justify-content-center gap-3">
+      <a class="btn btn-outline-secondary btn-lg rounded-pill px-4 d-inline-flex align-items-center gap-2" href="https://github.com/corazawaf/coraza" target="_blank" rel="noopener">
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/></svg>
+        Star on GitHub
+      </a>
+      <a class="btn btn-outline-secondary btn-lg rounded-pill px-4 d-inline-flex align-items-center gap-2" href="https://owasp.slack.com/archives/C027DPKDLNT" target="_blank" rel="noopener">
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+        Join Slack
+      </a>
+    </div>
+  </div>
+</section>
+
+{{ end }}
+
+{{ define "sidebar-footer" }}{{ end }}

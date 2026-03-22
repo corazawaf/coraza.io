@@ -1,0 +1,4 @@
+{{/* Scarf analytics — only in production, only when pixel ID is configured */}}
+{{ if and (eq (hugo.Environment) "production") (site.Params.scarfPixelId) -}}
+<img referrerpolicy="no-referrer-when-downgrade" src="https://static.scarf.sh/a.png?x-pxid={{ site.Params.scarfPixelId }}" alt="" width="1" height="1" style="position:absolute;left:-9999px;" />
+{{ end -}}
