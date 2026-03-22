@@ -1,4 +1,3 @@
 User-agent: *
-Allow: /
-
+Disallow: /admin/
 Sitemap: https://coraza.io/sitemap.xml

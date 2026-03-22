@@ -1,65 +1,21 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Seclang on</title><link>https://coraza.io/docs/seclang/</link><description>Recent content in Seclang on</description><generator>Hugo -- gohugo.io</generator><language>en-US</language><lastBuildDate>Tue, 06 Oct 2020 08:48:23 +0000</lastBuildDate><atom:link href="https://coraza.io/docs/seclang/index.xml" rel="self" type="application/rss+xml"/><item><title>Directives</title><link>https://coraza.io/docs/seclang/directives/</link><pubDate>Tue, 06 Oct 2020 08:48:57 +0000</pubDate><guid>https://coraza.io/docs/seclang/directives/</guid><description>&lt;h2 id="include"&gt;Include &lt;a href="#include" class="anchor" aria-hidden="true"&gt;#&lt;/a&gt;&lt;/h2&gt;
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Seclang on OWASP Coraza</title><link>https://coraza.io/docs/seclang/</link><description>Recent content in Seclang on OWASP Coraza</description><generator>Hugo</generator><language>en-US</language><copyright>Copyright (c) 2021-2026 OWASP Coraza</copyright><lastBuildDate>Thu, 12 Mar 2026 22:31:01 +0100</lastBuildDate><atom:link href="https://coraza.io/docs/seclang/index.xml" rel="self" type="application/rss+xml"/><item><title>Directives</title><link>https://coraza.io/docs/seclang/directives/</link><pubDate>Tue, 06 Oct 2020 08:48:57 +0000</pubDate><guid>https://coraza.io/docs/seclang/directives/</guid><description>&lt;h2 id="include"&gt;Include&lt;/h2&gt;
 &lt;p&gt;&lt;strong&gt;Description:&lt;/strong&gt; Include and evaluate a file or file pattern.&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;Syntax:&lt;/strong&gt; &lt;code&gt;Include [PATH_TO_CONF_FILES]&lt;/code&gt;&lt;/p&gt;
-&lt;p&gt;Include loads a file or a list of files from the filesystem using golang Glob syntax.&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;Example:&lt;/strong&gt;&lt;/p&gt;
-&lt;pre&gt;&lt;code class="language-apache"&gt;Include /path/coreruleset/rules/*.conf
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;Quoting &lt;a href="https://pkg.go.dev/path/filepath#Glob"&gt;Glob documentation&lt;/a&gt;:&lt;/p&gt;
-&lt;blockquote&gt;
-&lt;p&gt;The syntax of patterns is the same as in Match. The pattern may describe hierarchical
-names such as /usr/*/bin/ed (assuming the Separator is ‘/’).
-Glob ignores file system errors such as I/O errors reading directories. The only possible returned error is ErrBadPattern, when pattern is malformed.&lt;/p&gt;</description></item><item><title>Syntax</title><link>https://coraza.io/docs/seclang/syntax/</link><pubDate>Tue, 06 Oct 2020 08:48:57 +0000</pubDate><guid>https://coraza.io/docs/seclang/syntax/</guid><description>&lt;p&gt;The original language for configuring the ModSecurity Apache module was a set of extension directives to the Apache config language. This extension allows you to generate your Security Policy where you take an access control decision based on a set of parameters. Directives can be used to configure the engine itself, but also to send directives to the engine for access control. Directives look like the examples below:&lt;/p&gt;
-&lt;pre&gt;&lt;code class="language-modsecurity"&gt;SecDirective1 some options
-SecDirective2 &amp;quot;some option between brackets \&amp;quot; and escaped&amp;quot;
-&lt;/code&gt;&lt;/pre&gt;
-&lt;pre&gt;&lt;code&gt;SecSampleDirective this \
-directive \
-is splitted \
-in lines
-&lt;/code&gt;&lt;/pre&gt;
-&lt;h2 id="rule-syntax"&gt;Rule syntax &lt;a href="#rule-syntax" class="anchor" aria-hidden="true"&gt;#&lt;/a&gt;&lt;/h2&gt;
-&lt;p&gt;Rules are a special directive that must contain variables, operator and actions: &lt;code&gt;SecRule VARIABLES &amp;quot;@OPERATOR OPERATOR_ARGUMENTS&amp;quot; &amp;quot;ACTIONS&amp;quot;&lt;/code&gt;.&lt;/p&gt;</description></item><item><title>Actions</title><link>https://coraza.io/docs/seclang/actions/</link><pubDate>Tue, 06 Oct 2020 08:48:57 +0000</pubDate><guid>https://coraza.io/docs/seclang/actions/</guid><description>&lt;p&gt;Package actions implements SecLang rule actions for processing and control flow.&lt;/p&gt;
-&lt;h1 id="overview"&gt;Overview &lt;a href="#overview" class="anchor" aria-hidden="true"&gt;#&lt;/a&gt;&lt;/h1&gt;
+&lt;p&gt;Include loads a file or a list of files from the filesystem using golang Glob syntax.&lt;/p&gt;</description></item><item><title>Syntax</title><link>https://coraza.io/docs/seclang/syntax/</link><pubDate>Tue, 06 Oct 2020 08:48:57 +0000</pubDate><guid>https://coraza.io/docs/seclang/syntax/</guid><description>&lt;p&gt;The original language for configuring the ModSecurity Apache module was a set of extension directives to the Apache config language. This extension allows you to generate your Security Policy where you take an access control decision based on a set of parameters. Directives can be used to configure the engine itself, but also to send directives to the engine for access control. Directives look like the examples below:&lt;/p&gt;</description></item><item><title>Actions</title><link>https://coraza.io/docs/seclang/actions/</link><pubDate>Tue, 06 Oct 2020 08:48:57 +0000</pubDate><guid>https://coraza.io/docs/seclang/actions/</guid><description>&lt;p&gt;Package actions implements SecLang rule actions for processing and control flow.&lt;/p&gt;
+&lt;h1 id="overview"&gt;Overview&lt;/h1&gt;
 &lt;p&gt;Actions define how the system handles HTTP requests when rule conditions match.
 Actions are defined as part of a SecRule or as parameters for SecAction or SecDefaultAction.
-A rule can have no or several actions which need to be separated by a comma.&lt;/p&gt;
-&lt;h1 id="action-categories"&gt;Action Categories &lt;a href="#action-categories" class="anchor" aria-hidden="true"&gt;#&lt;/a&gt;&lt;/h1&gt;
-&lt;p&gt;Actions are categorized into five types:&lt;/p&gt;
-&lt;ol&gt;
-&lt;li&gt;Disruptive Actions&lt;/li&gt;
-&lt;/ol&gt;
-&lt;p&gt;Trigger Coraza operations such as blocking or allowing transactions.
-Only one disruptive action per rule applies; if multiple are specified,
-the last one takes precedence. Disruptive actions will NOT be executed
-if SecRuleEngine is set to DetectionOnly.&lt;/p&gt;</description></item><item><title>Execution flow</title><link>https://coraza.io/docs/seclang/execution-flow/</link><pubDate>Tue, 06 Oct 2020 08:48:57 +0000</pubDate><guid>https://coraza.io/docs/seclang/execution-flow/</guid><description>&lt;h2 id="phases"&gt;Phases &lt;a href="#phases" class="anchor" aria-hidden="true"&gt;#&lt;/a&gt;&lt;/h2&gt;
-&lt;p&gt;Phases are an abstract concept designed to fit most web servers execution flows and give it more oportunities to stop a request.&lt;/p&gt;
-&lt;figure&gt;
-&lt;img src="https://coraza.io/images/execution_flow.png" style="border-1 img-fluid" data-sizes="auto" width="100%"&gt;
-&lt;/figure&gt;
-&lt;h3 id="phase-1-request-headers"&gt;Phase 1: Request Headers &lt;a href="#phase-1-request-headers" class="anchor" aria-hidden="true"&gt;#&lt;/a&gt;&lt;/h3&gt;
-&lt;p&gt;This phase will process rules with the following variables:&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;HTTP connection data, like IPs, ports and protocol version&lt;/li&gt;
-&lt;li&gt;URI and GET arguments&lt;/li&gt;
-&lt;li&gt;Request Headers: cookies, content-type and content-length&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h3 id="phase-2-request-body"&gt;Phase 2: Request Body &lt;a href="#phase-2-request-body" class="anchor" aria-hidden="true"&gt;#&lt;/a&gt;&lt;/h3&gt;
-&lt;p&gt;This phase will process rules with the following variables:&lt;/p&gt;</description></item><item><title>Operators</title><link>https://coraza.io/docs/seclang/operators/</link><pubDate>Tue, 06 Oct 2020 08:48:57 +0000</pubDate><guid>https://coraza.io/docs/seclang/operators/</guid><description>&lt;h2 id="beginswith"&gt;beginsWith &lt;a href="#beginswith" class="anchor" aria-hidden="true"&gt;#&lt;/a&gt;&lt;/h2&gt;
+A rule can have no or several actions which need to be separated by a comma.&lt;/p&gt;</description></item><item><title>Execution flow</title><link>https://coraza.io/docs/seclang/execution-flow/</link><pubDate>Tue, 06 Oct 2020 08:48:57 +0000</pubDate><guid>https://coraza.io/docs/seclang/execution-flow/</guid><description>&lt;h2 id="phases"&gt;Phases&lt;/h2&gt;
+&lt;p&gt;Phases are an abstract concept designed to fit most web servers execution flows and give it more oportunities to stop a request.&lt;/p&gt;</description></item><item><title>Operators</title><link>https://coraza.io/docs/seclang/operators/</link><pubDate>Tue, 06 Oct 2020 08:48:57 +0000</pubDate><guid>https://coraza.io/docs/seclang/operators/</guid><description>&lt;h2 id="beginswith"&gt;beginsWith&lt;/h2&gt;
 &lt;p&gt;&lt;strong&gt;Description:&lt;/strong&gt; Matches if the parameter string appears at the beginning of the input.
-Supports macro expansion for dynamic string matching.&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;Example:&lt;/strong&gt;&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;# Block requests that don't start with GET
-SecRule REQUEST_LINE &amp;quot;!@beginsWith GET&amp;quot; &amp;quot;id:149,deny,log&amp;quot;
-# Check if URI starts with /admin
-SecRule REQUEST_URI &amp;quot;@beginsWith /admin&amp;quot; &amp;quot;id:151,deny&amp;quot;
-&lt;/code&gt;&lt;/pre&gt;
-&lt;h2 id="contains"&gt;contains &lt;a href="#contains" class="anchor" aria-hidden="true"&gt;#&lt;/a&gt;&lt;/h2&gt;
-&lt;p&gt;&lt;strong&gt;Description:&lt;/strong&gt; Matches if the parameter string is found anywhere in the input.
 Supports macro expansion for dynamic string matching.&lt;/p&gt;</description></item><item><title>Transformations</title><link>https://coraza.io/docs/seclang/transformations/</link><pubDate>Tue, 06 Oct 2020 08:48:57 +0000</pubDate><guid>https://coraza.io/docs/seclang/transformations/</guid><description>&lt;p&gt;In the following example, the request parameter values are converted to lowercase before matching:&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;SecRule ARGS &amp;quot;xp_cmdshell&amp;quot; &amp;quot;t:lowercase,id:91&amp;quot;
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;Multiple transformation actions can be used in the same rule, forming a transformation pipeline. The transformations will be performed in the order in which they appear in the rule.&lt;/p&gt;
-&lt;p&gt;In most cases, the order in which transformations are performed is very important. In the following example, a series of transformation functions is performed to counter evasion. Performing the transformations in any other order would allow a skillful attacker to evade detection:&lt;/p&gt;</description></item><item><title>Variables</title><link>https://coraza.io/docs/seclang/variables/</link><pubDate>Tue, 06 Oct 2020 08:48:57 +0000</pubDate><guid>https://coraza.io/docs/seclang/variables/</guid><description>&lt;h2 id="args"&gt;ARGS &lt;a href="#args" class="anchor" aria-hidden="true"&gt;#&lt;/a&gt;&lt;/h2&gt;
-&lt;p&gt;&lt;strong&gt;ARGS&lt;/strong&gt; is a collection and can be used on its own (means all arguments including the POST Payload), with a static parameter (matches arguments with that name), or with a regular expression (matches all arguments with name that matches the regular expression). To look at only the query string or body arguments, see the ARGS_GET and ARGS_POST collections.&lt;/p&gt;
-&lt;p&gt;Some variables are actually collections, which are expanded into more variables at runtime. The following example will examine all request arguments:&lt;/p&gt;</description></item></channel></rss>
+&lt;div class="expressive-code"&gt;
+ &lt;figure class="frame not-content"&gt;
+ &lt;figcaption class="header"&gt;
+ &lt;span class="title"&gt;&lt;/span&gt;
+ &lt;/figcaption&gt;
+ &lt;div class="highlight"&gt;&lt;pre tabindex="0" class="chroma"&gt;&lt;code class="language-modsecurity" data-lang="modsecurity"&gt;SecRule ARGS &amp;#34;xp_cmdshell&amp;#34; &amp;#34;t:lowercase,id:91&amp;#34;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+ &lt;/figure&gt;
+&lt;/div&gt;
+&lt;p&gt;Multiple transformation actions can be used in the same rule, forming a transformation pipeline. The transformations will be performed in the order in which they appear in the rule.&lt;/p&gt;</description></item><item><title>Variables</title><link>https://coraza.io/docs/seclang/variables/</link><pubDate>Tue, 06 Oct 2020 08:48:57 +0000</pubDate><guid>https://coraza.io/docs/seclang/variables/</guid><description>&lt;h2 id="args"&gt;ARGS&lt;/h2&gt;
+&lt;p&gt;&lt;strong&gt;ARGS&lt;/strong&gt; is a collection and can be used on its own (means all arguments including the POST Payload), with a static parameter (matches arguments with that name), or with a regular expression (matches all arguments with name that matches the regular expression). To look at only the query string or body arguments, see the ARGS_GET and ARGS_POST collections.&lt;/p&gt;</description></item></channel></rss>

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Conectores on OWASP Coraza</title><link>https://coraza.io/es/connectors/</link><description>Recent content in Conectores on OWASP Coraza</description><generator>Hugo</generator><language>es</language><copyright>Copyright (c) 2021-2026 OWASP Coraza</copyright><lastBuildDate>Mon, 01 Jan 2024 00:00:00 +0000</lastBuildDate><atom:link href="https://coraza.io/es/connectors/index.xml" rel="self" type="application/rss+xml"/><item><title>HAProxy Coraza SPOA</title><link>https://coraza.io/es/connectors/coraza-spoa/</link><pubDate>Thu, 26 May 2022 00:00:00 +0000</pubDate><guid>https://coraza.io/es/connectors/coraza-spoa/</guid><description>&lt;p&gt;Coraza SPOA es un demonio del sistema que integra el Firewall de Aplicaciones Web (WAF) Coraza como servicio de respaldo para HAProxy. Está escrito en Go, admite conjuntos de reglas ModSecurity SecLang y es 100 % compatible con el OWASP Core Rule Set v4.&lt;/p&gt;</description></item><item><title>Apache APISIX</title><link>https://coraza.io/es/connectors/apisix/</link><pubDate>Mon, 01 Jan 2024 00:00:00 +0000</pubDate><guid>https://coraza.io/es/connectors/apisix/</guid><description>&lt;h2 id="descripcion-general"&gt;Descripcion general&lt;/h2&gt;
+&lt;p&gt;
+
+&lt;a class="link link--text" href="https://apisix.apache.org/" rel="external"&gt;Apache APISIX&lt;/a&gt; soporta Coraza WAF a traves de su integración proxy-wasm. APISIX puede cargar el filtro 
+
+&lt;a class="link link--text" href="https://github.com/corazawaf/coraza-proxy-wasm" rel="external"&gt;coraza-proxy-wasm&lt;/a&gt; para proporcionar capacidades de firewall de aplicaciones web.&lt;/p&gt;</description></item><item><title>Envoy</title><link>https://coraza.io/es/connectors/envoy/</link><pubDate>Mon, 01 Jan 2024 00:00:00 +0000</pubDate><guid>https://coraza.io/es/connectors/envoy/</guid><description>&lt;p&gt;Un plugin de filtro HTTP Web Application Firewall (WAF) para Envoy que aprovecha el motor 
+
+&lt;a class="link link--text" href="https://coraza.io/" rel="external"&gt;Coraza&lt;/a&gt; WAF para proporcionar seguridad en capa 7 para aplicaciones web.&lt;/p&gt;</description></item><item><title>libcoraza (Biblioteca C)</title><link>https://coraza.io/es/connectors/libcoraza/</link><pubDate>Mon, 01 Jan 2024 00:00:00 +0000</pubDate><guid>https://coraza.io/es/connectors/libcoraza/</guid><description>&lt;h2 id="descripcion-general"&gt;Descripcion general&lt;/h2&gt;
+&lt;p&gt;
+
+&lt;a class="link link--text" href="https://github.com/corazawaf/libcoraza" rel="external"&gt;libcoraza&lt;/a&gt; proporciona bindings en C para el motor de Coraza WAF. Permite que aplicaciones C y C++ integren la funcionalidad de Coraza WAF directamente, y es utilizado por el 
+
+&lt;a class="link link--text" href="https://coraza.io/es/connectors/nginx/"&gt;conector de NGINX&lt;/a&gt; para integrar Coraza con NGINX.&lt;/p&gt;</description></item><item><title>NGINX</title><link>https://coraza.io/es/connectors/nginx/</link><pubDate>Mon, 01 Jan 2024 00:00:00 +0000</pubDate><guid>https://coraza.io/es/connectors/nginx/</guid><description>&lt;h2 id="descripcion-general"&gt;Descripcion general&lt;/h2&gt;
+&lt;p&gt;
+
+&lt;a class="link link--text" href="https://github.com/corazawaf/coraza-nginx" rel="external"&gt;coraza-nginx&lt;/a&gt; integra Coraza WAF con NGINX como un módulo dinámico. Utiliza 
+
+&lt;a class="link link--text" href="https://github.com/corazawaf/libcoraza" rel="external"&gt;libcoraza&lt;/a&gt;, el binding en C para Coraza, para proporcionar capacidades de WAF dentro de NGINX.&lt;/p&gt;</description></item><item><title>Proxy-Wasm (Envoy/Istio)</title><link>https://coraza.io/es/connectors/proxy-wasm/</link><pubDate>Mon, 01 Jan 2024 00:00:00 +0000</pubDate><guid>https://coraza.io/es/connectors/proxy-wasm/</guid><description>&lt;h2 id="descripcion-general"&gt;Descripcion general&lt;/h2&gt;
+&lt;p&gt;
+
+&lt;a class="link link--text" href="https://github.com/corazawaf/coraza-proxy-wasm" rel="external"&gt;coraza-proxy-wasm&lt;/a&gt; es un filtro proxy-wasm que ejecuta Coraza WAF dentro de Envoy, Istio y otros proxies compatibles con proxy-wasm. Utiliza la ABI de proxy-wasm para integrarse con el proxy anfitrion.&lt;/p&gt;</description></item><item><title>Traefik</title><link>https://coraza.io/es/connectors/traefik/</link><pubDate>Mon, 01 Jan 2024 00:00:00 +0000</pubDate><guid>https://coraza.io/es/connectors/traefik/</guid><description>&lt;h2 id="descripcion-general"&gt;Descripcion general&lt;/h2&gt;
+&lt;p&gt;Coraza puede integrarse con 
+
+&lt;a class="link link--text" href="https://traefik.io/" rel="external"&gt;Traefik&lt;/a&gt; usando el middleware http-wasm. El proyecto 
+
+&lt;a class="link link--text" href="https://github.com/jcchavezs/coraza-http-wasm-traefik" rel="external"&gt;coraza-http-wasm-traefik&lt;/a&gt; proporciona un ejemplo de cómo ejecutar Coraza WAF como middleware de Traefik mediante http-wasm.&lt;/p&gt;</description></item><item><title>Caddy</title><link>https://coraza.io/es/connectors/caddy/</link><pubDate>Tue, 06 Oct 2020 08:48:45 +0000</pubDate><guid>https://coraza.io/es/connectors/caddy/</guid><description>&lt;p&gt;El módulo de Caddy de 
+
+&lt;a class="link link--text" href="https://github.com/corazawaf/coraza" rel="external"&gt;OWASP Coraza&lt;/a&gt; proporciona capacidades de Web Application Firewall para Caddy.&lt;/p&gt;
+&lt;p&gt;OWASP Coraza WAF es 100 % compatible con OWASP Coreruleset y la sintaxis de Modsecurity.&lt;/p&gt;</description></item></channel></rss>
