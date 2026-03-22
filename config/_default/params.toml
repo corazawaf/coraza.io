@@ -46,7 +46,7 @@ mainSections = ["docs"]
   alertDismissable = true
 
   # Bootstrap
-  bootstrapJavascript = false
+  bootstrapJavascript = true
 
   # Nav
   sectionNav = ["docs"]
