@@ -10,3 +10,389 @@ body {
 .wrap {
   flex: 1;
 }
+
+// ─── Homepage ────────────────────────────────────────────────────────────────
+
+// Hero
+.home-hero {
+  position: relative;
+  overflow: hidden;
+  padding: 5rem 0 6rem;
+
+  .home-hero-glow {
+    position: absolute;
+    top: -220px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 720px;
+    height: 640px;
+    background: radial-gradient(circle, rgba($primary, 0.13) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .home-hero-inner {
+    position: relative;
+    z-index: 1;
+    max-width: 760px;
+  }
+
+  .home-hero-badge {
+    padding: 0.35rem 0.9rem;
+    border-radius: 999px;
+    border: 1px solid $gray-200;
+    background: $white;
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: $gray-600;
+  }
+
+  .home-hero-title {
+    font-size: clamp(2.6rem, 7vw, 4.75rem);
+    font-weight: 900;
+    letter-spacing: -0.02em;
+    line-height: 1.1;
+    margin-bottom: 1.25rem;
+  }
+
+  .home-hero-lead {
+    font-size: 1.1rem;
+    color: $gray-600;
+    max-width: 600px;
+    margin: 0 auto 2.5rem;
+    line-height: 1.75;
+  }
+}
+
+// Bento Grid
+.home-bento {
+  background: $gray-100;
+
+  .bento-grid {
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    gap: 1.25rem;
+  }
+
+  .bento-main      { grid-column: span 8; }
+  .bento-enterprise { grid-column: span 4; }
+  .bento-legacy    { grid-column: span 4; }
+  .bento-universal { grid-column: span 8; }
+
+  @media (max-width: 767px) {
+    .bento-main,
+    .bento-enterprise,
+    .bento-legacy,
+    .bento-universal {
+      grid-column: span 12;
+    }
+  }
+
+  .bento-card {
+    background: $white;
+    border: 1px solid $gray-200;
+    border-radius: 1rem;
+    padding: 1.75rem;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    position: relative;
+  }
+
+  .bento-main {
+    padding: 2.5rem;
+    min-height: 260px;
+  }
+
+  .bento-enterprise {
+    background: $primary;
+    border-color: transparent;
+    color: $white;
+    min-height: 260px;
+  }
+
+  .bento-bg-icon {
+    position: absolute;
+    top: 1rem;
+    right: 1.5rem;
+    opacity: 0.06;
+    pointer-events: none;
+    color: $primary;
+  }
+
+  .deploy-bubble {
+    width: 2.4rem;
+    height: 2.4rem;
+    border-radius: 50%;
+    background: $gray-100;
+    border: 1px solid $gray-200;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: $gray-600;
+  }
+}
+
+// Why section
+.home-why {
+  .feature-icon-box {
+    width: 3.5rem;
+    height: 3.5rem;
+    border-radius: 0.875rem;
+    background: $gray-100;
+    border: 1px solid $gray-200;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: $primary;
+  }
+}
+
+// Deploy Anywhere
+.home-deploy {
+  background: $gray-100;
+
+  .connector-tab {
+    display: flex;
+    align-items: center;
+    gap: 0.875rem;
+    padding: 0.875rem 1rem;
+    border-radius: 0.75rem;
+    border: 1px solid $gray-200;
+    background: $white;
+    cursor: pointer;
+    transition: border-color 0.15s ease, background 0.15s ease;
+    color: $body-color;
+    width: 100%;
+    text-align: left;
+
+    &:hover {
+      border-color: $primary;
+      background: $gray-100;
+    }
+
+    &.active {
+      border-color: $primary;
+      background: $gray-100;
+
+      .fw-semibold { color: $primary; }
+      .connector-logo { border-color: $primary; }
+    }
+  }
+
+  .connector-logo {
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: 0.5rem;
+    border: 1px solid $gray-200;
+    background: $gray-100;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    transition: border-color 0.15s ease;
+
+    img {
+      width: 22px;
+      height: 22px;
+      object-fit: contain;
+    }
+  }
+
+  // Code panel is always dark (terminal aesthetic)
+  .code-panel {
+    background: hsl(224, 14%, 8%);
+    border-radius: 0.875rem;
+    overflow: hidden;
+    border: 1px solid hsl(224, 14%, 18%);
+    min-height: 380px;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .code-panel-header {
+    padding: 0.75rem 1.25rem;
+    border-bottom: 1px solid hsl(224, 14%, 18%);
+    background: hsl(224, 14%, 11%);
+    flex-shrink: 0;
+
+    #cp-filename {
+      color: hsl(224, 6%, 55%);
+      font-family: ui-monospace, monospace;
+      font-size: 0.8rem;
+    }
+
+    .btn-link {
+      color: $link-color-dark !important;
+      font-size: 0.8rem;
+    }
+  }
+
+  .code-dots {
+    display: flex;
+    gap: 0.375rem;
+
+    span {
+      width: 0.65rem;
+      height: 0.65rem;
+      border-radius: 50%;
+      background: hsl(224, 10%, 28%);
+    }
+  }
+
+  .code-panel-body {
+    padding: 1.5rem;
+    flex-grow: 1;
+    overflow: auto;
+
+    pre {
+      margin: 0;
+      background: transparent;
+      font-size: 0.8125rem;
+      line-height: 1.7;
+      color: hsl(224, 6%, 75%);
+      white-space: pre;
+    }
+
+    // Chroma class overrides for dark panel
+    .k, .kn, .kd, .kc { color: #79c0ff; }
+    .c1                { color: hsl(224, 6%, 48%); font-style: italic; }
+    .s, .s1, .s2       { color: #a5d6ff; }
+    .nt                { color: #7ee787; }
+    .nv                { color: #ff7b72; }
+    .na                { color: #ffa657; }
+    .mi, .m            { color: #f2cc60; }
+    .o                 { color: hsl(224, 6%, 65%); }
+    .nd                { color: #d2a8ff; }
+  }
+}
+
+// Community
+.home-community {
+  .home-eyebrow {
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: $primary;
+  }
+
+  .community-logos {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 1.5rem;
+    align-items: center;
+  }
+
+  .community-logo-pill {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.5rem 1.25rem;
+    border-radius: 999px;
+    background: $gray-100;
+    border: 1px solid $gray-200;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: $gray-600;
+    letter-spacing: 0.03em;
+  }
+}
+
+// ─── Dark mode overrides ──────────────────────────────────────────────────────
+
+html[data-bs-theme="dark"] {
+  .home-hero {
+    .home-hero-glow {
+      background: radial-gradient(circle, rgba($link-color-dark, 0.1) 0%, transparent 70%);
+    }
+
+    .home-hero-badge {
+      background: $body-overlay-dark;
+      border-color: $border-dark;
+      color: $body-color-dark;
+    }
+
+    .home-hero-lead {
+      color: $body-color-dark;
+    }
+  }
+
+  .home-bento {
+    background: $body-overlay-dark;
+
+    .bento-card {
+      background: $body-bg-dark;
+      border-color: $border-dark;
+    }
+
+    .bento-enterprise {
+      background: $link-color-dark;
+      color: $body-bg-dark;
+      border-color: transparent;
+    }
+
+    .bento-bg-icon {
+      color: $link-color-dark;
+    }
+
+    .deploy-bubble {
+      background: $body-overlay-dark;
+      border-color: $border-dark;
+      color: $body-color-dark;
+    }
+  }
+
+  .home-why {
+    .feature-icon-box {
+      background: $body-overlay-dark;
+      border-color: $border-dark;
+      color: $link-color-dark;
+    }
+
+    h3.text-primary {
+      color: $link-color-dark !important;
+    }
+  }
+
+  .home-deploy {
+    background: $body-overlay-dark;
+
+    .connector-tab {
+      background: $body-bg-dark;
+      border-color: $border-dark;
+      color: $body-color-dark;
+
+      &:hover {
+        background: lighten($body-bg-dark, 3%);
+        border-color: $link-color-dark;
+      }
+
+      &.active {
+        background: lighten($body-bg-dark, 3%);
+        border-color: $link-color-dark;
+
+        .fw-semibold { color: $link-color-dark; }
+        .connector-logo { border-color: $link-color-dark; }
+      }
+    }
+
+    .connector-logo {
+      background: $body-overlay-dark;
+      border-color: $border-dark;
+    }
+  }
+
+  .home-community {
+    .home-eyebrow {
+      color: $link-color-dark;
+    }
+
+    .community-logo-pill {
+      background: $body-overlay-dark;
+      border-color: $border-dark;
+      color: $body-color-dark;
+    }
+  }
+}
