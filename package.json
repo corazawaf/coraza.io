@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "hugo server --disableFastRender --noHTTPCache",
     "build": "hugo --minify --gc",
-    "create": "hugo new"
+    "create": "hugo new",
+    "test": "npx jest --testPathPattern=tests/ --testTimeout=30000"
   },
   "dependencies": {
     "@thulite/doks-core": "^1.9.3",
@@ -18,7 +19,8 @@
   "devDependencies": {
     "@fullhuman/postcss-purgecss": "^8.0.0",
     "autoprefixer": "^10.4.20",
-    "postcss-cli": "^11.0.1"
+    "postcss-cli": "^11.0.1",
+    "puppeteer": "^24.40.0"
   },
   "engines": {
     "node": ">=20.0.0"
