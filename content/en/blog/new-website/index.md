@@ -7,7 +7,7 @@ images: []
 contributors: ["Juan Pablo Tosso"]
 ---
 
-The Coraza website has been running on the same setup since around 2020. It did the job, but it was showing its age. We've given it a proper overhaul.
+The Coraza website has been running on the same setup since around 2020. It did the job, but it was showing its age. We've given it a proper overhaul. If you're feeling nostalgic, here's [what it looked like before](https://web.archive.org/web/20260305214828/https://coraza.io/).
 
 ## Same Doks, Six Years Later
 

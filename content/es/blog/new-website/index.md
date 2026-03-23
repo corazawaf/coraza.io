@@ -7,7 +7,7 @@ images: []
 contributors: ["Juan Pablo Tosso"]
 ---
 
-El sitio web de Coraza ha funcionado con la misma configuración desde aproximadamente 2020. Cumplía su función, pero empezaba a quedarse anticuado. Le hemos dado una renovación a fondo.
+El sitio web de Coraza ha funcionado con la misma configuración desde aproximadamente 2020. Cumplía su función, pero empezaba a quedarse anticuado. Le hemos dado una renovación a fondo. Si te entra la nostalgia, aquí tienes [cómo se veía antes](https://web.archive.org/web/20260305214828/https://coraza.io/).
 
 ## El mismo Doks, seis años después
 
