@@ -5,13 +5,13 @@
     <div class="home-hero-inner text-center mx-auto">
       <div class="home-hero-badge d-inline-flex align-items-center gap-2 mb-4">
         <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="currentColor" class="text-primary" aria-hidden="true"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4z"/></svg>
-        <span>OWASP Production Project</span>
+        <span>{{ i18n "home_badge" }}</span>
       </div>
       <h1 class="home-hero-title">OWASP <span class="text-primary">Coraza</span> WAF</h1>
       <p class="home-hero-lead">{{ .Params.lead | safeHTML }}</p>
       <div class="d-flex flex-wrap justify-content-center gap-3">
-        <a class="btn btn-primary btn-lg rounded-pill px-5" href="/docs/tutorials/quick-start/">Get Started</a>
-        <a class="btn btn-outline-secondary btn-lg rounded-pill px-5" href="/docs/tutorials/introduction/">Learn More</a>
+        <a class="btn btn-primary btn-lg rounded-pill px-5" href="/docs/tutorials/quick-start/">{{ i18n "home_get_started" }}</a>
+        <a class="btn btn-outline-secondary btn-lg rounded-pill px-5" href="/docs/tutorials/introduction/">{{ i18n "home_learn_more" }}</a>
       </div>
     </div>
   </div>
@@ -30,8 +30,8 @@
           <svg xmlns="http://www.w3.org/2000/svg" width="160" height="160" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="0.6"><rect x="3" y="3" width="6" height="6" rx="1"/><rect x="15" y="3" width="6" height="6" rx="1"/><rect x="3" y="15" width="6" height="6" rx="1"/><rect x="15" y="15" width="6" height="6" rx="1"/><line x1="9" y1="6" x2="15" y2="6"/><line x1="6" y1="9" x2="6" y2="15"/><line x1="18" y1="9" x2="18" y2="15"/><line x1="9" y1="18" x2="15" y2="18"/></svg>
         </div>
         <div class="mt-auto">
-          <h2 class="h2 fw-bold mb-3">Built for Modern APIs</h2>
-          <p class="text-body-secondary mb-0" style="max-width: 480px;">High-performance protection for REST, GraphQL, and gRPC endpoints. Coraza handles massive throughput with minimal latency impact.</p>
+          <h2 class="h2 fw-bold mb-3">{{ i18n "home_bento_title" }}</h2>
+          <p class="text-body-secondary mb-0" style="max-width: 480px;">{{ i18n "home_bento_desc" }}</p>
         </div>
       </div>
 
@@ -40,21 +40,21 @@
           <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4z"/></svg>
         </div>
         <div class="mt-auto">
-          <h3 class="h4 fw-bold mb-2">Enterprise Ready</h3>
-          <p class="mb-0" style="opacity:.8;">Hardened for mission-critical infrastructure and high-availability environments.</p>
+          <h3 class="h4 fw-bold mb-2">{{ i18n "home_enterprise_title" }}</h3>
+          <p class="mb-0" style="opacity:.8;">{{ i18n "home_enterprise_desc" }}</p>
         </div>
       </div>
 
       <div class="bento-card bento-legacy">
         <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-primary mb-3" aria-hidden="true"><polyline points="4 17 10 11 4 5"/><line x1="12" y1="19" x2="20" y2="19"/></svg>
-        <h3 class="h5 fw-bold mb-2">Legacy Systems</h3>
-        <p class="text-body-secondary mb-0 small">Drop-in replacement for ModSecurity, supporting existing rule sets and workflows.</p>
+        <h3 class="h5 fw-bold mb-2">{{ i18n "home_legacy_title" }}</h3>
+        <p class="text-body-secondary mb-0 small">{{ i18n "home_legacy_desc" }}</p>
       </div>
 
       <div class="bento-card bento-universal d-flex align-items-center justify-content-between gap-4">
         <div>
-          <h3 class="h5 fw-bold mb-2">Universal Deployment</h3>
-          <p class="text-body-secondary mb-0 small">Run as a sidecar, proxy, or library in Go, C++, and WebAssembly.</p>
+          <h3 class="h5 fw-bold mb-2">{{ i18n "home_universal_title" }}</h3>
+          <p class="text-body-secondary mb-0 small">{{ i18n "home_universal_desc" }}</p>
         </div>
         <div class="d-flex gap-2 flex-shrink-0">
           <div class="deploy-bubble">
@@ -77,30 +77,30 @@
 <section class="home-section home-why py-5">
   <div class="container">
     <div class="text-center mb-5">
-      <h2 class="fw-bold">Why Security Teams Choose Coraza</h2>
-      <p class="text-body-secondary">Engineered for the modern security landscape.</p>
+      <h2 class="fw-bold">{{ i18n "home_why_title" }}</h2>
+      <p class="text-body-secondary">{{ i18n "home_why_subtitle" }}</p>
     </div>
     <div class="row row-cols-1 row-cols-md-3 g-4 text-center">
       <div class="col">
         <div class="feature-icon-box mx-auto mb-4">
           <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4z"/></svg>
         </div>
-        <h3 class="h5 fw-bold text-primary mb-3">Security First</h3>
-        <p class="text-body-secondary">Rigorous testing and full OWASP CRS compatibility ensure your applications are protected against top threats from day one.</p>
+        <h3 class="h5 fw-bold text-primary mb-3">{{ i18n "home_security_title" }}</h3>
+        <p class="text-body-secondary">{{ i18n "home_security_desc" }}</p>
       </div>
       <div class="col">
         <div class="feature-icon-box mx-auto mb-4">
           <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
         </div>
-        <h3 class="h5 fw-bold text-primary mb-3">High Performance</h3>
-        <p class="text-body-secondary">Written in Go with an optimized engine, Coraza delivers microsecond-level inspection even at peak traffic loads.</p>
+        <h3 class="h5 fw-bold text-primary mb-3">{{ i18n "home_performance_title" }}</h3>
+        <p class="text-body-secondary">{{ i18n "home_performance_desc" }}</p>
       </div>
       <div class="col">
         <div class="feature-icon-box mx-auto mb-4">
           <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.24 12.24a6 6 0 0 0-8.49-8.49L5 10.5V19h8.5z"/><line x1="16" y1="8" x2="2" y2="22"/><line x1="17.5" y1="15" x2="9" y2="15"/></svg>
         </div>
-        <h3 class="h5 fw-bold text-primary mb-3">Extensible</h3>
-        <p class="text-body-secondary">A modular plugin architecture allows you to create custom rules, operators, and logging backends tailored to your needs.</p>
+        <h3 class="h5 fw-bold text-primary mb-3">{{ i18n "home_extensible_title" }}</h3>
+        <p class="text-body-secondary">{{ i18n "home_extensible_desc" }}</p>
       </div>
     </div>
   </div>
@@ -110,8 +110,8 @@
 <section class="home-section home-deploy py-5">
   <div class="container-lg px-4">
     <div class="mb-5">
-      <h2 class="fw-bold mb-3">Deploy Anywhere</h2>
-      <p class="text-body-secondary" style="max-width: 560px;">Coraza isn't just a standalone service. Integrate it directly into your infrastructure using our versatile connectors and SDKs.</p>
+      <h2 class="fw-bold mb-3">{{ i18n "home_deploy_title" }}</h2>
+      <p class="text-body-secondary" style="max-width: 560px;">{{ i18n "home_deploy_desc" }}</p>
     </div>
     <div class="row g-4 align-items-stretch" style="min-height: 420px;">
       <div class="col-lg-4">
@@ -163,7 +163,7 @@
               </div>
               <span class="small" id="cp-filename">envoy.yaml</span>
             </div>
-            <button class="btn btn-link btn-sm p-0 text-decoration-none" id="cp-copy-btn" onclick="copyConnectorCode()" type="button">Copy Code</button>
+            <button class="btn btn-link btn-sm p-0 text-decoration-none" id="cp-copy-btn" onclick="copyConnectorCode()" type="button">{{ i18n "home_copy_code" }}</button>
           </div>
           <div class="code-panel-body flex-grow-1 overflow-auto">
             <pre class="mb-0" id="cp-code"></pre>
@@ -225,7 +225,7 @@
     var btn = document.getElementById('cp-copy-btn');
     navigator.clipboard.writeText(configs[current].code).then(function () {
       btn.textContent = 'Copied!';
-      setTimeout(function () { btn.textContent = 'Copy Code'; }, 2000);
+      setTimeout(function () { btn.textContent = '{{ i18n "home_copy_code" }}'; }, 2000);
     });
   };
 
@@ -241,8 +241,8 @@
 {{/* Community */}}
 <section class="home-section home-community py-5 text-center">
   <div class="container">
-    <p class="home-eyebrow mb-3">Community Driven</p>
-    <h2 class="fw-bold mb-5 mx-auto" style="max-width: 560px;">Join the open source security movement.</h2>
+    <p class="home-eyebrow mb-3">{{ i18n "home_community_eyebrow" }}</p>
+    <h2 class="fw-bold mb-5 mx-auto" style="max-width: 560px;">{{ i18n "home_community_title" }}</h2>
     <div class="community-logos mb-5">
       <a href="https://owasp.org/www-project-coraza-web-application-firewall/" target="_blank" rel="noopener" class="community-logo-pill text-decoration-none gap-2">
         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>
@@ -252,16 +252,16 @@
         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/></svg>
         GitHub
       </a>
-      <span class="community-logo-pill">Open Source</span>
+      <span class="community-logo-pill">{{ i18n "home_open_source" }}</span>
     </div>
     <div class="d-flex flex-wrap justify-content-center gap-3">
       <a class="btn btn-outline-secondary btn-lg rounded-pill px-4 d-inline-flex align-items-center gap-2" href="https://github.com/corazawaf/coraza" target="_blank" rel="noopener">
         <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/></svg>
-        Star on GitHub
+        {{ i18n "home_star_github" }}
       </a>
       <a class="btn btn-outline-secondary btn-lg rounded-pill px-4 d-inline-flex align-items-center gap-2" href="https://owasp.slack.com/archives/C027DPKDLNT" target="_blank" rel="noopener">
         <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M5.042 15.165a2.528 2.528 0 0 1-2.52 2.523A2.528 2.528 0 0 1 0 15.165a2.527 2.527 0 0 1 2.522-2.52h2.52v2.52zm1.271 0a2.527 2.527 0 0 1 2.521-2.52 2.527 2.527 0 0 1 2.521 2.52v6.313A2.528 2.528 0 0 1 8.834 24a2.528 2.528 0 0 1-2.521-2.522v-6.313zM8.834 5.042a2.528 2.528 0 0 1-2.521-2.52A2.528 2.528 0 0 1 8.834 0a2.528 2.528 0 0 1 2.521 2.522v2.52H8.834zm0 1.271a2.528 2.528 0 0 1 2.521 2.521 2.528 2.528 0 0 1-2.521 2.521H2.522A2.528 2.528 0 0 1 0 8.834a2.528 2.528 0 0 1 2.522-2.521h6.312zm10.122 2.521a2.528 2.528 0 0 1 2.522-2.521A2.528 2.528 0 0 1 24 8.834a2.528 2.528 0 0 1-2.522 2.521h-2.522V8.834zm-1.268 0a2.528 2.528 0 0 1-2.523 2.521 2.527 2.527 0 0 1-2.52-2.521V2.522A2.527 2.527 0 0 1 15.165 0a2.528 2.528 0 0 1 2.523 2.522v6.312zm-2.523 10.122a2.528 2.528 0 0 1 2.523 2.522A2.528 2.528 0 0 1 15.165 24a2.527 2.527 0 0 1-2.52-2.522v-2.522h2.52zm0-1.268a2.527 2.527 0 0 1-2.52-2.523 2.526 2.526 0 0 1 2.52-2.52h6.313A2.527 2.527 0 0 1 24 15.165a2.528 2.528 0 0 1-2.522 2.523h-6.313z"/></svg>
-        Join Slack
+        {{ i18n "home_join_slack" }}
       </a>
     </div>
   </div>
