@@ -2,14 +2,16 @@
 
 ## Multilingual Content
 
-This site supports multiple languages. All content changes **must** be applied to every language directory:
+This site supports multiple languages. Content is written in English first, and AI agents (GitHub Copilot, Claude, etc.) are responsible for generating and maintaining translations. Maintainers review translation quality.
 
-- `content/en/` — English (default)
+### Language directories
+
+- `content/en/` — English (default, source of truth)
 - `content/es/` — Spanish (Spain)
 
 ### Rules
 
-1. **When adding a new page**, create the file in all language directories with the same path.
+1. **When adding a new page**, create the file in `content/en/` first. Then create the translated version in all other language directories with the same path.
 2. **When deleting a page**, remove it from all language directories.
 3. **When modifying structure** (renaming files, moving sections, changing front matter keys like `weight`, `draft`, `toc`), apply the same structural changes to all languages.
 4. **When modifying code examples**, apply to all languages — code is language-neutral.
@@ -31,7 +33,7 @@ This site supports multiple languages. All content changes **must** be applied t
 
 #### New or modified English content
 
-When English content changes, the Spanish translation must be updated to match:
+When English content changes, the corresponding translations must be updated to match:
 
 1. Make the change in `content/en/`.
 2. Open the corresponding file in `content/es/`.
@@ -57,6 +59,7 @@ After regeneration:
 - If a PR only changes code examples or front matter structure, the Spanish file can be updated mechanically (same change).
 - If a PR changes prose, the Spanish file needs a proper translation of the changed text.
 - The CI parity check (`go test ./tools/i18ncheck/...`) ensures no files are missing, but does **not** check translation quality or staleness.
+- **AI agents are responsible for producing translations. Maintainers are responsible for reviewing them.**
 
 ### Validation
 
@@ -67,6 +70,42 @@ go test ./tools/i18ncheck/...
 ```
 
 This test is also enforced in CI via GitHub Actions.
+
+## Plugins and Connectors
+
+Plugin and connector metadata lives in YAML data files, **not** as individual content pages. The data is always in English and is not translated.
+
+### Files
+
+- `data/plugins.yaml` — list of all plugins
+- `data/connectors.yaml` — list of all connectors
+
+### Adding a plugin or connector
+
+Add a new entry to the appropriate YAML file with these fields:
+
+```yaml
+- title: "Name"
+  lead: "One-line description."
+  author: "Author or Organization"
+  repo: "https://github.com/org/repo"
+  official: false       # true only if maintained by the Coraza project
+  compatibility: ["v3.x"]
+  logo: false           # or "/images/connectors/name.svg" for connectors
+```
+
+For connectors with a logo, place the SVG in `static/images/connectors/`.
+
+### What IS translated
+
+Only the listing page titles and descriptions are translated. These live in the `_index.md` files:
+
+- `content/en/plugins/_index.md` / `content/es/plugins/_index.md`
+- `content/en/connectors/_index.md` / `content/es/connectors/_index.md`
+
+### What is NOT translated
+
+The YAML data files (`data/plugins.yaml`, `data/connectors.yaml`) are always in English. Individual plugin/connector names, descriptions, and author names stay in English across all locales.
 
 ## Go Tooling
 
