@@ -4,7 +4,7 @@ go 1.25.0
 
 require (
 	github.com/corazawaf/coraza/v3 v3.4.0
-	github.com/magefile/mage v1.15.1-0.20250615140142-78acbaf2e3ae
+	github.com/magefile/mage v1.16.1
 )
 
 require (
