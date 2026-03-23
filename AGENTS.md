@@ -18,11 +18,41 @@ This site supports multiple languages. Content is written in English first, and 
 5. **Translation of prose** is expected to differ between languages, but the file must exist in every language directory.
 6. **Generated files** (`directives.md`, `actions.md`, `operators.md`) are generated into `content/en/` by the Go tools in `tools/`. After regeneration, the Spanish versions must be updated too (see Translation Workflow below).
 
-### Translation Style
+### Writing Style and Tone
 
-- **Spanish variant**: Spain (castellano), formal technical tone.
-- **Accents are mandatory**: always use proper tildes — á, é, í, ó, ú, ñ, ü.
-- **Technical terms** stay in English: ModSecurity, SecLang, WAF, Coraza, Go, proxy, middleware, plugin, etc.
+This is a technical documentation site for a security engineering project. Write like an engineer talking to other engineers — direct, precise, and grounded in how things actually work.
+
+#### General principles (all languages)
+
+- **Be direct.** State what something does, how to use it, and what to watch out for. No filler, no preamble, no "In this section we will explore...".
+- **Be specific.** Use concrete terms: function names, file paths, config keys, error messages. Vague descriptions help nobody.
+- **Be honest about limitations.** If something is experimental, has known issues, or requires specific conditions, say so plainly. Don't hedge with marketing language.
+- **No AI voice.** Do not write like a chatbot. Avoid phrases like "It's important to note that...", "This powerful feature allows you to...", "Simply run the following command...", "Let's dive into...". Just explain the thing.
+- **No unnecessary enthusiasm.** Words like "easily", "seamlessly", "robust", "leverage", "empower" add nothing. Describe behaviour, not feelings about behaviour.
+- **Assume competence.** The reader knows what a reverse proxy is, what Go modules are, and how HTTP works. Don't explain prerequisites that any engineer deploying a WAF would already know. Do explain things specific to Coraza.
+- **Prefer short sentences.** One idea per sentence. If a sentence has three commas and a semicolon, split it.
+- **Use active voice.** "The module loads rules from the file" not "The rules are loaded from the file by the module".
+- **Structure with headers and code blocks.** Engineers scan documentation. Use headings to let them jump to what they need. Put commands and config in fenced code blocks with the correct language tag.
+
+#### English (British)
+
+- **Variant**: British English. Use British spelling: "behaviour" not "behavior", "colour" not "color", "initialise" not "initialize", "catalogue" not "catalog", "licence" (noun) not "license".
+- **Punctuation**: Use Oxford commas. Place punctuation outside quotation marks unless it is part of the quoted material.
+- **Tone**: Dry, factual, technical. Think man pages and RFCs, not blog posts. It is fine to be terse.
+- **Contractions**: Acceptable in prose ("don't", "isn't", "you'll"). Avoid in headings.
+
+#### Spanish (Spain — castellano)
+
+- **Variant**: Peninsular Spanish (Spain), not Latin American. Use "vosotros" forms where appropriate, not "ustedes". Use "ordenador" not "computadora", "fichero" not "archivo" (for file in system context).
+- **Register**: Formal technical register, but not stiff. Address the reader with "tú" in tutorials and guides, "se" impersonal constructions in reference documentation.
+- **Accents are mandatory**: á, é, í, ó, ú, ñ, ü — always. Missing accents are bugs.
+- **Technical terms stay in English**: ModSecurity, SecLang, WAF, Coraza, Go, proxy, middleware, plugin, reverse proxy, request, response, header, body, etc. Do not invent Spanish translations for established English technical terms. When introducing a term for the first time, you may add a brief parenthetical explanation in Spanish if it aids clarity.
+- **Sentence structure**: Spanish naturally runs longer than English. That's fine, but still prefer clarity over elegance. Break up run-on sentences. Don't nest three subordinate clauses.
+- **No literal translation.** Translate the meaning, not the words. English technical writing is terse; Spanish needs different phrasing to sound natural. Restructure sentences to flow in Spanish rather than mirroring English word order.
+- **Articles and prepositions**: Spanish requires more articles than English. Don't drop them for brevity — "el módulo carga las reglas" not "módulo carga reglas".
+
+### Translation Mechanics
+
 - **Code identifiers** (directive names, variable names, action names, operator names) are never translated.
 - **Code blocks** are never translated — they are language-neutral.
 - **Front matter keys** stay in English; only translate their string **values** (`title`, `description`, `lead`).
