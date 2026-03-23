@@ -1,0 +1,86 @@
+# Cadenas de la página principal
+
+[home_badge]
+other = "Proyecto en Producción de OWASP"
+
+[home_get_started]
+other = "Comenzar"
+
+[home_learn_more]
+other = "Más Información"
+
+# Bento Grid
+[home_bento_title]
+other = "Construido para APIs Modernas"
+
+[home_bento_desc]
+other = "Protección de alto rendimiento para endpoints REST, GraphQL y gRPC. Coraza maneja un gran volumen de tráfico con un impacto mínimo en la latencia."
+
+[home_enterprise_title]
+other = "Listo para Empresas"
+
+[home_enterprise_desc]
+other = "Fortalecido para infraestructura de misión crítica y entornos de alta disponibilidad."
+
+[home_legacy_title]
+other = "Sistemas Legados"
+
+[home_legacy_desc]
+other = "Reemplazo directo de ModSecurity, compatible con conjuntos de reglas y flujos de trabajo existentes."
+
+[home_universal_title]
+other = "Despliegue Universal"
+
+[home_universal_desc]
+other = "Ejecuta como sidecar, proxy o biblioteca en Go, C++ y WebAssembly."
+
+# Sección Por Qué
+[home_why_title]
+other = "Por Qué los Equipos de Seguridad Eligen Coraza"
+
+[home_why_subtitle]
+other = "Diseñado para el panorama de seguridad moderno."
+
+[home_security_title]
+other = "Seguridad Primero"
+
+[home_security_desc]
+other = "Pruebas rigurosas y compatibilidad total con OWASP CRS garantizan que tus aplicaciones estén protegidas contra las principales amenazas desde el primer día."
+
+[home_performance_title]
+other = "Alto Rendimiento"
+
+[home_performance_desc]
+other = "Escrito en Go con un motor optimizado, Coraza ofrece inspección a nivel de microsegundos incluso en picos de tráfico."
+
+[home_extensible_title]
+other = "Extensible"
+
+[home_extensible_desc]
+other = "Una arquitectura modular de plugins permite crear reglas personalizadas, operadores y backends de registro adaptados a tus necesidades."
+
+# Sección Despliegue
+[home_deploy_title]
+other = "Despliega en Cualquier Lugar"
+
+[home_deploy_desc]
+other = "Coraza no es solo un servicio independiente. Intégralo directamente en tu infraestructura usando nuestros versátiles conectores y SDKs."
+
+[home_copy_code]
+other = "Copiar Código"
+
+# Sección Comunidad
+[home_community_eyebrow]
+other = "Impulsado por la Comunidad"
+
+[home_community_title]
+other = "Únete al movimiento de seguridad de código abierto."
+
+[home_star_github]
+other = "Estrella en GitHub"
+
+[home_join_slack]
+other = "Únete a Slack"
+
+[home_open_source]
+other = "Código Abierto"
