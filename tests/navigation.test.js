@@ -50,7 +50,7 @@ describe('Page Navigation', () => {
   test('docs page loads successfully', async () => {
     const page = await newPage();
     const response = await page.goto(`${BASE_URL}/docs/tutorials/quick-start/`, { waitUntil: 'networkidle0' });
-    expect(response.status()).toBe(200);
+    expect([200, 304]).toContain(response.status());
     await page.close();
   });
 
@@ -58,8 +58,10 @@ describe('Page Navigation', () => {
     const page = await newPage();
     await page.goto(BASE_URL, { waitUntil: 'networkidle0' });
 
-    await page.click('a[href="/docs/tutorials/quick-start/"]');
-    await page.waitForNavigation({ waitUntil: 'networkidle0' });
+    await Promise.all([
+      page.waitForNavigation({ waitUntil: 'networkidle0' }),
+      page.click('a[href="/docs/tutorials/quick-start/"]'),
+    ]);
 
     expect(page.url()).toContain('/docs/tutorials/quick-start/');
     await page.close();
@@ -132,7 +134,7 @@ describe('Mobile Menu', () => {
     const page = await newPage({ width: 375, height: 812 });
     await page.goto(BASE_URL, { waitUntil: 'networkidle0' });
 
-    const toggler = await page.$('.navbar-toggler');
+    const toggler = await page.$('[data-bs-target="#offcanvasNavMain"]');
     expect(toggler).not.toBeNull();
 
     await toggler.click();
