@@ -1,0 +1,63 @@
+- title: "NGINX"
+  lead: "Run Coraza WAF as a dynamic NGINX module using libcoraza."
+  author: "Coraza Contributors"
+  repo: "https://github.com/corazawaf/coraza-nginx"
+  official: true
+  compatibility: ["v3.x"]
+  logo: "/images/connectors/nginx.svg"
+
+- title: "Envoy"
+  lead: "Web Application Firewall HTTP filter plugin for Envoy that leverages the Coraza WAF engine."
+  author: "United Security Providers"
+  repo: "https://github.com/united-security-providers/coraza-envoy-go-filter"
+  official: false
+  compatibility: ["v3.x"]
+  logo: "/images/connectors/envoy.svg"
+
+- title: "Caddy"
+  lead: "Deploy Coraza WAF as a Caddy module for HTTP and reverse proxy protection."
+  author: "Coraza Contributors"
+  repo: "https://github.com/corazawaf/coraza-caddy"
+  official: true
+  compatibility: ["v3.x"]
+  logo: "/images/connectors/caddy.svg"
+
+- title: "Apache APISIX"
+  lead: "Use Coraza WAF with Apache APISIX via the proxy-wasm integration."
+  author: "Coraza Contributors"
+  repo: "https://github.com/corazawaf/coraza-proxy-wasm"
+  official: true
+  compatibility: ["v3.x"]
+  logo: "/images/connectors/apisix.svg"
+
+- title: "Proxy-Wasm (Envoy/Istio)"
+  lead: "Deploy Coraza WAF as a proxy-wasm filter for Envoy, Istio, and other proxy-wasm compatible proxies."
+  author: "Coraza Contributors"
+  repo: "https://github.com/corazawaf/coraza-proxy-wasm"
+  official: true
+  compatibility: ["v3.x"]
+  logo: "/images/connectors/envoy.svg"
+
+- title: "HAProxy Coraza SPOA"
+  lead: "Deploy Coraza WAF as an HAProxy SPOE agent for HTTP traffic inspection."
+  author: "Coraza Contributors"
+  repo: "https://github.com/corazawaf/coraza-spoa"
+  official: true
+  compatibility: []
+  logo: "/images/connectors/haproxy.svg"
+
+- title: "Traefik"
+  lead: "Deploy Coraza WAF with Traefik using http-wasm middleware."
+  author: "jcchavezs"
+  repo: "https://github.com/jcchavezs/coraza-http-wasm-traefik"
+  official: false
+  compatibility: ["v3.x"]
+  logo: "/images/connectors/traefik.svg"
+
+- title: "libcoraza (C Library)"
+  lead: "Use Coraza WAF from C/C++ applications via the libcoraza shared library."
+  author: "Coraza Contributors"
+  repo: "https://github.com/corazawaf/libcoraza"
+  official: true
+  compatibility: ["v3.x"]
+  logo: "/images/connectors/c.svg"
