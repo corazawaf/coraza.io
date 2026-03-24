@@ -202,7 +202,8 @@ func parseAction(name string, doc string) Action {
 			value = ""
 		} else {
 			key, value, ok = strings.Cut(line, ": ")
-			if !ok {
+			if !ok || fieldAppenders[key] == nil {
+				// Not a recognized key-value pair; treat as continuation of previous field.
 				key = previousKey
 				if previousKey == "Example" {
 					value = "\n" + line

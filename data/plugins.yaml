@@ -1,0 +1,23 @@
+- title: "GeoIP"
+  lead: "Adds geoip Maxmind GeoIP2 database support to Coraza"
+  author: "Coraza Contributors"
+  repo: "https://github.com/corazawaf/coraza-geoip"
+  official: true
+  compatibility: ["v3.x"]
+  logo: false
+
+- title: "Coraza Core Ruleset"
+  lead: "Embeds the OWASP Core Rule Set and recommended Coraza configuration as a Go package, eliminating the need for manual file management."
+  author: "Coraza Contributors"
+  repo: "https://github.com/corazawaf/coraza-coreruleset"
+  official: true
+  compatibility: ["v3.x"]
+  logo: false
+
+- title: "Coraza Leet Normalize"
+  lead: "Transformation plugin that normalizes leet-speak, Cyrillic/Greek homoglyphs, and zero-width Unicode characters to prevent WAF evasion via character substitution."
+  author: "Traceable AI"
+  repo: "https://github.com/Traceableai/coraza-leet-normalize"
+  official: false
+  compatibility: ["v3.x"]
+  logo: false

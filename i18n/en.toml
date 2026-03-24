@@ -1,0 +1,86 @@
+# Homepage strings
+
+[home_badge]
+other = "OWASP Production Project"
+
+[home_get_started]
+other = "Get Started"
+
+[home_learn_more]
+other = "Learn More"
+
+# Bento Grid
+[home_bento_title]
+other = "Built for Modern APIs"
+
+[home_bento_desc]
+other = "High-performance protection for REST, GraphQL, and gRPC endpoints. Coraza handles massive throughput with minimal latency impact."
+
+[home_enterprise_title]
+other = "Enterprise Ready"
+
+[home_enterprise_desc]
+other = "Hardened for mission-critical infrastructure and high-availability environments."
+
+[home_legacy_title]
+other = "Legacy Systems"
+
+[home_legacy_desc]
+other = "Drop-in replacement for ModSecurity, supporting existing rule sets and workflows."
+
+[home_universal_title]
+other = "Universal Deployment"
+
+[home_universal_desc]
+other = "Run as a sidecar, proxy, or library in Go, C++, and WebAssembly."
+
+# Why section
+[home_why_title]
+other = "Why Security Teams Choose Coraza"
+
+[home_why_subtitle]
+other = "Engineered for the modern security landscape."
+
+[home_security_title]
+other = "Security First"
+
+[home_security_desc]
+other = "Rigorous testing and full OWASP CRS compatibility ensure your applications are protected against top threats from day one."
+
+[home_performance_title]
+other = "High Performance"
+
+[home_performance_desc]
+other = "Written in Go with an optimized engine, Coraza delivers microsecond-level inspection even at peak traffic loads."
+
+[home_extensible_title]
+other = "Extensible"
+
+[home_extensible_desc]
+other = "A modular plugin architecture allows you to create custom rules, operators, and logging backends tailored to your needs."
+
+# Deploy section
+[home_deploy_title]
+other = "Deploy Anywhere"
+
+[home_deploy_desc]
+other = "Coraza isn't just a standalone service. Integrate it directly into your infrastructure using our versatile connectors and SDKs."
+
+[home_copy_code]
+other = "Copy Code"
+
+# Community section
+[home_community_eyebrow]
+other = "Community Driven"
+
+[home_community_title]
+other = "Join the open source security movement."
+
+[home_star_github]
+other = "Star on GitHub"
+
+[home_join_slack]
+other = "Join Slack"
+
+[home_open_source]
+other = "Open Source"
