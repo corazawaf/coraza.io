@@ -3,7 +3,7 @@ title: "Operators"
 description: "This section documents the operators currently available in Coraza."
 lead: "This section documents the operators currently available in Coraza."
 date: 2020-10-06T08:48:57+00:00
-lastmod: "2026-03-22T11:55:20-03:00"
+lastmod: "2026-03-23T20:12:27+01:00"
 draft: false
 images: []
 weight: 100
@@ -248,7 +248,8 @@ multi-pattern searching. Matches space-separated keywords or patterns provided a
 ```modsecurity
 # Detect known malicious user agents
 SecRule REQUEST_HEADERS:User-Agent "@pm WebZIP WebCopier Webster" "id:170,deny,log"
-# Match multiple attack patternsonerror=" "id:171,deny"
+# Match multiple attack patterns
+SecRule ARGS "@pm <script> javascript: onerror=" "id:171,deny"
 ```
 
 

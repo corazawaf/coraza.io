@@ -44,6 +44,15 @@ func TestParseAction(t *testing.T) {
 				Example:     "\n```modsecurity\nSecRule ARGS \"@rx complex\" \"phase:2,block,id:3\"\n```",
 			},
 		},
+		"description with colon in continuation line": {
+			name: "test",
+			doc:  "Action Group: Disruptive\n\nDescription:\nLine one.\n(codes: 301, 302) are supported.",
+			expected: Action{
+				Name:        "test",
+				ActionGroup: "Disruptive",
+				Description: "Line one.\n(codes: 301, 302) are supported.",
+			},
+		},
 		"action with empty fields": {
 			name: "test4",
 			doc:  "Action Group: Meta-data\n\nDescription: Simple description only.",

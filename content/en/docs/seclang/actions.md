@@ -3,7 +3,7 @@ title: "Actions"
 description: "Actions available in Coraza"
 lead: "The action of a rule defines how to handle HTTP requests that have matched one or more rule conditions."
 date: 2020-10-06T08:48:57+00:00
-lastmod: "2026-03-22T11:55:19-03:00"
+lastmod: "2026-03-23T20:12:27+01:00"
 draft: false
 images: []
 weight: 100
@@ -76,9 +76,12 @@ For the complete list of available actions, see: https://coraza.io/docs/seclang/
 
 ## allow
 
-**Description**: Stops rule processing on a successful match and allows a transaction to be proceed.allow will affect the entire transaction.
+**Description**: Stops rule processing on a successful match and allows a transaction to be proceed.
+- Using solely: allow will affect the entire transaction.
 stopping processing of the current phase but also skipping over all other phases apart from the logging phase.
-(The logging phase is special; it is designed to be always execute.)the engine will stop processing the current phase, and the other phases will continue.engine will stop processing the current phase, and the next phase to be processed will be phase `types.PhaseResponseHeaders`.
+(The logging phase is special; it is designed to be always execute.)
+- Using with parameter `phase`: the engine will stop processing the current phase, and the other phases will continue.
+- Using with parameter `request`: engine will stop processing the current phase, and the next phase to be processed will be phase `types.PhaseResponseHeaders`.
 
 **Action Group**: Disruptive
 
@@ -243,7 +246,8 @@ The default configuration, as well as the other transactions running in parallel
  1. Option `ruleRemoveTargetById`, `ruleRemoveTargetByMsg`, and `ruleRemoveTargetByTag`, users don't need to use the char ! before the target list.
  2. Option `ruleRemoveById` is triggered at run time and should be specified before the rule in which it is disabling.
  3. Option `requestBodyProcessor` allows you to configure the request body processor.
-    By default, Coraza will use the `URLENCODED` and `MULTIPART` processors to process an `application/x-www-form-urlencoded` and a `multipart/form-data` body respectively.`JSON` and `XML`, but they are never used implicitly.
+    By default, Coraza will use the `URLENCODED` and `MULTIPART` processors to process an `application/x-www-form-urlencoded` and a `multipart/form-data` body respectively.
+    Other processors also supported: `JSON` and `XML`, but they are never used implicitly.
     Instead, you must tell Coraza to use it by placing a few rules in the `REQUEST_HEADERS` processing phase.
     After the request body is processed as XML, you will be able to use the XML-related features to inspect it.
     Request body processors will not interrupt a transaction if an error occurs during parsing.
@@ -294,7 +298,8 @@ SecRule REQUEST_HEADERS:User-Agent "nikto" "log,deny,id:107,msg:'Nikto Scanners 
 **Description**: > This action depends on each implementation, the server is instructed to drop the connection.
 Initiates an immediate close of the TCP connection by sending a FIN packet.
 This action is extremely useful when responding to both Brute Force and Denial of Service attacks,
-which you may want to minimize the network bandwidth and the data returned to the client.core_output_filter: writing data to the network`
+which you may want to minimize the network bandwidth and the data returned to the client.
+This action causes error message to appear in the log `(9)Bad file descriptor: core_output_filter: writing data to the network`
 
 **Action Group**: Disruptive
 
@@ -579,7 +584,8 @@ SecRule ARGS "test" "phase:2,log,pass,setvar:TX.test=+1,id:124"
 It can also be used in `SecDefaultAction` to establish the rule defaults.
 - 2 (request)
 - 4 (response)
-- 5 (logging)Keep in mind that the variable used in the rule may not be available if specifying the incorrect phase.
+- 5 (logging)
+> Warning: Keep in mind that the variable used in the rule may not be available if specifying the incorrect phase.
 > This could lead to a false negative situation where your variable and operator may be correct,
 > but it misses malicious data because you specified the wrong phase.
 
@@ -603,7 +609,8 @@ SecRule REQUEST_HEADERS:User-Agent "Test" "phase:request,log,deny,id:127"
 ## redirect
 
 **Description**: Intercepts transaction by issuing an external (client-visible) redirection to the given location.
-If the status action is presented on the same rule,  and its value can be used for a redirection301, 302, 303, 307) the value will be used for the redirection status code.
+If the status action is presented on the same rule,  and its value can be used for a redirection
+(supported redirection codes: 301, 302, 303, 307) the value will be used for the redirection status code.
 Otherwise, status code 302 will be used.
 
 **Action Group**: Disruptive
@@ -654,7 +661,8 @@ and it can still provide some indication about the rule changes.
 
 
 ```modsecurity
-SecRule RESPONSE_HEADERS:/Set-Cookie2?/ "(?i:(j?sessionid|(php)?sessid|(asp|jserv|jw)?session[-_]?(id)?|cf(id|token)|sid))" "phase:3,t:none,pass,id:139,nolog,setvar:tx.sessionid=%{matched_var}"Missing HttpOnly Cookie Flag.'"
+SecRule RESPONSE_HEADERS:/Set-Cookie2?/ "(?i:(j?sessionid|(php)?sessid|(asp|jserv|jw)?session[-_]?(id)?|cf(id|token)|sid))" "phase:3,t:none,pass,id:139,nolog,setvar:tx.sessionid=%{matched_var}"
+SecRule TX:SESSIONID "!(?i:\;? ?httponly;?)" "phase:3,id:140,t:none,setenv:httponly_cookie=%{matched_var},pass,log,auditlog,msg:'AppDefect: Missing HttpOnly Cookie Flag.'"
 # In Apache
 Header set Set-Cookie "%{httponly_cookie}e; HTTPOnly" env=httponly_cookie
 ```
@@ -702,7 +710,13 @@ Header set Set-Cookie "%{httponly_cookie}e; HTTPOnly" env=httponly_cookie
 ## severity
 
 **Description**: Assigns severity to the rule in which it is used.
-Severity values in Coraza follows the numeric scale of syslog (where 0 is the most severe).is generated from correlation of anomaly scoring data where there is an inbound attack and an outbound leakage.is generated from correlation where there is an inbound attack and an outbound application level error.Anomaly Score of 5. Is the highest severity level possible without correlation. It is normally generated by the web attack rules (40 level files).Error - Anomaly Score of 4. Is generated mostly from outbound leakage rules (50 level files).Anomaly Score of 3. Is generated by malicious client rules (35 level files).Anomaly Score of 2. Is generated by the Protocol policy and anomaly files.
+Severity values in Coraza follows the numeric scale of syslog (where 0 is the most severe).
+- **0, EMERGENCY**: is generated from correlation of anomaly scoring data where there is an inbound attack and an outbound leakage.
+- **1, ALERT**: is generated from correlation where there is an inbound attack and an outbound application level error.
+- **2, CRITICAL**: Anomaly Score of 5. Is the highest severity level possible without correlation. It is normally generated by the web attack rules (40 level files).
+- **3, ERROR**: Error - Anomaly Score of 4. Is generated mostly from outbound leakage rules (50 level files).
+- **4, WARNING**: Anomaly Score of 3. Is generated by malicious client rules (35 level files).
+- **5, NOTICE**: Anomaly Score of 2. Is generated by the Protocol policy and anomaly files.
 - **6, INFO**
 - **7, DEBUG**
 > It is possible to specify severity levels using either the numerical values or the text values,

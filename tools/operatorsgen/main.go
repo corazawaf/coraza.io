@@ -219,7 +219,7 @@ func parseOperator(name string, doc string) Operator {
 			value = ""
 		} else {
 			key, value, ok = strings.Cut(line, ": ")
-			if !ok {
+			if !ok || fieldAppenders[key] == nil {
 				key = previousKey
 				if previousKey == "Example" || previousKey == "Note" {
 					value = "\n" + line
