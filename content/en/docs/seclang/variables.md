@@ -16,31 +16,31 @@ toc: true
 
 Some variables are actually collections, which are expanded into more variables at runtime. The following example will examine all request arguments:
 
-```modsecurity
+```seclang
 SecRule ARGS dirty "id:7"
 ```
 
 Sometimes, however, you will want to look only at parts of a collection. This can be achieved with the help of the selection operator(colon). The following example will only look at the arguments named p (do note that, in general, requests can contain multiple arguments with the same name):
 
-```modsecurity
+```seclang
 SecRule ARGS:p dirty "id:8"
 ```
 
 It is also possible to specify exclusions. The following will examine all request arguments for the word dirty, except the ones named z (again, there can be zero or more arguments named z):
 
-```modsecurity
+```seclang
 SecRule ARGS|!ARGS:z dirty "id:9"
 ```
 
 There is a special operator that allows you to count how many variables there are in a collection. The following rule will trigger if there is more than zero arguments in the request (ignore the second parameter for the time being):
 
-```modsecurity
+```seclang
 SecRule &ARGS !^0$ "id:10"
 ```
 
 And sometimes you need to look at an array of parameters, each with a slightly different name. In this case you can specify a regular expression in the selection operator itself. The following rule will look into all arguments whose names begin with id_:
 
-```modsecurity
+```seclang
 SecRule ARGS:/^id_/ dirty "id:11"
 ```
 
@@ -50,7 +50,7 @@ SecRule ARGS:/^id_/ dirty "id:11"
 
 Contains the combined size of all request parameters. Files are excluded from the calculation. This variable can be useful, for example, to create a rule to ensure that the total size of the argument data is below a certain threshold. The following rule detects a request whose parameters are more than 2500 bytes long:
 
-```modsecurity
+```seclang
 SecRule ARGS_COMBINED_SIZE "@gt 2500" "id:12"
 ````
 
@@ -66,7 +66,7 @@ SecRule ARGS_COMBINED_SIZE "@gt 2500" "id:12"
 
 Contains all request parameter names. You can search for specific parameter names that you want to inspect. In a positive policy scenario, you can also allowlist (using an inverted rule with the exclamation mark) only the authorized argument names. This example rule allows only two argument names: p and a:
 
-```modsecurity
+```seclang
 SecRule ARGS_NAMES "!^(p|a)$" "id:13"
 ```
 
@@ -84,7 +84,7 @@ SecRule ARGS_NAMES "!^(p|a)$" "id:13"
 
 This variable holds the authentication method used to validate a user, if any of the methods built into HTTP are used. In a reverse-proxy deployment, this information will not be available if the authentication is handled in the backend web server.
 
-```modsecurity
+```seclang
 SecRule AUTH_TYPE "Basic" "id:14"
 ```
 
@@ -100,7 +100,7 @@ Contains the number of microseconds elapsed since the beginning of the current t
 
 Collection that provides access to environment variables set by Coraza or other server modules. Requires a single parameter to specify the name of the desired variable.
 
-```modsecurity
+```seclang
 # Set environment variable
 SecRule REQUEST_FILENAME "printenv" \
 "phase:2,id:15,pass,setenv:tag=suspicious" 
@@ -118,7 +118,7 @@ SecRule TX:ANOMALY_SCORE "@gt 0" "phase:5,id:16,msg:'%{env.ssl_cipher}'"
 
 Contains a collection of original file names (as they were called on the remote user’s filesys- tem). Available only on inspected multipart/form-data requests.
 
-```modsecurity
+```seclang
 SecRule FILES "@rx \.conf$" "id:17"
 ```
 
@@ -128,7 +128,7 @@ SecRule FILES "@rx \.conf$" "id:17"
 
 Contains the total size of the files transported in request body. Available only on inspected multipart/form-data requests.
 
-```modsecurity
+```seclang
 SecRule FILES_COMBINED_SIZE "@gt 100000" "id:18"
 ```
 
@@ -136,7 +136,7 @@ SecRule FILES_COMBINED_SIZE "@gt 100000" "id:18"
 
 Contains a list of form fields that were used for file upload. Available only on inspected multipart/form-data requests.
 
-```modsecurity
+```seclang
 SecRule FILES_NAMES "^upfile$" "id:19"
 ```
 
@@ -144,7 +144,7 @@ SecRule FILES_NAMES "^upfile$" "id:19"
 
 Represents the amount of bytes that FULL_REQUEST may use.
 
-```modsecurity
+```seclang
 SecRule FULL_REQUEST_LENGTH "@eq 205" "id:21"
 ```
 
@@ -152,7 +152,7 @@ SecRule FULL_REQUEST_LENGTH "@eq 205" "id:21"
 
 Contains a list of individual file sizes. Useful for implementing a size limitation on individual uploaded files. Available only on inspected multipart/form-data requests.
 
-```modsecurity
+```seclang
 SecRule FILES_SIZES "@gt 100" "id:20"
 ```
 
@@ -160,7 +160,7 @@ SecRule FILES_SIZES "@gt 100" "id:20"
 
 Contains a list of temporary files’ names on the disk. Useful when used together with @inspectFile. Available only on inspected multipart/form-data requests.
 
-```modsecurity
+```seclang
 SecRule FILES_TMPNAMES "@inspectFile /path/to/inspect_script.pl" "id:21"
 ```
 
@@ -168,7 +168,7 @@ SecRule FILES_TMPNAMES "@inspectFile /path/to/inspect_script.pl" "id:21"
 
 Contains a key-value set where value is the content of the file which was uploaded. Useful when used together with @fuzzyHash.
 
-```modsecurity
+```seclang
 SecRule FILES_TMP_CONTENT "@fuzzyHash $ENV{CONF_DIR}/ssdeep.txt 1" "id:192372,log,deny"
 ```
 
@@ -192,7 +192,7 @@ Fields:
 
 **Example:**
 
-```modsecurity
+```seclang
 SecGeoLookupDb maxminddb file=/usr/local/geo/data/GeoLiteCity.dat
 ...
 SecRule REMOTE_ADDR "@geoLookup" "chain,id:22,drop,msg:'Non-GB IP address'"
@@ -203,7 +203,7 @@ SecRule GEO:COUNTRY_CODE "!@streq GB"
 
 This variable holds the highest severity of any rules that have matched so far. Severities are numeric values and thus can be used with comparison operators such as @lt, and so on. A value of 255 indicates that no severity has been set.
 
-```modsecurity
+```seclang
 SecRule HIGHEST_SEVERITY "@le 2" "phase:2,id:23,deny,status:500,msg:'severity %{HIGHEST_SEVERITY}'"
 ```
 
@@ -215,7 +215,7 @@ This variable will be set to 1 when the request body size is above the setting c
 
 The best way to use this variable is as in the example below:
 
-```modsecurity
+```seclang
 SecRule INBOUND_DATA_ERROR "@eq 1" "phase:1,id:24,t:none,log,pass,msg:'Request Body Larger than SecRequestBodyLimit Setting'"
 ```
 
@@ -223,7 +223,7 @@ SecRule INBOUND_DATA_ERROR "@eq 1" "phase:1,id:24,t:none,log,pass,msg:'Request B
 
 This variable holds the value of the most-recently matched variable. It is similar to the TX:0, but it is automatically supported by all operators and there is no need to specify the capture action.
 
-```modsecurity
+```seclang
 SecRule ARGS pattern chain,deny,id:25
   SecRule MATCHED_VAR "further scrutiny"
 ```
@@ -234,7 +234,7 @@ SecRule ARGS pattern chain,deny,id:25
 
 Similar to **MATCHED_VAR** except that it is a collection of all matches for the current operator check.
 
-```modsecurity
+```seclang
 SecRule ARGS pattern "chain,deny,id:26"
   SecRule MATCHED_VARS "@eq ARGS:param"
 ```
@@ -243,7 +243,7 @@ SecRule ARGS pattern "chain,deny,id:26"
 
 This variable holds the full name of the variable that was matched against.
 
-```modsecurity
+```seclang
 SecRule ARGS pattern "chain,deny,id:27"
   SecRule MATCHED_VAR_NAME "@eq ARGS:param"
 ```
@@ -254,7 +254,7 @@ SecRule ARGS pattern "chain,deny,id:27"
 
 Similar to MATCHED_VAR_NAME except that it is a collection of all matches for the current operator check.
 
-```modsecurity
+```seclang
 SecRule ARGS pattern "chain,deny,id:28"
   SecRule MATCHED_VARS_NAMES "@eq ARGS:param"
 ```
@@ -273,7 +273,7 @@ This variable will be set to 1 when the response body size is above the setting 
 
 The best way to use this variable is as in the example below:
 
-```modsecurity
+```seclang
 SecRule OUTBOUND_DATA_ERROR "@eq 1" "phase:1,id:32,t:none,log,pass,msg:'Response Body Larger than SecResponseBodyLimit Setting'"
 ```
 
@@ -281,7 +281,7 @@ SecRule OUTBOUND_DATA_ERROR "@eq 1" "phase:1,id:32,t:none,log,pass,msg:'Response
 
 Contains the extra request URI information, also known as path info. (For example, in the URI /index.php/123, /123 is the path info.) Available only in embedded deployments.
 
-```modsecurity
+```seclang
 SecRule PATH_INFO "^/(bin|etc|sbin|opt|usr)" "id:33"
 ```
 
@@ -362,7 +362,7 @@ PERF_RULES is a collection, that is populated with the rules hitting the perform
 
 Supported on Coraza: TBI
 
-```modsecurity
+```seclang
 SecRulePerfTime            100
 
 SecRule FILES_TMPNAMES "@inspectFile /path/to/util/runav.pl" \
@@ -397,7 +397,7 @@ Contains the time, in microseconds, spent writing to persistent storage.
 
 Contains the query string part of a request URI. The value in QUERY_STRING is always provided raw, without URL decoding taking place.
 
-```modsecurity
+```seclang
 SecRule QUERY_STRING "attack" "id:34"
 ```
 
@@ -405,7 +405,7 @@ SecRule QUERY_STRING "attack" "id:34"
 
 This variable holds the IP address of the remote client.
 
-```modsecurity
+```seclang
 SecRule REMOTE_ADDR "@ipMatch 192.168.1.101" "id:35"
 ```
 
@@ -413,7 +413,7 @@ SecRule REMOTE_ADDR "@ipMatch 192.168.1.101" "id:35"
 
 If the Apache directive HostnameLookups is set to On, then this variable will hold the remote hostname resolved through DNS. If the directive is set to Off, this variable it will hold the remote IP address (same as REMOTE_ADDR). Possible uses for this variable would be to deny known bad client hosts or network blocks, or conversely, to allow in authorized hosts.
 
-```modsecurity
+```seclang
 SecRule REMOTE_HOST "\.evil\.network\org$" "id:36"
 ```
 
@@ -423,7 +423,7 @@ This variable holds information on the source port that the client used when ini
 
 In the following example, we are evaluating to see whether the REMOTE_PORT is less than 1024, which would indicate that the user is a privileged user:
 
-```modsecurity
+```seclang
 SecRule REMOTE_PORT "@lt 1024" "id:37"
 ```
 
@@ -431,7 +431,7 @@ SecRule REMOTE_PORT "@lt 1024" "id:37"
 
 This variable holds the username of the authenticated user. If there are no password access controls in place (Basic or Digest authentication), then this variable will be empty.
 
-```modsecurity
+```seclang
 SecRule REMOTE_USER "@streq admin" "id:38"
 ```
 
@@ -441,7 +441,7 @@ SecRule REMOTE_USER "@streq admin" "id:38"
 
 Contains the status of the request body processor used for request body parsing. The values can be 0 (no error) or 1 (error). This variable will be set by request body processors (typically the multipart/request-data parser, JSON or the XML parser) when they fail to do their work.
 
-```modsecurity
+```seclang
 SecRule REQBODY_ERROR "@eq 1" deny,phase:2,id:39
 ```
 
@@ -451,7 +451,7 @@ SecRule REQBODY_ERROR "@eq 1" deny,phase:2,id:39
 
 If there’s been an error during request body parsing, the variable will contain the following error message:
 
-```modsecurity
+```seclang
 SecRule REQBODY_ERROR_MSG "failed to parse" "id:40"
 ```
 
@@ -459,7 +459,7 @@ SecRule REQBODY_ERROR_MSG "failed to parse" "id:40"
 
 Contains the name of the currently used request body processor. The possible values are URLENCODED, JSON, MULTIPART, and XML.
 
-```modsecurity
+```seclang
 SecRule REQBODY_PROCESSOR "^XML$ chain,id:41
   SecRule XML://* "something" "id:123"
 ```
@@ -468,7 +468,7 @@ SecRule REQBODY_PROCESSOR "^XML$ chain,id:41
 
 This variable holds just the filename part of REQUEST_FILENAME (e.g., index.php).
 
-```modsecurity
+```seclang
 SecRule REQUEST_BASENAME "^login\.php$" phase:2,id:42,t:none,t:lowercase
 ```
 
@@ -478,7 +478,7 @@ SecRule REQUEST_BASENAME "^login\.php$" phase:2,id:42,t:none,t:lowercase
 
 Holds the raw request body. This variable is available only if the URLENCODED request body processor was used, which will occur by default when the application/x-www-form-urlencoded content type is detected, or if the use of the URLENCODED request body parser was forced.
 
-```modsecurity
+```seclang
 SecRule REQUEST_BODY "^username=\w{25,}\&password=\w{25,}\&Submit\=login$" "id:43"
 ```
 
@@ -492,7 +492,7 @@ Contains the number of bytes read from a request body.
 
 This variable is a collection of all of request cookies (values only). Example: the following example is using the Ampersand special operator to count how many variables are in the collection. In this rule, it would trigger if the request does not include any Cookie headers.
 
-```modsecurity
+```seclang
 SecRule &REQUEST_COOKIES "@eq 0" "id:44"
 ```
 
@@ -500,7 +500,7 @@ SecRule &REQUEST_COOKIES "@eq 0" "id:44"
 
 This variable is a collection of the names of all request cookies. For example, the following rule will trigger if the JSESSIONID cookie is not present:
 
-```modsecurity
+```seclang
 SecRule &REQUEST_COOKIES_NAMES:JSESSIONID "@eq 0" "id:45"
 ```
 
@@ -508,7 +508,7 @@ SecRule &REQUEST_COOKIES_NAMES:JSESSIONID "@eq 0" "id:45"
 
 This variable holds the relative request URL without the query string part (e.g., /index.php).
 
-```modsecurity
+```seclang
 SecRule REQUEST_FILENAME "^/cgi-bin/login\.php$" phase:2,id:46,t:none,t:normalizePath
 ```
 
@@ -518,7 +518,7 @@ SecRule REQUEST_FILENAME "^/cgi-bin/login\.php$" phase:2,id:46,t:none,t:normaliz
 
 This variable can be used as either a collection of all of the request headers or can be used to inspect selected headers (by using the REQUEST_HEADERS:Header-Name syntax).
 
-```modsecurity
+```seclang
 SecRule REQUEST_HEADERS:Host "^[\d\.]+$" "deny,id:47,log,status:400,msg:'Host header is a numeric IP address'"
 ```
 
@@ -528,7 +528,7 @@ SecRule REQUEST_HEADERS:Host "^[\d\.]+$" "deny,id:47,log,status:400,msg:'Host he
 
 This variable is a collection of the names of all of the request headers.
 
-```modsecurity
+```seclang
 SecRule REQUEST_HEADERS_NAMES "^x-forwarded-for" "log,deny,id:48,status:403,t:lowercase,msg:'Proxy Server Used'"
 ```
 
@@ -536,7 +536,7 @@ SecRule REQUEST_HEADERS_NAMES "^x-forwarded-for" "log,deny,id:48,status:403,t:lo
 
 This variable holds the complete request line sent to the server (including the request method and HTTP version information).
 
-```modsecurity
+```seclang
 # Allow only POST, GET and HEAD request methods, as well as only
 # the valid protocol versions
 SecRule REQUEST_LINE "!(^((?:(?:POS|GE)T|HEAD))|HTTP/(0\.9|1\.0|1\.1)$)" "phase:1,id:49,log,block,t:none"
@@ -546,7 +546,7 @@ SecRule REQUEST_LINE "!(^((?:(?:POS|GE)T|HEAD))|HTTP/(0\.9|1\.0|1\.1)$)" "phase:
 
 This variable holds the request method used in the transaction.
 
-```modsecurity
+```seclang
 SecRule REQUEST_METHOD "^(?:CONNECT|TRACE)$" "id:50,t:none"
 ```
 
@@ -554,7 +554,7 @@ SecRule REQUEST_METHOD "^(?:CONNECT|TRACE)$" "id:50,t:none"
 
 This variable holds the request protocol version information.
 
-```modsecurity
+```seclang
 SecRule REQUEST_PROTOCOL "!^HTTP/(0\.9|1\.0|1\.1)$" "id:51"
 ```
 
@@ -562,7 +562,7 @@ SecRule REQUEST_PROTOCOL "!^HTTP/(0\.9|1\.0|1\.1)$" "id:51"
 
 This variable holds the full request URL including the query string data (e.g., /index.php? p=X). However, it will never contain a domain name, even if it was provided on the request line.
 
-```modsecurity
+```seclang
 SecRule REQUEST_URI "attack" "phase:1,id:52,t:none,t:urlDecode,t:lowercase,t:normalizePath"
 ```
 
@@ -572,7 +572,7 @@ SecRule REQUEST_URI "attack" "phase:1,id:52,t:none,t:urlDecode,t:lowercase,t:nor
 
 Same as REQUEST_URI but will contain the domain name if it was provided on the request line (e.g., http://www.example.com/index.php?p=X).
 
-```modsecurity
+```seclang
 SecRule REQUEST_URI_RAW "http:/" "phase:1,id:53,t:none,t:urlDecode,t:lowercase,t:normalizePath"
 ```
 
@@ -582,7 +582,7 @@ SecRule REQUEST_URI_RAW "http:/" "phase:1,id:53,t:none,t:urlDecode,t:lowercase,t
 
 This variable holds the data for the response body, but only when response body buffering is enabled.
 
-```modsecurity
+```seclang
 SecRule RESPONSE_BODY "ODBC Error Code" "phase:4,id:54,t:none"
 ```
 
@@ -598,7 +598,7 @@ Response content type. Available only starting with phase 3. The value available
 
 This variable refers to response headers, in the same way as REQUEST_HEADERS does to request headers.
 
-```modsecurity
+```seclang
 SecRule RESPONSE_HEADERS:X-Cache "MISS" "id:55"
 ```
 
@@ -608,7 +608,7 @@ This variable may not have access to some headers when running in embedded mode.
 
 This variable is a collection of the response header names.
 
-```modsecurity
+```seclang
 SecRule RESPONSE_HEADERS_NAMES "Set-Cookie" "phase:3,id:56,t:none"
 ```
 
@@ -618,7 +618,7 @@ The same limitations apply as the ones discussed in RESPONSE_HEADERS.
 
 This variable holds the HTTP response protocol information.
 
-```modsecurity
+```seclang
 SecRule RESPONSE_PROTOCOL "^HTTP\/0\.9" "phase:3,id:57,t:none"
 ```
 
@@ -626,7 +626,7 @@ SecRule RESPONSE_PROTOCOL "^HTTP\/0\.9" "phase:3,id:57,t:none"
 
 This variable holds the HTTP response status code:
 
-```modsecurity
+```seclang
 SecRule RESPONSE_STATUS "^[45]" "phase:3,id:58,t:none"
 ```
 
@@ -636,7 +636,7 @@ This variable may not work as expected, as some implementations might change the
 
 This is a special collection that provides access to the id, rev, severity, logdata, and msg fields of the rule that triggered the action. It can be used to refer to only the same rule in which it resides.
 
-```modsecurity
+```seclang
 SecRule &REQUEST_HEADERS:Host "@eq 0" "log,deny,id:59,setvar:tx.varname=%{RULE.id}"
 ```
 
@@ -644,7 +644,7 @@ SecRule &REQUEST_HEADERS:Host "@eq 0" "log,deny,id:59,setvar:tx.varname=%{RULE.i
 
 This variable contains the IP address of the server.
 
-```modsecurity
+```seclang
 SecRule SERVER_ADDR "@ipMatch 192.168.1.100" "id:67"
 ```
 
@@ -652,7 +652,7 @@ SecRule SERVER_ADDR "@ipMatch 192.168.1.100" "id:67"
 
 This variable contains the transaction’s hostname or IP address, taken from the request itself (which means that, in principle, it should not be trusted).
 
-```modsecurity
+```seclang
 SecRule SERVER_NAME "hostname\.com$" "id:68"
 ```
 
@@ -660,7 +660,7 @@ SecRule SERVER_NAME "hostname\.com$" "id:68"
 
 This variable contains the local port that the web server (or reverse proxy) is listening on.
 
-```modsecurity
+```seclang
 SecRule SERVER_PORT "^80$" "id:69"
 ```
 
@@ -670,7 +670,7 @@ This variable is a collection that contains session information. It becomes avai
 
 The following example shows how to initialize SESSION using setsid, how to use setvar to increase the SESSION.score values, how to set the SESSION.blocked variable, and finally, how to deny the connection based on the SESSION:blocked value:
 
-```modsecurity
+```seclang
 # Initialize session storage
 SecRule REQUEST_COOKIES:PHPSESSID !^$ "phase:2,id:70,nolog,pass,setsid:%{REQUEST_COOKIES.PHPSESSID}"
 
@@ -692,7 +692,7 @@ This variable contains the value set with setsid. See SESSION (above) for a comp
 
 This variable holds the full status line sent by the server (including the request method and HTTP version information).
 
-```modsecurity
+```seclang
 # Generate an alert when the application generates 500 errors.
 SecRule STATUS_LINE "@contains 500" "phase:3,id:49,log,pass,logdata:'Application error detected!,t:none"
 Version: 2.x
@@ -704,7 +704,7 @@ Version: 2.x
 
 This variable holds a formatted string representing the time (hour:minute:second).
 
-```modsecurity
+```seclang
 SecRule TIME "^(([1](8|9))|([2](0|1|2|3))):\d{2}:\d{2}$" "id:74"
 ```
 
@@ -712,7 +712,7 @@ SecRule TIME "^(([1](8|9))|([2](0|1|2|3))):\d{2}:\d{2}$" "id:74"
 
 This variable holds the current date (1–31). The following rule triggers on a transaction that’s happening anytime between the 10th and 20th in a month:
 
-```modsecurity
+```seclang
 SecRule TIME_DAY "^(([1](0|1|2|3|4|5|6|7|8|9))|20)$" "id:75"
 ```
 
@@ -724,7 +724,7 @@ This variable holds the time in seconds since 1970.
 
 This variable holds the current hour value (0–23). The following rule triggers when a request is made “off hours”:
 
-```modsecurity
+```seclang
 SecRule TIME_HOUR "^(0|1|2|3|4|5|6|[1](8|9)|[2](0|1|2|3))$" "id:76"
 ```
 
@@ -732,7 +732,7 @@ SecRule TIME_HOUR "^(0|1|2|3|4|5|6|[1](8|9)|[2](0|1|2|3))$" "id:76"
 
 This variable holds the current minute value (0–59). The following rule triggers during the last half hour of every hour:
 
-```modsecurity
+```seclang
 SecRule TIME_MIN "^(3|4|5)" "id:77"
 ```
 
@@ -740,7 +740,7 @@ SecRule TIME_MIN "^(3|4|5)" "id:77"
 
 This variable holds the current month value (0–11). The following rule matches if the month is either November (value 10) or December (value 11):
 
-```modsecurity
+```seclang
 SecRule TIME_MON "^1" "id:78"
 ```
 
@@ -750,7 +750,7 @@ This variable holds the current second value (0–59).
 
 **Supported:** TBI
 
-```modsecurity
+```seclang
 SecRule TIME_SEC "@gt 30" "id:79"
 ```
 
@@ -760,7 +760,7 @@ This variable holds the current weekday value (0–6). The following rule trigge
 
 **Supported:** TBI
 
-```modsecurity
+```seclang
 SecRule TIME_WDAY "^(0|6)$" "id:80"
 ```
 
@@ -770,7 +770,7 @@ This variable holds the current four-digit year value.
 
 **Supported:** TBI
 
-```modsecurity
+```seclang
 SecRule TIME_YEAR "^2006$" "id:81"
 ```
 
@@ -778,7 +778,7 @@ SecRule TIME_YEAR "^2006$" "id:81"
 
 This is the transient transaction collection, which is used to store pieces of data, create a transaction anomaly score, and so on. The variables placed into this collection are available only until the transaction is complete.
 
-```modsecurity
+```seclang
 # Increment transaction attack score on attack
 SecRule ARGS attack "phase:2,id:82,nolog,pass,setvar:TX.score=+5"
 
@@ -805,7 +805,7 @@ This variable contains the value set with setuid.
 
 **Supported:** TBI
 
-```modsecurity
+```seclang
 # Initialize user tracking
 SecAction "nolog,id:84,pass,setuid:%{REMOTE_USER}" 
 
@@ -823,7 +823,7 @@ This variable contains the current application name, which is set in configurati
 
 Special collection used to interact with the XML parser. It must contain a valid XPath expression, which will then be evaluated against a previously parsed XML DOM tree.
 
-```modsecurity
+```seclang
 SecDefaultAction log,deny,status:403,phase:2,id:90
 SecRule REQUEST_HEADERS:Content-Type ^text/xml$ "phase:1,id:87,t:lowercase,nolog,pass,ctl:requestBodyProcessor=XML"
 SecRule REQBODY_PROCESSOR "!^XML$" skipAfter:12345,id:88

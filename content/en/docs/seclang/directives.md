@@ -20,7 +20,7 @@ versions: v3.0+
 Include loads a file or a list of files from the filesystem using golang Glob syntax.
 
 **Example:**
-```modsecurity
+```seclang
 Include /path/coreruleset/rules/*.conf
 ```
 
@@ -39,7 +39,7 @@ This directive is commonly used to set variables and initialize persistent colle
 `initcol` action. The syntax of the parameter is identical to that of the third parameter of [`SecRule`](#secrule).
 
 **Example:**
-```modsecurity
+```seclang
 SecAction "nolog,phase:1,initcol:RESOURCE=%{REQUEST_FILENAME}"
 ```
 
@@ -54,7 +54,7 @@ SecAction "nolog,phase:1,initcol:RESOURCE=%{REQUEST_FILENAME}"
 Exceeding the limit will not be included.
 With JSON body processing, there is nothing to do when exceed the limit.
 **Example:**
-```modsecurity
+```seclang
 SecArgumentsLimit 1000
 ```
 
@@ -80,7 +80,7 @@ The possible values for the audit log engine are as follows:
 in response to some transaction data), use the `ctl` action.
 
 The following example demonstrates how [`SecAuditEngine`](#secauditengine) is used:
-```modsecurity
+```seclang
 SecAuditEngine RelevantOnly
 SecAuditLog logs/audit/audit.log
 SecAuditLogParts ABCFHZ
@@ -97,7 +97,7 @@ SecAuditLogRelevantStatus ^(?:5|4(?!04))
 
 
 **Example:**
-```modsecurity
+```seclang
 SecAuditLog "/path/to/audit.log"
 ```
 
@@ -117,7 +117,7 @@ The default mode for new audit log directories (0600) only grants read/write acc
 to the owner.
 
 **Example:**
-```modsecurity
+```seclang
 SecAuditLogDirMode 02750
 ```
 
@@ -130,7 +130,7 @@ SecAuditLogDirMode 02750
 **Default:** `0600`
 
 **Example:**
-```modsecurity
+```seclang
 SecAuditLogFileMode 00640
 ```
 
@@ -152,7 +152,7 @@ SecAuditLogFileMode 00640
 **Default:** `ABCFHZ`
 
 **Example:**
-```modsecurity
+```seclang
 SecAuditLogParts ABCFHZ
 ```
 
@@ -214,7 +214,7 @@ This directive is required only when concurrent audit logging is used. Ensure th
 specify a file system location with adequate disk space.
 
 **Example:**
-```modsecurity
+```seclang
 SecAuditLogStorageDir /tmp/auditlogs/
 ```
 
@@ -236,7 +236,7 @@ The possible values are:
     in one of formats: "ADDRESS:PORT" (TCP), "udp://ADDRESS:PORT", or "unixgram:///var/run/syslog".
 
 **Example:**
-```modsecurity
+```seclang
 SecAuditLogType Serial
 ```
 
@@ -249,7 +249,7 @@ SecAuditLogType Serial
 Appends component signature to the Coraza signature.
 
 **Example:**
-```modsecurity
+```seclang
 SecComponentSignature "OWASP_CRS/4.18.0"
 ```
 
@@ -315,7 +315,7 @@ The value can be either a number or a text string. The SecMarker directive is av
 allow you to choose the best way to implement a skip-over. Here is an example used from the
 Core Rule Set:
 
-```modsecurity
+```seclang
 
 	SecMarker BEGIN_HOST_CHECK
 
@@ -469,7 +469,7 @@ Multiple SecResponseBodyMimeType directives can be used to add MIME types.
 Use SecResponseBodyMimeTypesClear to clear previously configured MIME types and start over.
 
 **Example:**
-```modsecurity
+```seclang
 SecResponseBodyMimeType text/plain text/html text/xml
 ```
 
@@ -494,7 +494,7 @@ to form the final actions that will be used. (The actions in the rule will overw
 those in the default list.) Refer to [`SecDefaultAction`](#secdefaultaction) for more information.
 
 **Example:**
-```modsecurity
+```seclang
 SecRule ARGS "@rx attack" "phase:1,log,deny,id:1"
 ```
 
@@ -530,7 +530,7 @@ be easier to disable one or more rules with [`SecRuleRemoveByMsg`](#secruleremov
 by case-sensitive string equality.
 
 **Example:**
-```modsecurity
+```seclang
 SecRuleRemoveByMsg "Directory Listing"
 ```
 
@@ -545,7 +545,7 @@ be easier to disable an entire group of rules with [`SecRuleRemoveByTag`](#secru
 by case-sensitive string equality.
 
 **Example:**
-```modsecurity
+```seclang
 SecRuleRemoveByTag attack-dos
 ```
 
@@ -562,7 +562,7 @@ It has two limitations: it cannot be used to change the ID or phase of a rule.
 Only the actions that can appear only once are overwritten.
 The actions that are allowed to appear multiple times in a list, will be appended to the end of the list.
 The following example demonstrates how [`SecRuleUpdateActionById`](#secruleupdateactionbyid) is used:
-```modsecurity
+```seclang
 SecRuleUpdateActionById 12345 "deny,status:403"
 ```
 The rule ID can be single IDs or ranges of IDs. The targets are separated by a pipe character.

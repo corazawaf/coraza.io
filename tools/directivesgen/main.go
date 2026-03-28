@@ -155,8 +155,8 @@ func parseDirective(name string, doc string) Directive {
 
 	d.Description = addsLinksToDirectives(d.Description)
 	d.Content = addsLinksToDirectives(d.Content)
-	// Replace apache language hints with modsecurity for proper syntax highlighting
-	d.Content = strings.ReplaceAll(d.Content, "```apache", "```modsecurity")
+	// Replace apache language hints with seclang for proper syntax highlighting
+	d.Content = strings.ReplaceAll(d.Content, "```apache", "```seclang")
 
 	return d
 }

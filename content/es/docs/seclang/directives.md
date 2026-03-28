@@ -20,7 +20,7 @@ versions: v3.0+
 Include carga un archivo o una lista de archivos del sistema de archivos utilizando la sintaxis Glob de golang.
 
 **Ejemplo:**
-```modsecurity
+```seclang
 Include /path/coreruleset/rules/*.conf
 ```
 
@@ -39,7 +39,7 @@ Esta directiva se utiliza comúnmente para establecer variables e inicializar co
 acción `initcol`. La sintaxis del parámetro es idéntica a la del tercer parámetro de [`SecRule`](#secrule).
 
 **Ejemplo:**
-```modsecurity
+```seclang
 SecAction "nolog,phase:1,initcol:RESOURCE=%{REQUEST_FILENAME}"
 ```
 
@@ -54,7 +54,7 @@ SecAction "nolog,phase:1,initcol:RESOURCE=%{REQUEST_FILENAME}"
 Los argumentos que excedan el límite no serán incluidos.
 Con el procesamiento de cuerpo JSON, no hay nada que hacer cuando se excede el límite.
 **Ejemplo:**
-```modsecurity
+```seclang
 SecArgumentsLimit 1000
 ```
 
@@ -79,7 +79,7 @@ Los valores posibles para el motor de registro de auditoría son los siguientes:
 en respuesta a ciertos datos de la transacción), utilice la acción `ctl`.
 
 El siguiente ejemplo muestra cómo se utiliza [`SecAuditEngine`](#secauditengine):
-```modsecurity
+```seclang
 SecAuditEngine RelevantOnly
 SecAuditLog logs/audit/audit.log
 SecAuditLogParts ABCFHZ
@@ -96,7 +96,7 @@ SecAuditLogRelevantStatus ^(?:5|4(?!04))
 
 
 **Ejemplo:**
-```modsecurity
+```seclang
 SecAuditLog "/path/to/audit.log"
 ```
 
@@ -116,7 +116,7 @@ El modo predeterminado para los nuevos directorios de registro de auditoría (06
 al propietario.
 
 **Ejemplo:**
-```modsecurity
+```seclang
 SecAuditLogDirMode 02750
 ```
 
@@ -129,7 +129,7 @@ SecAuditLogDirMode 02750
 **Por defecto:** `0600`
 
 **Ejemplo:**
-```modsecurity
+```seclang
 SecAuditLogFileMode 00640
 ```
 
@@ -151,7 +151,7 @@ SecAuditLogFileMode 00640
 **Por defecto:** `ABCFHZ`
 
 **Ejemplo:**
-```modsecurity
+```seclang
 SecAuditLogParts ABCFHZ
 ```
 
@@ -212,7 +212,7 @@ Esta directiva es necesaria solo cuando se utiliza el registro de auditoría con
 especificar una ubicación del sistema de archivos con espacio en disco adecuado.
 
 **Ejemplo:**
-```modsecurity
+```seclang
 SecAuditLogStorageDir /tmp/auditlogs/
 ```
 
@@ -234,7 +234,7 @@ Los valores posibles son:
     en uno de los formatos: "ADDRESS:PORT" (TCP), "udp://ADDRESS:PORT", o "unixgram:///var/run/syslog".
 
 **Ejemplo:**
-```modsecurity
+```seclang
 SecAuditLogType Serial
 ```
 
@@ -247,7 +247,7 @@ SecAuditLogType Serial
 Añade la firma de un componente a la firma de Coraza.
 
 **Ejemplo:**
-```modsecurity
+```seclang
 SecComponentSignature "OWASP_CRS/4.18.0"
 ```
 
@@ -313,7 +313,7 @@ El valor puede ser un número o una cadena de texto. La directiva SecMarker est�
 permitirle elegir la mejor manera de implementar un salto. A continuación se muestra un ejemplo utilizado del
 Core Rule Set:
 
-```modsecurity
+```seclang
 
 	SecMarker BEGIN_HOST_CHECK
 
@@ -457,7 +457,7 @@ Se pueden utilizar múltiples directivas SecResponseBodyMimeType para añadir ti
 Use SecResponseBodyMimeTypesClear para borrar los tipos MIME configurados previamente y comenzar de nuevo.
 
 **Ejemplo:**
-```modsecurity
+```seclang
 SecResponseBodyMimeType text/plain text/html text/xml
 ```
 
@@ -482,7 +482,7 @@ para formar las acciones finales que se utilizarán. (Las acciones en la regla s
 las de la lista por defecto.) Consulte [`SecDefaultAction`](#secdefaultaction) para más información.
 
 **Ejemplo:**
-```modsecurity
+```seclang
 SecRule ARGS "@rx attack" "phase:1,log,deny,id:1"
 ```
 
@@ -518,7 +518,7 @@ puede ser más fácil deshabilitar una o más reglas con [`SecRuleRemoveByMsg`](
 por igualdad de cadena sensible a mayúsculas.
 
 **Ejemplo:**
-```modsecurity
+```seclang
 SecRuleRemoveByMsg "Directory Listing"
 ```
 
@@ -533,7 +533,7 @@ puede ser más fácil deshabilitar un grupo completo de reglas con [`SecRuleRemo
 por igualdad de cadena sensible a mayúsculas.
 
 **Ejemplo:**
-```modsecurity
+```seclang
 SecRuleRemoveByTag attack-dos
 ```
 
@@ -550,7 +550,7 @@ Tiene dos limitaciones: no puede usarse para cambiar el ID o la fase de una regl
 Solo se sobrescriben las acciones que pueden aparecer una sola vez.
 Las acciones que pueden aparecer múltiples veces en una lista se añadirán al final de la misma.
 El siguiente ejemplo muestra cómo se utiliza [`SecRuleUpdateActionById`](#secruleupdateactionbyid):
-```modsecurity
+```seclang
 SecRuleUpdateActionById 12345 "deny,status:403"
 ```
 
