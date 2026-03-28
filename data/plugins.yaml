@@ -4,6 +4,7 @@
   repo: "https://github.com/corazawaf/coraza-geoip"
   official: true
   compatibility: ["v3.x"]
+  license: "Apache-2.0"
   logo: false
 
 - title: "Coraza Core Ruleset"
@@ -12,6 +13,7 @@
   repo: "https://github.com/corazawaf/coraza-coreruleset"
   official: true
   compatibility: ["v3.x"]
+  license: "Apache-2.0"
   logo: false
 
 - title: "Coraza Leet Normalize"

@@ -4,6 +4,7 @@
   repo: "https://github.com/corazawaf/coraza-nginx"
   official: true
   compatibility: ["v3.x"]
+  license: "Apache-2.0"
   logo: "/images/connectors/nginx.svg"
 
 - title: "Envoy"
@@ -12,6 +13,7 @@
   repo: "https://github.com/united-security-providers/coraza-envoy-go-filter"
   official: false
   compatibility: ["v3.x"]
+  license: "Apache-2.0"
   logo: "/images/connectors/envoy.svg"
 
 - title: "Caddy"
@@ -20,6 +22,7 @@
   repo: "https://github.com/corazawaf/coraza-caddy"
   official: true
   compatibility: ["v3.x"]
+  license: "Apache-2.0"
   logo: "/images/connectors/caddy.svg"
 
 - title: "Apache APISIX"
@@ -28,6 +31,7 @@
   repo: "https://github.com/corazawaf/coraza-proxy-wasm"
   official: true
   compatibility: ["v3.x"]
+  license: "Apache-2.0"
   logo: "/images/connectors/apisix.svg"
 
 - title: "Proxy-Wasm (Envoy/Istio)"
@@ -36,6 +40,7 @@
   repo: "https://github.com/corazawaf/coraza-proxy-wasm"
   official: true
   compatibility: ["v3.x"]
+  license: "Apache-2.0"
   logo: "/images/connectors/envoy.svg"
 
 - title: "HAProxy Coraza SPOA"
@@ -44,6 +49,7 @@
   repo: "https://github.com/corazawaf/coraza-spoa"
   official: true
   compatibility: []
+  license: "Apache-2.0"
   logo: "/images/connectors/haproxy.svg"
 
 - title: "Traefik"
@@ -52,6 +58,7 @@
   repo: "https://github.com/jcchavezs/coraza-http-wasm-traefik"
   official: false
   compatibility: ["v3.x"]
+  license: "Apache-2.0"
   logo: "/images/connectors/traefik.svg"
 
 - title: "libcoraza (C Library)"
@@ -60,4 +67,5 @@
   repo: "https://github.com/corazawaf/libcoraza"
   official: true
   compatibility: ["v3.x"]
+  license: "Apache-2.0"
   logo: "/images/connectors/c.svg"

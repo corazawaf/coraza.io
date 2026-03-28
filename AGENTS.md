@@ -121,6 +121,7 @@ Add a new entry to the appropriate YAML file with these fields:
   repo: "https://github.com/org/repo"
   official: false       # true only if maintained by the Coraza project
   compatibility: ["v3.x"]
+  license: "Apache-2.0" # SPDX identifier; omit if unknown
   logo: false           # or "/images/connectors/name.svg" for connectors
 ```
 
