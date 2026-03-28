@@ -27,9 +27,12 @@ Las acciones disruptivas NO se ejecutarán si `SecRuleEngine` está establecido 
 
 ## allow
 
-**Descripción**: Detiene el procesamiento de reglas en caso de coincidencia exitosa y permite que la transacción continúe. allow afectará a toda la transacción,
+**Descripción**: Detiene el procesamiento de reglas en caso de coincidencia exitosa y permite que la transacción continúe.
+- Usado de forma individual: allow afectará a toda la transacción,
 deteniendo el procesamiento de la fase actual y saltando también todas las demás fases aparte de la fase de registro.
-(La fase de registro es especial; está diseñada para ejecutarse siempre.) El motor dejará de procesar la fase actual, y las demás fases continuarán. El motor dejará de procesar la fase actual, y la siguiente fase a procesar será la fase `types.PhaseResponseHeaders`.
+(La fase de registro es especial; está diseñada para ejecutarse siempre.)
+- Usado con el parámetro `phase`: el motor dejará de procesar la fase actual, y las demás fases continuarán.
+- Usado con el parámetro `request`: el motor dejará de procesar la fase actual, y la siguiente fase a procesar será la fase `types.PhaseResponseHeaders`.
 
 **Grupo de acción**: Disruptiva
 
@@ -194,7 +197,8 @@ La configuración por defecto, así como las demás transacciones que se ejecute
  1. Con las opciones `ruleRemoveTargetById`, `ruleRemoveTargetByMsg` y `ruleRemoveTargetByTag`, los usuarios no necesitan usar el carácter ! antes de la lista de destinos.
  2. La opción `ruleRemoveById` se activa en tiempo de ejecución y debe especificarse antes de la regla que está deshabilitando.
  3. La opción `requestBodyProcessor` le permite configurar el procesador del cuerpo de la solicitud.
-    Por defecto, Coraza utilizará los procesadores `URLENCODED` y `MULTIPART` para procesar cuerpos `application/x-www-form-urlencoded` y `multipart/form-data` respectivamente. `JSON` y `XML`, pero nunca se usan implícitamente.
+    Por defecto, Coraza utilizará los procesadores `URLENCODED` y `MULTIPART` para procesar cuerpos `application/x-www-form-urlencoded` y `multipart/form-data` respectivamente.
+    Otros procesadores también soportados: `JSON` y `XML`, pero nunca se usan implícitamente.
     En su lugar, debe indicar a Coraza que los use colocando algunas reglas en la fase de procesamiento `REQUEST_HEADERS`.
     Después de que el cuerpo de la solicitud se procese como XML, podrá usar las funcionalidades relacionadas con XML para inspeccionarlo.
     Los procesadores del cuerpo de la solicitud no interrumpirán una transacción si ocurre un error durante el análisis.
@@ -245,7 +249,8 @@ SecRule REQUEST_HEADERS:User-Agent "nikto" "log,deny,id:107,msg:'Nikto Scanners 
 **Descripción**: > Esta acción depende de cada implementación; se instruye al servidor para que cierre la conexión.
 Inicia un cierre inmediato de la conexión TCP enviando un paquete FIN.
 Esta acción es extremadamente útil al responder a ataques de fuerza bruta y de denegación de servicio,
-en los que puede querer minimizar el ancho de banda de red y los datos devueltos al cliente. `core_output_filter: writing data to the network`
+en los que puede querer minimizar el ancho de banda de red y los datos devueltos al cliente.
+Esta acción provoca que aparezca un mensaje de error en el registro `(9)Bad file descriptor: core_output_filter: writing data to the network`
 
 **Grupo de acción**: Disruptiva
 
@@ -530,7 +535,8 @@ SecRule ARGS "test" "phase:2,log,pass,setvar:TX.test=+1,id:124"
 También puede usarse en `SecDefaultAction` para establecer los valores por defecto de las reglas.
 - 2 (solicitud)
 - 4 (respuesta)
-- 5 (registro) Tenga en cuenta que la variable usada en la regla puede no estar disponible si especifica la fase incorrecta.
+- 5 (registro)
+> Advertencia: Tenga en cuenta que la variable usada en la regla puede no estar disponible si especifica la fase incorrecta.
 > Esto podría llevar a una situación de falso negativo donde su variable y operador pueden ser correctos,
 > pero no detecta datos maliciosos porque especificó la fase equivocada.
 
@@ -554,7 +560,8 @@ SecRule REQUEST_HEADERS:User-Agent "Test" "phase:request,log,deny,id:127"
 ## redirect
 
 **Descripción**: Intercepta la transacción emitiendo una redirección externa (visible para el cliente) a la ubicación indicada.
-Si la acción status está presente en la misma regla y su valor puede usarse para una redirección (301, 302, 303, 307), el valor se usará para el código de estado de la redirección.
+Si la acción status está presente en la misma regla y su valor puede usarse para una redirección
+(códigos de redirección soportados: 301, 302, 303, 307), el valor se usará para el código de estado de la redirección.
 De lo contrario, se usará el código de estado 302.
 
 **Grupo de acción**: Disruptiva
@@ -605,7 +612,8 @@ y aún pueda proporcionar alguna indicación sobre los cambios en la regla.
 
 
 ```modsecurity
-SecRule RESPONSE_HEADERS:/Set-Cookie2?/ "(?i:(j?sessionid|(php)?sessid|(asp|jserv|jw)?session[-_]?(id)?|cf(id|token)|sid))" "phase:3,t:none,pass,id:139,nolog,setvar:tx.sessionid=%{matched_var}"Missing HttpOnly Cookie Flag.'"
+SecRule RESPONSE_HEADERS:/Set-Cookie2?/ "(?i:(j?sessionid|(php)?sessid|(asp|jserv|jw)?session[-_]?(id)?|cf(id|token)|sid))" "phase:3,t:none,pass,id:139,nolog,setvar:tx.sessionid=%{matched_var}"
+SecRule TX:SESSIONID "!(?i:\;? ?httponly;?)" "phase:3,id:140,t:none,setenv:httponly_cookie=%{matched_var},pass,log,auditlog,msg:'AppDefect: Missing HttpOnly Cookie Flag.'"
 # In Apache
 Header set Set-Cookie "%{httponly_cookie}e; HTTPOnly" env=httponly_cookie
 ```
@@ -653,7 +661,13 @@ Header set Set-Cookie "%{httponly_cookie}e; HTTPOnly" env=httponly_cookie
 ## severity
 
 **Descripción**: Asigna una severidad a la regla en la que se utiliza.
-Los valores de severidad en Coraza siguen la escala numérica de syslog (donde 0 es el más severo). Se genera a partir de la correlación de datos de puntuación de anomalías donde hay un ataque entrante y una filtración saliente. Se genera a partir de la correlación donde hay un ataque entrante y un error a nivel de aplicación saliente. Puntuación de anomalía de 5. Es el nivel de severidad más alto posible sin correlación. Normalmente se genera por las reglas de ataque web (archivos de nivel 40). Error - Puntuación de anomalía de 4. Se genera principalmente a partir de reglas de filtración saliente (archivos de nivel 50). Puntuación de anomalía de 3. Se genera por las reglas de cliente malicioso (archivos de nivel 35). Puntuación de anomalía de 2. Se genera por los archivos de política de protocolo y anomalías.
+Los valores de severidad en Coraza siguen la escala numérica de syslog (donde 0 es el más severo).
+- **0, EMERGENCY**: se genera a partir de la correlación de datos de puntuación de anomalías donde hay un ataque entrante y una filtración saliente.
+- **1, ALERT**: se genera a partir de la correlación donde hay un ataque entrante y un error a nivel de aplicación saliente.
+- **2, CRITICAL**: Puntuación de anomalía de 5. Es el nivel de severidad más alto posible sin correlación. Normalmente se genera por las reglas de ataque web (archivos de nivel 40).
+- **3, ERROR**: Error - Puntuación de anomalía de 4. Se genera principalmente a partir de reglas de filtración saliente (archivos de nivel 50).
+- **4, WARNING**: Puntuación de anomalía de 3. Se genera por las reglas de cliente malicioso (archivos de nivel 35).
+- **5, NOTICE**: Puntuación de anomalía de 2. Se genera por los archivos de política de protocolo y anomalías.
 - **6, INFO**
 - **7, DEBUG**
 > Es posible especificar los niveles de severidad usando los valores numéricos o los valores de texto,

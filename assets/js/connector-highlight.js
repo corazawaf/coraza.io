@@ -190,4 +190,16 @@
       default:        return esc(code);
     }
   };
+
+  // Re-render the active code panel now that the highlighter is available.
+  // The inline script on the homepage may have run before this async bundle
+  // loaded, falling back to plain text.
+  var el = document.getElementById('cp-code');
+  if (el && el.textContent && !el.querySelector('span')) {
+    var fn = document.getElementById('cp-filename');
+    var lang = fn && fn.textContent.endsWith('.yaml') ? 'yaml' : null;
+    if (lang) {
+      el.innerHTML = window.highlightConnectorCode(el.textContent, lang);
+    }
+  }
 })();
