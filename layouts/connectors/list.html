@@ -6,7 +6,7 @@
     {{ .Content }}
     <div class="row row-cols-1 row-cols-md-2 g-4 mt-3">
       {{ range $.Site.Data.connectors }}
-      {{ partial "card-item.html" (dict "title" .title "lead" .lead "author" .author "official" .official "repo" .repo "compatibility" .compatibility "logo" .logo "show_logo" true) }}
+      {{ partial "card-item.html" (dict "title" .title "lead" .lead "author" .author "official" .official "repo" .repo "compatibility" .compatibility "license" .license "logo" .logo "show_logo" true) }}
       {{ end }}
     </div>
   </div>
