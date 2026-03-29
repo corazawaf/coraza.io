@@ -1,6 +1,6 @@
 ---
 title: "Directivas"
-Description: "La siguiente sección describe todas las directivas de Coraza."
+description: "Referencia completa de todas las directivas de Coraza para configurar el motor WAF, incluyendo SecRule, SecAction y SecDefaultAction."
 lead: "La siguiente sección describe todas las directivas de Coraza."
 date: 2020-10-06T08:48:57+00:00
 lastmod: "2026-03-13T20:20:12+01:00"

@@ -1,6 +1,6 @@
 ---
 title: "Variables"
-description: ""
+description: "Complete reference of all Coraza SecLang variables: ARGS, REQUEST_HEADERS, TX, GEO, MATCHED_VAR, RESPONSE_BODY, and more — with usage examples."
 lead: ""
 date: 2020-10-06T08:48:57+00:00
 lastmod: 2020-10-06T08:48:57+00:00

@@ -18,21 +18,13 @@ copyright = "Copyright (c) 2021-2026 OWASP Coraza"
 
 [outputs]
   home = ["html", "rss", "searchIndex"]
-  section = ["html", "rss", "sitemap"]
+  section = ["html", "rss"]
 
 [outputFormats.searchIndex]
   mediaType = "application/json"
   baseName = "search-index"
   isPlainText = true
   notAlternative = true
-
-[outputFormats.sitemap]
-  mediaType = "application/xml"
-  baseName = "sitemap"
-  isHTML = false
-  isPlainText = true
-  noUgly = true
-  rel  = "sitemap"
 
 [sitemap]
   changefreq = "monthly"

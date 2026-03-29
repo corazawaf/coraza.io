@@ -1,6 +1,6 @@
 ---
 title: "Directives"
-Description: "The following section outlines all of the Coraza directives. "
+description: "Complete reference of all Coraza directives for configuring the WAF engine, including SecRule, SecAction, SecDefaultAction, and engine initialization."
 lead: "The following section outlines all of the Coraza directives. "
 date: 2020-10-06T08:48:57+00:00
 lastmod: "2026-03-12T22:31:00+01:00"
