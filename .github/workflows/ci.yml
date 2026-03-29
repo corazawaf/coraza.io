@@ -61,3 +61,6 @@ jobs:
 
       - name: Build
         run: npm run build
+
+      - name: SEO checks
+        run: go test ./tools/seocheck/...
