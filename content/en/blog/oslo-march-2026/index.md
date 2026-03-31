@@ -68,6 +68,8 @@ Nothing massive, but a few things worth knowing:
 
 ---
 
+Oh, and one more thing — Coraza turns 10 this month. It was started in March 2016 in Talca, a small city in Chile. A decade later we're in Norway writing WAF code under the northern lights. Not bad.
+
 Oslo was worth it. Some decisions are just faster in person — like whether memoization should be on by default, which is a five-minute conversation, not three weeks of GitHub comments. Happy we did it.
 
 More to come soon!
