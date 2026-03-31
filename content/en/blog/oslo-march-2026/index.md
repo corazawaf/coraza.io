@@ -7,7 +7,7 @@ images: []
 contributors: ["Juan Pablo Tosso"]
 ---
 
-So we went to Oslo! Felipe, Jose Carlos, and I got together at the [OWASP Project Summit](https://projectsummit.owasp.org/) in early March and spent a week actually talking to each other in person for once. Workshops, long dinners, and a lot of conversations that would've taken months on GitHub. It was really good to be there. After the summit, Felipe and I — along with a couple of OWASP folks — took a trip up to Tromso to watch the northern lights. Breathtaking, honestly. We literally wrote some Coraza code up there, under the auroras. Not a bad office.
+So we went to Oslo! Felipe, Jose Carlos, and I got together at the [OWASP Project Summit](https://projectsummit.owasp.org/) in early March and spent a week together in person. Workshops, long dinners, and a lot of conversations that would've taken months on GitHub. It was really good to be there. After the summit, Felipe and I — along with a couple of OWASP folks — took a trip up to Tromso to watch the northern lights. Breathtaking, honestly. We literally wrote some Coraza code up there, under the auroras. Not a bad office.
 
 {{< figure src="oslo-team.jpg" alt="The Coraza team at the OWASP Project Summit in Oslo, Norway" caption="Oslo, March 2026." >}}
 
