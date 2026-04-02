@@ -1,6 +1,6 @@
 /*!
- * ModSecurity/SecLang syntax highlighter
- * Highlights modsecurity code blocks using Chroma CSS classes
+ * SecLang syntax highlighter
+ * Highlights seclang code blocks using Chroma CSS classes
  */
 
 (() => {
@@ -166,7 +166,7 @@
     }).join('');
   }
 
-  document.querySelectorAll('code.language-modsecurity').forEach(el => {
+  document.querySelectorAll('code.language-seclang').forEach(el => {
     el.innerHTML = highlight(el.textContent);
   });
 })();

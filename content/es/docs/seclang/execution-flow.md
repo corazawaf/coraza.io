@@ -78,7 +78,7 @@ Esta fase evaluará las reglas de la fase 5, guardará las colecciones persisten
 
 Las reglas **no se** ordenan por ID, sino por fase y orden de compilación. Por ejemplo:
 
-```modsecurity
+```seclang
 SecAction "id:1,phase:3,logdata:'first rule',log"
 SecAction "id:150,phase:2,logdata:'second rule',log"
 SecAction "id:300,phase:1,logdata:'third rule',log"
@@ -86,7 +86,7 @@ SecAction "id:300,phase:1,logdata:'third rule',log"
 
 Esto evaluará las reglas según su fase, no según su ID, y mostrará el siguiente `logdata`:
 
-```modsecurity
+```seclang
 third rule
 second rule
 first rule
@@ -96,7 +96,7 @@ first rule
 
 [SecMarker](#) es una directiva que crea una regla abstracta, sin reglas, operadores ni acciones, que solo funciona como marcador de posición para indicar a la transacción bajo qué SecMarker nos encontramos.
 
-```modsecurity
+```seclang
 SecMarker BEGIN_HOST_CHECK
 
 SecRule &REQUEST_HEADERS:Host "@eq 0" "phase:1,id:1,pass"
@@ -107,7 +107,7 @@ SecMarker END_HOST_CHECK
 
 Esto "marcará" las reglas 1 y 2 como `BEGIN_HOST_CHECK`, que será utilizado por la acción [skipAfter]({{< relref "actions#skipafter" >}}) para saltar las reglas siguientes hasta que se alcance el "SecMarker" indicado, por ejemplo:
 
-```modsecurity
+```seclang
 SecAction "id:1, phase:1,skipAfter:END_HOST_CHECK"
 SecMarker BEGIN_HOST_CHECK
 
@@ -124,7 +124,7 @@ En el ejemplo anterior, las reglas 2 y 3 serán omitidas porque están marcadas 
 
 La acción [Skip]({{< relref "actions#skip" >}}) también puede utilizarse para saltar las N reglas siguientes, por ejemplo:
 
-```modsecurity
+```seclang
 SecAction "id:1,phase:1, skip:1"
 
 # The following rule won't be evaluated

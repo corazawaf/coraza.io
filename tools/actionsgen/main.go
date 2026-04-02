@@ -152,14 +152,14 @@ func getActionFromFile(file string, page Page) Page {
 	return page
 }
 
-// addModsecurityLang replaces plain opening code fences with ```modsecurity
-func addModsecurityLang(s string) string {
+// addSecLang replaces plain opening code fences with ```seclang
+func addSecLang(s string) string {
 	lines := strings.Split(s, "\n")
 	inCode := false
 	for i, line := range lines {
 		if strings.TrimSpace(line) == "```" {
 			if !inCode {
-				lines[i] = "```modsecurity"
+				lines[i] = "```seclang"
 			}
 			inCode = !inCode
 		}
@@ -233,7 +233,7 @@ func parseAction(name string, doc string) Action {
 			log.Fatalf("unknown field %q", key)
 		}
 	}
-	d.Example = addModsecurityLang(d.Example)
+	d.Example = addSecLang(d.Example)
 	return d
 }
 
