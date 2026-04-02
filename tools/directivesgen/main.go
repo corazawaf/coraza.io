@@ -154,11 +154,40 @@ func parseDirective(name string, doc string) Directive {
 	}
 
 	d.Description = addsLinksToDirectives(d.Description)
-	d.Content = addsLinksToDirectives(d.Content)
-	// Replace apache language hints with seclang for proper syntax highlighting
-	d.Content = strings.ReplaceAll(d.Content, "```apache", "```seclang")
+	d.Content = normalizeSecLangFences(addsLinksToDirectives(d.Content))
 
 	return d
+}
+
+// normalizeSecLangFences converts all SecLang code fences in s to use the
+// "seclang" language identifier. It first replaces explicit "```apache" fences,
+// then converts bare "```" opening fences (tracked via inCode state) to
+// "```seclang", leaving closing fences and other language fences untouched.
+func normalizeSecLangFences(s string) string {
+	s = strings.ReplaceAll(s, "```apache", "```seclang")
+
+	var buf strings.Builder
+	inCode := false
+	for _, line := range strings.Split(s, "\n") {
+		if line == "```" {
+			if !inCode {
+				buf.WriteString("```seclang\n")
+				inCode = true
+				continue
+			}
+			inCode = false
+		} else if strings.HasPrefix(line, "```") && !inCode {
+			inCode = true
+		}
+		buf.WriteString(line + "\n")
+	}
+	result := buf.String()
+	// Remove the trailing newline added by the final iteration if the original
+	// string did not end with one.
+	if !strings.HasSuffix(s, "\n") && strings.HasSuffix(result, "\n") {
+		result = result[:len(result)-1]
+	}
+	return result
 }
 
 func decorateNote(s string) string {
