@@ -197,7 +197,8 @@ func parseAction(name string, doc string) Action {
 		// Example:                                    <= second one, key in a line, value in the next lines
 		// This action is used to generate a response.
 		//
-		if strings.HasSuffix(line, ":") {
+		if strings.HasSuffix(line, ":") && fieldAppenders[line[:len(line)-1]] != nil {
+			// Recognized key with no inline value (e.g. "Example:")
 			key = line[:len(line)-1]
 			value = ""
 		} else {

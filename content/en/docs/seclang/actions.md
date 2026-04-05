@@ -3,7 +3,7 @@ title: "Actions"
 description: "Actions available in Coraza"
 lead: "The action of a rule defines how to handle HTTP requests that have matched one or more rule conditions."
 date: 2020-10-06T08:48:57+00:00
-lastmod: "2026-03-23T20:12:27+01:00"
+lastmod: "2026-04-05T20:03:49+02:00"
 draft: false
 images: []
 weight: 100
@@ -147,10 +147,12 @@ SecRule ARGS "@rx attack1" "phase:2,block,id:102"
 # Detect attacks where we want only to warn
 SecRule ARGS "@rx attack2" "phase:2,pass,id:103"
 # It is possible to use the `SecRuleUpdateActionById` directive to override how a rule handles blocking.
+# This is useful in three cases:
 # 1. If a rule has blocking hard-coded, and you want it to use the policy you determine.
 # 2. If a rule was written to `block`, but you want it to warn only.
 # 3. If a rule was written to only `warn`, but you want it to block.
 # The following example demonstrates the first case,
+# in which the hard-coded block is removed in favor of the user-controllable block:
 # Specify how blocking is to be done
 SecDefaultAction "phase:2,deny,status:403,log,auditlog,id:104"
 # Detect attacks and block
@@ -191,14 +193,17 @@ All the other variables contain the captured values, in the order in which the c
 Noted that rule chains simulate **AND condition**.
 The disruptive actions specified in the first portion of the chained rule will be triggered only if all of the variable checks return positive hits.
 If one of the chained rule is negative, the entire rule chain will fail to match.
+These action can be specified only by the chain starter rule:
 - disruptive actions
 - execution phases
 - metadata actions (id, rev, msg, tag, severity, logdata)
 - skip
 - skipAfter
+The following directives can be used in rule chains:
 - `SecAction`
 - `SecRule`
 - `SecRuleScript`
+Special rules control the usage of actions in a chained rule:
 - An action which affects the rule flow (i.e., the disruptive actions, `skip` and `skipAfter`) can be used only in the chain starter. They will be executed only if the entire chain matches.
 - Non-disruptive rules can be used in any rule; they will be executed if the rule that contains them matches and not only when the entire chain matches.
 - The metadata actions (e.g., `id`, `rev`, `msg`) can be used only in the chain starter.
@@ -225,6 +230,7 @@ If one of the chained rule is negative, the entire rule chain will fail to match
 **Description**: Change Coraza configuration on transient, per-transaction basis.
 Any changes made using this action will affect only the transaction in which the action is executed.
 The default configuration, as well as the other transactions running in parallel, will be unaffected.
+The following configuration options are supported:
 - `auditEngine`
 - `auditLogParts`
 - `debugLogLevel`
@@ -243,7 +249,14 @@ The default configuration, as well as the other transactions running in parallel
 - `ruleRemoveTargetByTag`
 - `hashEngine` (**Not Supported in Coraza (TBI)**)
 - `hashEnforcement` (**Not supported in Coraza (TBI)**)
- 1. Option `ruleRemoveTargetById`, `ruleRemoveTargetByMsg`, and `ruleRemoveTargetByTag`, users don't need to use the char ! before the target list.
+Here are some notes about the options:
+ 1. Option `ruleRemoveTargetById`, `ruleRemoveTargetByMsg`, and `ruleRemoveTargetByTag` accept a collection key in two forms:
+    - **Exact string**: `ARGS:user` — removes only the variable whose name is exactly `user`.
+    - **Regular expression** (delimited by `/`): `ARGS:/^json\.\d+\.field$/` — removes all variables whose
+    names match the pattern. The closing `/` must not be preceded by an odd number of backslashes
+    (e.g. `/foo\/` is treated as the literal string `/foo\/`, not a regex). An empty pattern (`//`) is rejected.
+    Pattern matching is always case-insensitive because variable names are lowercased before comparison.
+    Users do not need to use the `!` character before the target list.
  2. Option `ruleRemoveById` is triggered at run time and should be specified before the rule in which it is disabling.
  3. Option `requestBodyProcessor` allows you to configure the request body processor.
     By default, Coraza will use the `URLENCODED` and `MULTIPART` processors to process an `application/x-www-form-urlencoded` and a `multipart/form-data` body respectively.
@@ -270,6 +283,9 @@ SecRule REQUEST_CONTENT_TYPE ^text/xml "nolog,pass,id:106,phase:1,ctl:requestBod
 # white-list the user parameter for rule #981260 when the REQUEST_URI is /index.php
 		SecRule REQUEST_URI "@beginsWith /index.php" "phase:1,t:none,pass,\
 	 	nolog,ctl:ruleRemoveTargetById=981260;ARGS:user"
+# white-list all JSON array fields matching a pattern for rule #932125 when the REQUEST_URI begins with /api/jobs
+		SecRule REQUEST_URI "@beginsWith /api/jobs" "phase:1,t:none,pass,\
+	 	nolog,ctl:ruleRemoveTargetById=932125;ARGS:/^json\.\d+\.jobdescription$/"
 ```
 
 
@@ -582,6 +598,7 @@ SecRule ARGS "test" "phase:2,log,pass,setvar:TX.test=+1,id:124"
 
 **Description**: Places the rule or chain into one of five available processing phases.
 It can also be used in `SecDefaultAction` to establish the rule defaults.
+Besides, There are aliases for some phase numbers:
 - 2 (request)
 - 4 (response)
 - 5 (logging)
@@ -690,6 +707,7 @@ Header set Set-Cookie "%{httponly_cookie}e; HTTPOnly" env=httponly_cookie
 `setvar:!TX.score`
 # Increase or decrease variable value, use + and - characters in front of a numerical value
 `setvar:TX.score=+5`
+# Example from OWASP CRS:
 	SecRule REQUEST_FILENAME|ARGS_NAMES|ARGS|XML:/* "\bsys\.user_catalog\b" \
 		"phase:2,rev:'2.1.3',capture,t:none,t:urlDecodeUni,t:htmlEntityDecode,t:lowercase,t:replaceComments,t:compressWhiteSpace,ctl:auditLogParts=+E, \
 		block,msg:'Blind SQL Injection Attack',id:'959517',tag:'WEB_ATTACK/SQL_INJECTION',tag:'WASCTC/WASC-19',tag:'OWASP_TOP_10/A1',tag:'OWASP_AppSensor/CIE1', \
@@ -711,6 +729,7 @@ Header set Set-Cookie "%{httponly_cookie}e; HTTPOnly" env=httponly_cookie
 
 **Description**: Assigns severity to the rule in which it is used.
 Severity values in Coraza follows the numeric scale of syslog (where 0 is the most severe).
+The data below is used by the OWASP Core Rule Set (CRS):
 - **0, EMERGENCY**: is generated from correlation of anomaly scoring data where there is an inbound attack and an outbound leakage.
 - **1, ALERT**: is generated from correlation where there is an inbound attack and an outbound application level error.
 - **2, CRITICAL**: Anomaly Score of 5. Is the highest severity level possible without correlation. It is normally generated by the web attack rules (40 level files).
@@ -777,6 +796,7 @@ The `skipAfter` action works only within the current processing phase and not ne
 
 
 ```modsecurity
+# The following rules implement the same logic as the skip example, but using skipAfter:
 # Require Accept header, but not from access from the localhost
 SecRule REMOTE_ADDR "^127\.0\.0\.1$" "phase:1,id:143,skipAfter:IGNORE_LOCALHOST"
 # This rule will be skipped over when REMOTE_ADDR is 127.0.0.1
