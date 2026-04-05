@@ -54,6 +54,11 @@ func main() {
 	variablesFile := path.Join(corazaPath, "internal/variables/variables.go")
 	variables := parseVariables(variablesFile, nameMap)
 
+	if len(variables) == 0 {
+		log.Printf("Warning: no variables with structured documentation found in %s, skipping file generation", variablesFile)
+		return
+	}
+
 	sort.Slice(variables, func(i, j int) bool {
 		return variables[i].Name < variables[j].Name
 	})

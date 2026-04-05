@@ -3,7 +3,7 @@ title: "Actions"
 description: "Actions available in Coraza"
 lead: "The action of a rule defines how to handle HTTP requests that have matched one or more rule conditions."
 date: 2020-10-06T08:48:57+00:00
-lastmod: "2026-03-23T20:12:27+01:00"
+lastmod: "2026-04-05T19:51:15+02:00"
 draft: false
 images: []
 weight: 100
@@ -243,7 +243,12 @@ The default configuration, as well as the other transactions running in parallel
 - `ruleRemoveTargetByTag`
 - `hashEngine` (**Not Supported in Coraza (TBI)**)
 - `hashEnforcement` (**Not supported in Coraza (TBI)**)
- 1. Option `ruleRemoveTargetById`, `ruleRemoveTargetByMsg`, and `ruleRemoveTargetByTag`, users don't need to use the char ! before the target list.
+    - **Exact string**: `ARGS:user` — removes only the variable whose name is exactly `user`.
+    - **Regular expression** (delimited by `/`): `ARGS:/^json\.\d+\.field$/` — removes all variables whose
+    names match the pattern. The closing `/` must not be preceded by an odd number of backslashes
+    (e.g. `/foo\/` is treated as the literal string `/foo\/`, not a regex). An empty pattern (`//`) is rejected.
+    Pattern matching is always case-insensitive because variable names are lowercased before comparison.
+    Users do not need to use the `!` character before the target list.
  2. Option `ruleRemoveById` is triggered at run time and should be specified before the rule in which it is disabling.
  3. Option `requestBodyProcessor` allows you to configure the request body processor.
     By default, Coraza will use the `URLENCODED` and `MULTIPART` processors to process an `application/x-www-form-urlencoded` and a `multipart/form-data` body respectively.
@@ -270,6 +275,9 @@ SecRule REQUEST_CONTENT_TYPE ^text/xml "nolog,pass,id:106,phase:1,ctl:requestBod
 # white-list the user parameter for rule #981260 when the REQUEST_URI is /index.php
 		SecRule REQUEST_URI "@beginsWith /index.php" "phase:1,t:none,pass,\
 	 	nolog,ctl:ruleRemoveTargetById=981260;ARGS:user"
+# white-list all JSON array fields matching a pattern for rule #932125 when the REQUEST_URI begins with /api/jobs
+		SecRule REQUEST_URI "@beginsWith /api/jobs" "phase:1,t:none,pass,\
+	 	nolog,ctl:ruleRemoveTargetById=932125;ARGS:/^json\.\d+\.jobdescription$/"
 ```
 
 

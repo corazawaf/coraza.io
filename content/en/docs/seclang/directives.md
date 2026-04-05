@@ -3,7 +3,7 @@ title: "Directives"
 Description: "The following section outlines all of the Coraza directives. "
 lead: "The following section outlines all of the Coraza directives. "
 date: 2020-10-06T08:48:57+00:00
-lastmod: "2026-03-22T11:55:18-03:00"
+lastmod: "2026-04-05T19:51:14+02:00"
 draft: false
 images: []
 weight: 10
@@ -588,5 +588,33 @@ Matching is by case-sensitive string equality.
 This directive will append variables to the specified rule with the targets provided in the second parameter.
 The rule ID can be single IDs or ranges of IDs. The targets are separated by a pipe character.
 **Note:** OWASP CRS has a list of supported tags https://coreruleset.org/docs/rules/metadata/
+
+## SecUploadDir
+
+**Description:** Configures the directory where uploaded files will be stored.
+
+**Syntax:** `SecUploadDir /path/to/dir`
+
+**Default:** `""`
+
+This directive is required when enabling SecUploadKeepFiles.
+
+## SecUploadKeepFiles
+
+**Description:** Configures whether intercepted files will be kept after the transaction is processed.
+
+**Syntax:** `SecUploadKeepFiles On|RelevantOnly|Off`
+
+**Default:** `Off`
+
+The [`SecUploadKeepFiles`](#secuploadkeepfiles) directive is used to configure whether intercepted files are
+preserved on disk after the transaction is processed.
+This directive requires the storage directory to be defined (using [`SecUploadDir`](#secuploaddir)).
+
+Possible values are:
+  - On: Keep all uploaded files.
+  - Off: Do not keep uploaded files.
+  - RelevantOnly: Keep only uploaded files that matched at least one rule that would be
+    logged (excluding rules with the `nolog` action).
 
 
