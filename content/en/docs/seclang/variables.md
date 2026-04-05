@@ -352,6 +352,7 @@ Holds the filename part of REQUEST_FILENAME (e.g., index.php).
 Anti-evasion transformations are NOT applied to this variable by default. REQUEST_BASENAME will
 recognize both / and \ as path separators. The value of this variable depends on what was provided
 in request. It does not have to correspond to the resource (on disk) that will be used by the web server.
+
 ```seclang
 SecRule REQUEST_BASENAME "^login\.php$" "phase:2,id:42,pass,t:none,t:lowercase"
 ```
@@ -575,6 +576,7 @@ Holds the full response status line sent by the backend server. (e.g., `HTTP/1.1
 ```seclang
 # Generate an alert when the application returns 500 error.
 SecRule STATUS_LINE "@contains 500" "phase:3,id:49,log,pass,logdata:'Application error detected!',t:none"
+```
 
 **Note:** This variable is currently NOT implemented by Coraza, but only kept for compatibility.
 
