@@ -1,6 +1,6 @@
 ---
 title: "Política de Privacidad"
-description: "Politica de privacidad de coraza.io: no usamos cookies ni recopilamos datos personales de los visitantes de nuestro sitio web."
+description: "Política de privacidad de coraza.io: no usamos cookies ni recopilamos datos personales de los visitantes de nuestro sitio web."
 date: 2020-08-27T19:23:18+02:00
 lastmod: 2020-08-27T19:23:18+02:00
 draft: false
