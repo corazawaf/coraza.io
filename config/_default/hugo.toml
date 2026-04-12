@@ -17,7 +17,7 @@ copyright = "Copyright (c) 2021-2026 OWASP Coraza"
   enable = true
 
 [outputs]
-  home = ["html", "rss", "searchIndex"]
+  home = ["html", "rss", "searchIndex", "sitemap"]
   section = ["html", "rss", "sitemap"]
 
 [outputFormats.searchIndex]
