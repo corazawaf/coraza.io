@@ -20,8 +20,8 @@
                 />{{ end }}
   </url>
   {{- end }}
-  {{/* Section indexes and top-level pages */}}
-  {{ range where .Pages "Sitemap.Disable" "ne" true }}
+  {{/* All pages in this language site (sections + regular pages), excluding home */}}
+  {{ range where (where site.Pages "Sitemap.Disable" "ne" true) "Kind" "ne" "home" }}
     {{- if .Permalink -}}
   <url>
     <loc>{{ .Permalink }}</loc>{{ if not .Lastmod.IsZero }}
