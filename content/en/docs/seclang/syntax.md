@@ -1,7 +1,7 @@
 ---
 title: "Syntax"
-description: ""
-lead: ""
+description: "Learn the SecLang rule syntax used by Coraza WAF — directives, operators, actions, transformations, and variables explained with examples."
+lead: "Learn the SecLang rule syntax used by Coraza WAF — directives, operators, actions, transformations, and variables explained with examples."
 date: 2020-10-06T08:48:57+00:00
 lastmod: 2020-10-06T08:48:57+00:00
 draft: false

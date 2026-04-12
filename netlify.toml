@@ -5,6 +5,13 @@
 [build.environment]
   NODE_VERSION = "22.14.0"
   HUGO_VERSION = "0.145.0"
+  GIT_DEPTH = "0"
+
+[[redirects]]
+  from   = "https://coraza.io/*"
+  to     = "https://www.coraza.io/:splat"
+  status = 301
+  force  = true
 
 [context.deploy-preview]
   command = "npm run build -- -b $DEPLOY_PRIME_URL"

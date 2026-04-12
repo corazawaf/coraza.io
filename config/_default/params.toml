@@ -3,8 +3,9 @@ goVersion = "1.24"
 
 # Hugo
 title = "OWASP Coraza"
-description = "OWASP Coraza is an open source, enterprise-grade, high performance Web Application Firewall ready to protect your beloved applications."
-images = ["cover.png"]
+keywords = ["web application firewall", "WAF", "open source WAF", "OWASP Coraza", "Go WAF", "Golang WAF", "ModSecurity alternative", "ModSecurity compatible", "OWASP CRS", "API security", "OWASP Core Rule Set"]
+description = "OWASP Coraza is an open source, enterprise-grade Web Application Firewall for Go — protecting APIs and web applications with full OWASP Core Rule Set support."
+images = ["/images/logo.png"]
 
 mainSections = ["docs"]
 [social]
@@ -114,6 +115,7 @@ mainSections = ["docs"]
   [seo.schemas]
     type = "Organization"
     name = "OWASP Coraza"
-    sameAs = ["https://github.com/corazawaf/coraza", "https://x.com/corazaio"]
-    images = ["cover.png"]
+    sameAs = ["https://github.com/corazawaf/coraza", "https://x.com/corazaio", "https://owasp.org/www-project-coraza-web-application-firewall/"]
+    images = ["/images/logo.png"]
+    article = ["docs"]
     blogPosting = ["blog"]

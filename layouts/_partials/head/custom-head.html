@@ -1,1 +1,7 @@
 <!-- Custom head -->
+{{- $siteKeywords := site.Params.keywords }}
+{{- $pageKeywords := .Params.keywords }}
+{{- $keywords := $pageKeywords | default $siteKeywords }}
+{{- with $keywords }}
+<meta name="keywords" content="{{ if reflect.IsSlice . }}{{ delimit . ", " }}{{ else }}{{ . }}{{ end }}">
+{{- end }}

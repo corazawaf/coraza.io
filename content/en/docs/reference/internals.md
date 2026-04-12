@@ -1,6 +1,6 @@
 ---
 title: "Internals"
-description: "Deep dive into Coraza WAF internals: engine architecture, rule evaluation, collections, and phases."
+description: "Deep dive into Coraza WAF internals — engine architecture, rule evaluation pipeline, transaction collections, and processing phases."
 lead: "Understanding how Coraza WAF works internally helps you write better rules and build more effective integrations."
 date: 2020-10-06T08:48:57+00:00
 lastmod: 2020-10-06T08:48:57+00:00

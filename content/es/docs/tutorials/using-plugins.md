@@ -1,6 +1,6 @@
 ---
 title: "Uso de Plugins"
-description: "Los plugins pueden extender la mayoría de las funcionalidades de Coraza como operadores, acciones, transformaciones, procesadores de cuerpo y registro de auditoría."
+description: "Los plugins amplian la mayoria de las funcionalidades de Coraza: operadores, acciones, transformaciones, procesadores de cuerpo y auditoria."
 lead: "Los plugins pueden extender la mayoría de las funcionalidades de Coraza como operadores, acciones, transformaciones, procesadores de cuerpo y registro de auditoría."
 date: 2021-09-05T14:03:58-03:00
 lastmod: 2021-09-05T14:03:58-03:00
