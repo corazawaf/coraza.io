@@ -13,6 +13,40 @@
   status = 301
   force  = true
 
+# /en/* is a Hugo multilingual alias with no canonical — force HTTP 301 so the HTML never gets served
+[[redirects]]
+  from   = "/en"
+  to     = "/"
+  status = 301
+  force  = true
+
+[[redirects]]
+  from   = "/en/*"
+  to     = "/:splat"
+  status = 301
+  force  = true
+
+# Old removed pages — redirect to closest current equivalent
+[[redirects]]
+  from   = "/docs/configuration/"
+  to     = "/docs/"
+  status = 301
+
+[[redirects]]
+  from   = "/docs/configuration"
+  to     = "/docs/"
+  status = 301
+
+[[redirects]]
+  from   = "/docs/waf/*"
+  to     = "/docs/seclang/"
+  status = 301
+
+[[redirects]]
+  from   = "/docs/tutorials/introduction/examples/*"
+  to     = "/docs/tutorials/quick-start/"
+  status = 301
+
 [context.deploy-preview]
   command = "npm run build -- -b $DEPLOY_PRIME_URL"
 
