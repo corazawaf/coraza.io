@@ -1,6 +1,6 @@
 ---
-title : "OWASP Coraza WAF"
-description: "OWASP Coraza es un firewall de aplicaciones web de código abierto, de alto rendimiento y nivel empresarial, diseñado para APIs y aplicaciones web — desde sistemas legados hasta arquitecturas modernas."
+title : "Firewall de Aplicaciones Web de Código Abierto"
+description: "OWASP Coraza es un WAF de código abierto y nivel empresarial para Go, que protege APIs y aplicaciones web con soporte del OWASP Core Rule Set."
 lead: "Firewall de aplicaciones web de código abierto para APIs y aplicaciones web. Protección de nivel empresarial, 100% compatible con OWASP Core Rule Set."
 date: 2020-10-06T08:47:36+00:00
 lastmod: 2020-10-06T08:47:36+00:00

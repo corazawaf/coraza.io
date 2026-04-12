@@ -1,9 +1,9 @@
 ---
 title: "Política de Privacidad"
-description: "No usamos cookies y no recopilamos ningún dato personal."
+description: "Política de privacidad de coraza.io: no usamos cookies ni recopilamos datos personales de los visitantes de nuestro sitio web."
 date: 2020-08-27T19:23:18+02:00
 lastmod: 2020-08-27T19:23:18+02:00
-draft: true
+draft: false
 images: []
 ---
 
@@ -20,6 +20,6 @@ __Resumen__: No usamos cookies y no recopilamos ningún dato personal.
 
 ## Contáctanos
 
-[Contáctanos]({{< relref "contact/index.md" >}}) si tienes alguna pregunta.
+[Contáctanos](https://owasp.org/slack/invite) a través del Slack de OWASP (canal #coraza) si tienes alguna pregunta.
 
 Fecha de vigencia: _27 de agosto de 2020_

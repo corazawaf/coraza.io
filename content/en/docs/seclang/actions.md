@@ -1,6 +1,6 @@
 ---
 title: "Actions"
-description: "Actions available in Coraza"
+description: "Complete reference for all SecLang actions in Coraza WAF, used to define rule responses such as blocking, allowing, logging, and redirecting."
 lead: "The action of a rule defines how to handle HTTP requests that have matched one or more rule conditions."
 date: 2020-10-06T08:48:57+00:00
 lastmod: "2026-04-05T20:03:49+02:00"

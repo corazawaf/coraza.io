@@ -1,6 +1,6 @@
 ---
 title: "Operators"
-description: "This section documents the operators currently available in Coraza."
+description: "Complete reference for all operators available in Coraza WAF SecLang rules, used to match variables against patterns, ranges, and conditions."
 lead: "This section documents the operators currently available in Coraza."
 date: 2020-10-06T08:48:57+00:00
 lastmod: "{{ .LastModification }}"
