@@ -1,7 +1,7 @@
 ---
 title: "Variables"
-description: "This section documents the variables currently available in Coraza."
-lead: "This section documents the variables currently available in Coraza."
+description: "Reference for all SecLang variables available in Coraza WAF, covering request, response, server, and collection variables used in rules."
+lead: "Reference for all SecLang variables available in Coraza WAF, covering request, response, server, and collection variables used in rules."
 date: 2020-10-06T08:48:57+00:00
 lastmod: "{{ .LastModification }}"
 draft: false

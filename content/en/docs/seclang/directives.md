@@ -1,9 +1,9 @@
 ---
 title: "Directives"
 description: "Complete reference for all Coraza WAF SecLang directives used to configure the engine, load rules, and control request and response inspection."
-lead: "The following section outlines all of the Coraza directives. "
+lead: "The following section outlines all of the Coraza directives."
 date: 2020-10-06T08:48:57+00:00
-lastmod: "2026-04-05T19:51:14+02:00"
+lastmod: "2026-04-13T01:23:16+02:00"
 draft: false
 images: []
 weight: 10
