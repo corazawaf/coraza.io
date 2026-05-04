@@ -3,7 +3,7 @@ module github.com/corazawaf/coraza.io
 go 1.25.0
 
 require (
-	github.com/corazawaf/coraza/v3 v3.6.0
+	github.com/corazawaf/coraza/v3 v3.7.0
 	github.com/magefile/mage v1.17.1
 )
 
