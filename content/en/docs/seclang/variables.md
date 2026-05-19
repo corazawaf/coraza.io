@@ -524,11 +524,20 @@ SecRule RESPONSE_STATUS "^[45]" "phase:3,id:58,t:none,pass,log,msg:'Response sta
 
 ## RESPONSE_XML
 
-Collection for interacting with the response XML body via XPath expressions.
+Collection for interacting with the response XML body via XPath expressions. Requires the XML response body processor to be active.
 
-**Not Implemented yet**
+```seclang
+SecRule RESPONSE_HEADERS:Content-Type "^text/xml$" "phase:3,id:89,t:lowercase,nolog,pass,ctl:responseBodyProcessor=XML"
+SecRule RESPONSE_XML://@* "sensitive" "phase:4,id:90,deny,log"
+```
 
+{{< callout context="caution" title="Limited XPath support" >}}
+Coraza only supports two XPath expressions: `//@*` (all attributes) and `/*` (root element). Arbitrary XPath expressions are not supported due to the absence of libxml2.
+{{< /callout >}}
 
+{{< callout context="caution" title="Not supported in TinyGo / proxy-wasm" >}}
+XML processing is not available in the TinyGo build used for proxy-wasm deployments.
+{{< /callout >}}
 
 ## RES_BODY_PROCESSOR
 
@@ -681,9 +690,11 @@ This variable is created when an invalid URL encoding is encountered during the 
 
 Special collection used to interact with the XML parser. It must contain a valid XPath expression, which will then be evaluated against a previously parsed XML DOM tree. Requires the XML body processor to be active.
 
+`REQUEST_XML` is an alias for `XML`. Use `XML` or `REQUEST_XML` interchangeably to inspect a parsed request XML body.
+
 ```seclang
 SecRule REQUEST_HEADERS:Content-Type "^text/xml$" "phase:1,id:87,t:lowercase,nolog,pass,ctl:requestBodyProcessor=XML"
-SecRule XML:/employees/employee/name "Fred" "phase:2,id:88,deny,log"
+SecRule XML://@* "sensitive" "phase:2,id:88,deny,log"
 ```
 
 It would match against payload such as this one:
@@ -711,3 +722,10 @@ It would match against payload such as this one:
 </employees>
 ```
 
+{{< callout context="caution" title="Limited XPath support" >}}
+Coraza only supports two XPath expressions: `//@*` (all attributes) and `/*` (root element). Arbitrary XPath expressions are not supported due to the absence of libxml2.
+{{< /callout >}}
+
+{{< callout context="caution" title="Not supported in TinyGo / proxy-wasm" >}}
+XML processing is not available in the TinyGo build used for proxy-wasm deployments.
+{{< /callout >}}
