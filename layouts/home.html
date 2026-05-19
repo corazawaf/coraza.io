@@ -180,7 +180,7 @@
     envoy: {
       file: 'envoy.yaml',
       lang: 'yaml',
-      code: '# Envoy Coraza WAF Filter\nhttp_filters:\n  - name: envoy.filters.http.golang\n    typed_config:\n      "@type": type.googleapis.com/envoy.extensions.filters.http.golang.v3alpha.Config\n      library_id: coraza-waf\n      library_path: /etc/envoy/coraza-waf.so\n      plugin_name: coraza-waf\n      plugin_config:\n        "@type": type.googleapis.com/xds.type.v3.TypedStruct\n        value:\n          directives: |\n            SecRuleEngine On\n            Include @coraza.conf-recommended\n            Include @crs-setup.conf.example\n            Include @owasp_crs/*.conf'
+      code: '# Envoy Coraza WAF Filter\nhttp_filters:\n  - name: envoy.filters.http.golang\n    typed_config:\n      "@type": type.googleapis.com/envoy.extensions.filters.http.golang.v3alpha.Config\n      library_id: coraza-waf\n      library_path: /etc/envoy/coraza-waf.so\n      plugin_name: coraza-waf\n      plugin_config:\n        "@type": type.googleapis.com/xds.type.v3.TypedStruct\n        value:\n          directives:\n            waf1:\n              simple_directives:\n                - "SecRuleEngine On"\n                - "Include @coraza-setup"\n                - "Include @crs-setup"\n                - "Include @owasp_crs/*.conf"\n          default_directive: "waf1"'
     },
     caddy: {
       file: 'Caddyfile',
