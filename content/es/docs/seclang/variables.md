@@ -632,6 +632,23 @@ SecRule RESPONSE_STATUS "^[45]" "phase:3,id:58,t:none"
 
 Esta variable puede no funcionar como se espera, ya que algunas implementaciones podrían cambiar el estado antes de liberar los búferes de salida.
 
+## RESPONSE_XML
+
+Colección para interactuar con el cuerpo de la respuesta XML mediante expresiones XPath. Requiere que el procesador de cuerpo XML de respuesta esté activo.
+
+```seclang
+SecRule RESPONSE_HEADERS:Content-Type "^text/xml$" "phase:3,id:89,t:lowercase,nolog,pass,ctl:responseBodyProcessor=XML"
+SecRule RESPONSE_XML://@* "sensitive" "phase:4,id:90,deny,log"
+```
+
+{{< callout context="caution" title="Soporte XPath limitado" >}}
+Coraza sólo admite dos expresiones XPath: `//@*` (todos los atributos) y `/*` (elemento raíz). Las expresiones XPath arbitrarias no están soportadas por la ausencia de libxml2.
+{{< /callout >}}
+
+{{< callout context="caution" title="No disponible en TinyGo / proxy-wasm" >}}
+El procesamiento XML no está disponible en la compilación TinyGo utilizada para despliegues proxy-wasm.
+{{< /callout >}}
+
 ## RULE
 
 Esta es una colección especial que proporciona acceso a los campos id, rev, severity, logdata y msg de la regla que activó la acción. Solo puede usarse para referirse a la misma regla en la que reside.
@@ -821,12 +838,13 @@ Esta variable contiene el nombre de la aplicación actual, que se establece en l
 
 ## XML
 
-Colección especial utilizada para interactuar con el analizador XML. Debe contener una expresión XPath válida, que se evaluará contra un árbol DOM XML previamente analizado.
+Colección especial utilizada para interactuar con el analizador XML. Debe contener una expresión XPath válida, que se evaluará contra un árbol DOM XML previamente analizado. Requiere que el procesador de cuerpo XML esté activo.
 
-```modsecurity
-SecDefaultAction log,deny,status:403,phase:2,id:90
-SecRule REQUEST_HEADERS:Content-Type ^text/xml$ "phase:1,id:87,t:lowercase,nolog,pass,ctl:requestBodyProcessor=XML"
-SecRule REQBODY_PROCESSOR "!^XML$" skipAfter:12345,id:88
+`REQUEST_XML` es un alias de `XML`. Se pueden usar `XML` o `REQUEST_XML` indistintamente para inspeccionar el cuerpo XML de una solicitud.
+
+```seclang
+SecRule REQUEST_HEADERS:Content-Type "^text/xml$" "phase:1,id:87,t:lowercase,nolog,pass,ctl:requestBodyProcessor=XML"
+SecRule XML://@* "sensitive" "phase:2,id:88,deny,log"
 ```
 
 Coincidiría con una carga útil como esta:
@@ -853,3 +871,11 @@ Coincidiría con una carga útil como esta:
     </employee>
 </employees>
 ```
+
+{{< callout context="caution" title="Soporte XPath limitado" >}}
+Coraza sólo admite dos expresiones XPath: `//@*` (todos los atributos) y `/*` (elemento raíz). Las expresiones XPath arbitrarias no están soportadas por la ausencia de libxml2.
+{{< /callout >}}
+
+{{< callout context="caution" title="No disponible en TinyGo / proxy-wasm" >}}
+El procesamiento XML no está disponible en la compilación TinyGo utilizada para despliegues proxy-wasm.
+{{< /callout >}}
