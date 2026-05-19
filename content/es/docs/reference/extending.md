@@ -59,7 +59,7 @@ type RuleAction interface {
 
 Cada acción puede tener un tipo que define en qué parte del ciclo de vida de la regla será evaluada.
 
-- **ACTION_TYPE_DISRUPTIVE**: Hace que Coraza realice algo. En muchos casos ese algo significa bloquear la transacción, pero no en todos. Por ejemplo, la acción allow se clasifica como una acción disruptiva, pero hace lo opuesto a bloquear. Solo puede haber una acción disruptiva por regla (si hay múltiples acciones disruptivas presentes o heredadas, solo la última tendrá efecto), o cadena de reglas (en una cadena, una acción disruptiva solo puede aparecer en la primera regla).
+- **ACTION_TYPE_DISRUPTIVE**: Hace que Coraza realice algo. En muchos casos ese algo significa bloquear la transacción, pero no en todos. Por ejemplo, la acción allow se clasifica como una acción disruptiva, pero hace lo opuesto a bloquear. Solo puede haber una acción disruptiva por regla (si hay múltiples acciones disruptivas presentes o heredadas, Coraza usa la primera acción disruptiva según el orden sintáctico e ignora el resto), o cadena de reglas (en una cadena, una acción disruptiva solo puede aparecer en la primera regla).
 - **ACTION_TYPE_NONDISRUPTIVE**: Realiza algo, pero ese algo no afecta ni puede afectar el flujo de procesamiento de reglas. Establecer una variable o cambiar su valor es un ejemplo de una acción no disruptiva. Las acciones no disruptivas pueden aparecer en cualquier regla, incluyendo cada regla perteneciente a una cadena.
 - **ACTION_TYPE_FLOW**: Estas acciones afectan el flujo de reglas (por ejemplo skip o skipAfter).
 - **ACTION_TYPE_METADATA**: Las acciones de metadatos se usan para proporcionar más información sobre las reglas. Ejemplos incluyen id, rev, severity y msg.

@@ -59,7 +59,7 @@ type RuleAction interface {
 
 Each action can have one type that defines in which part of the rule lifetime it will be evaluated.
 
-- **ACTION_TYPE_DISRUPTIVE**: Cause Coraza to do something. In many cases something means block transaction, but not in all. For example, the allow action is classified as a disruptive action, but it does the opposite of blocking. There can only be one disruptive action per rule (if there are multiple disruptive actions present, or inherited, only the last one will take effect), or rule chain (in a chain, a disruptive action can only appear in the first rule).
+- **ACTION_TYPE_DISRUPTIVE**: Cause Coraza to do something. In many cases something means block transaction, but not in all. For example, the allow action is classified as a disruptive action, but it does the opposite of blocking. There can only be one disruptive action per rule (if there are multiple disruptive actions present, or inherited, Coraza uses the first disruptive action in syntactic order and ignores the rest), or rule chain (in a chain, a disruptive action can only appear in the first rule).
 - **ACTION_TYPE_NONDISRUPTIVE**: Do something, but that something does not and cannot affect the rule processing flow. Setting a variable, or changing its value is an example of a non-disruptive action. Non-disruptive action can appear in any rule, including each rule belonging to a chain.
 - **ACTION_TYPE_FLOW**: These actions affect the rule flow (for example skip or skipAfter).
 - **ACTION_TYPE_METADATA**: Meta-data actions are used to provide more information about rules. Examples include id, rev, severity and msg.
