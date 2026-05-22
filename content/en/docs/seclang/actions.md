@@ -3,7 +3,7 @@ title: "Actions"
 description: "Complete reference for all SecLang actions in Coraza WAF, used to define rule responses such as blocking, allowing, logging, and redirecting."
 lead: "The action of a rule defines how to handle HTTP requests that have matched one or more rule conditions."
 date: 2020-10-06T08:48:57+00:00
-lastmod: "2026-04-05T20:03:49+02:00"
+lastmod: "2026-05-22T18:03:48+02:00"
 draft: false
 images: []
 weight: 100
@@ -69,10 +69,10 @@ Actions are specified in SecRule directives as comma-separated values:
 
 # Important Notes
 
-When using the allow action for allowlisting, it's recommended to add
-ctl:ruleEngine=On to ensure the rule executes even in DetectionOnly mode.
+When using the `allow` action for allowlisting, it's recommended to add
+`ctl:ruleEngine=On` to ensure the rule executes even in `DetectionOnly` mode.
 
-For the complete list of available actions, see: https://coraza.io/docs/seclang/actions/
+For the complete list of available actions, see [docs/seclang/actions](https://coraza.io/docs/seclang/actions/).
 
 ## allow
 
@@ -388,8 +388,8 @@ The expire time will be reset if they are used on their own (perhaps in a SecAct
 
 ## id
 
-**Description**: > This action is mandatory for all `SecRule` and `SecAction`, and it must be numeric.
-Assigns a unique ID to the rule or chain in which it appears.
+**Description**: Assigns a unique ID to the rule or chain in which it appears. This action is
+a numeric value and is mandatory for all `SecRule` and `SecAction`.
 
 **Action Group**: Metadata
 
@@ -450,7 +450,7 @@ SecAction "phase:1,id:117,pass,initcol:ip=%{REMOTE_ADDR},log"
 
 **Description**: Logs a data fragment as part of the alert message.
 The logdata information appears in the error and/or audit log files. Macro expansion is performed,
-so you may use variable names such as %{TX.0} or %{MATCHED_VAR}.
+so you may use variable names such as `%{TX.0}` or `%{MATCHED_VAR}`.
 The information is properly escaped for use with logging of binary data.
 
 **Action Group**: Non-disruptive
@@ -511,7 +511,7 @@ SecRule &REQUEST_HEADERS:Host "@eq 0" "log,id:60008,severity:2,msg:'Request Miss
 
 **Description**: Perform multiple operator invocations for every target, before and after every anti-evasion transformation is performed.
 Normally, variables are inspected only once per rule, and only after all transformation functions have been completed.
-With multiMatch, variables are checked against the operator before and after every transformation function that changes the input.
+With `multiMatch`, variables are checked against the operator before and after every transformation function that changes the input.
 
 **Action Group**: Non-disruptive
 
@@ -553,7 +553,7 @@ SecRule REQUEST_HEADERS:User-Agent "@streq Test" "allow,noauditlog,id:120"
 ## nolog
 
 **Description**: Prevents rule matches from appearing in both error and audit logs.
-Although nolog implies noauditlog, you can override the former by using `nolog,auditlog`.
+Although `nolog` implies `noauditlog`, you can override the former by using `nolog,auditlog`.
 
 **Action Group**: Non-disruptive
 
@@ -602,7 +602,7 @@ Besides, There are aliases for some phase numbers:
 - 2 (request)
 - 4 (response)
 - 5 (logging)
-> Warning: Keep in mind that the variable used in the rule may not be available if specifying the incorrect phase.
+> **Warning**: Keep in mind that the variable used in the rule may not be available if specifying the incorrect phase.
 > This could lead to a false negative situation where your variable and operator may be correct,
 > but it misses malicious data because you specified the wrong phase.
 

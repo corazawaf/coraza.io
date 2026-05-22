@@ -3,7 +3,7 @@ title: "Directives"
 description: "Complete reference for all Coraza WAF SecLang directives used to configure the engine, load rules, and control request and response inspection."
 lead: "The following section outlines all of the Coraza directives."
 date: 2020-10-06T08:48:57+00:00
-lastmod: "2026-05-22T18:00:07+02:00"
+lastmod: "2026-05-22T18:03:47+02:00"
 draft: false
 images: []
 weight: 10
@@ -182,7 +182,7 @@ response body, in which case the actual response body will contain the error mes
 `multipart/form-data` encoding in used. In this case, it will log a fake `application/x-www-form-urlencoded`
 body that contains the information about parameters but not about the files. This is handy if
 you don’t want to have (often large) files stored in your audit logs; not implemented yet.
-- J: This part contains information about the files uploaded using `multipart/form-data` encoding; not implemented yet.
+- J: This part contains information about the files uploaded using `multipart/form-data` encoding. Available from Coraza v3.7.0.
 - K: This part contains a full list of every rule that matched (one per line) in the order they were
 matched. The rules are fully qualified and will thus show inherited actions and default operators.
 - Z: Final boundary, signifies the end of the entry (mandatory).
@@ -409,7 +409,7 @@ There is a hard limit of 1 GiB.
 
 ## SecRequestBodyLimitAction
 
-**Description:** Controls what happens once a request body limit, configured with SecRequestBodyLimit, is encountered
+**Description:** Controls what happens once a request body limit, configured with SecRequestBodyLimit, is encountered.
 
 **Syntax:** `SecRequestBodyLimitAction Reject|ProcessPartial`
 
@@ -417,6 +417,9 @@ There is a hard limit of 1 GiB.
 
 By default, Coraza will reject a request body that is longer than specified to
 avoid OOM issues while buffering the request body prior the inspection.
+
+**Note:** When SecRuleEngine is set to DetectionOnly, this directive is set to
+ProcessPartial to minimize disruptions when initially deploying Coraza.
 
 
 ## SecRequestBodyNoFilesLimit
@@ -482,6 +485,9 @@ which the attacker controls the output (e.g., can make it arbitrary long). In su
 cases, however, it is not possible to prevent leakage anyway. The attacker could
 compress, obfuscate, or even encrypt data before it is sent back, and therefore
 bypass any monitoring device.
+
+**Note:** When SecRuleEngine is set to DetectionOnly, this directive is set to
+ProcessPartial to minimize disruptions when initially deploying Coraza.
 
 
 ## SecResponseBodyMimeType
@@ -619,7 +625,29 @@ with the targets provided in the second parameter. It can be handy for updating 
 Matching is by case-sensitive string equality.
 This directive will append variables to the specified rule with the targets provided in the second parameter.
 The rule ID can be single IDs or ranges of IDs. The targets are separated by a pipe character.
-**Note:** OWASP CRS has a list of supported tags https://coreruleset.org/docs/rules/metadata/
+
+**Note:** OWASP CRS provides a list of [supported tags](https://coreruleset.org/docs/3-about-rules/metadata/#tags-about-rule-classification).
+
+
+## SecRxPreFilter
+
+**Description:** Enables or disables pre-filtering for the @rx operator.
+
+**Syntax:** `SecRxPreFilter On|Off`
+
+**Default:** `Off`
+
+When enabled, Coraza analyses each regex pattern at rule-load time to extract required
+literal substrings and compute the minimum match length. At request time these fast
+checks run before the full regex, allowing the engine to skip the regex entirely when
+an input clearly cannot match.
+
+**Example:**
+```seclang
+SecRxPreFilter On
+
+> **Warning**: This is an experimental feature.
+```
 
 
 ## SecUploadDir
