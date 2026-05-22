@@ -12,12 +12,12 @@ toc: true
 
 The original language for configuring the ModSecurity Apache module was a set of extension directives to the Apache config language. This extension allows you to generate your Security Policy where you take an access control decision based on a set of parameters. Directives can be used to configure the engine itself, but also to send directives to the engine for access control. Directives look like the examples below:
 
-```modsecurity
+```seclang
 SecDirective1 some options
 SecDirective2 "some option between brackets \" and escaped"
 ```
 
-```modsecurity
+```seclang
 SecSampleDirective this \
     directive \
     is splitted \
@@ -34,7 +34,7 @@ Rules are a special directive that must contain variables, operator and actions:
 * Rules can contain only one disruptive action
 * More default actions can be set with [SecDefaultAction]({{< relref "directives/#SecDefaultAction" >}})
 
-```modsecurity
+```seclang
 SecRule REMOTE_ADDR "127.0.0.1" "id:1, phase:1, pass, log, logdata:'Request from localhost'"
 ```
 
@@ -46,7 +46,7 @@ Variables are a structure of KEY:VALUE(S), some variables are mapped objects tha
 
 Variables can be queried for a specific case insesitive key, for example:
 
-```modsecurity
+```seclang
 SecRule REQUEST_HEADERS:user-agent "@contains firefox" "id:1, pass, log, logdata:'someone used firefox to access'"
 ```
 
@@ -54,7 +54,7 @@ SecRule REQUEST_HEADERS:user-agent "@contains firefox" "id:1, pass, log, logdata
 
 (v2 Only): PCRE compatible regex can be used to query a mapped VARIABLE like ARGS, the following example will match all parameters (get and post) where the key begins with ```param``` and the value of this argument is ```someval```.
 
-```modsecurity
+```seclang
 SecRule ARGS:/^param.*$/ "someval" "id:1"
 ```
 
@@ -66,7 +66,7 @@ Only RE2 will be supported in v3.
 
 You can count the number of values available for a collection using the **&** prefix, for example:
 
-```modsecurity
+```seclang
 # You want to block requests without host header
 SecRule &REQUEST_HEADERS:host "@eq 0" "id:1, deny, status:403"
 ```
@@ -75,7 +75,7 @@ SecRule &REQUEST_HEADERS:host "@eq 0" "id:1, deny, status:403"
 
 You can remove specific target keys from the variables list using the **!** prefix, for example:
 
-```modsecurity
+```seclang
 # We want to apply some Sql Injection validations against the REQUEST_HEADERS
 SecRule REQUEST_HEADERS "@detectSQLi" "id:1,deny,status:403"
 
@@ -90,7 +90,7 @@ SecRule REQUEST_HEADERS|!REQUEST_HEADERS:User-Agent "@detectSQLi" "id:2,deny,sta
 
 You may evaluate multiple variables by separating them win pipe (|), for example:
 
-```modsecurity
+```seclang
 SecRule VARIABLE1|VARIABLE2|VARIABLE3:/some-regex/|!VARIABLE3:id "!@rx \w+" "id:1,pass"
 ```
 
@@ -98,7 +98,7 @@ SecRule VARIABLE1|VARIABLE2|VARIABLE3:/some-regex/|!VARIABLE3:id "!@rx \w+" "id:
 
 If the body processor is set to process JSON or XML, you may use the special variables **XML** and **JSON**, for example:
 
-```modsecurity
+```seclang
 SecAction "id:1, phase:1,ctl:setRequestBodyProcessor=XML,pass,nolog"
 # We are denying a book because we don't like it
 SecRule XML:/* "name of the book" "id:2,phase:2,log,logdata:'We don´t like this book!',deny,status:403"
@@ -135,7 +135,7 @@ Actions values are optional, the key-value syntax is ```key:value``` and some ac
 
 If you define default actions, you are forced to indicate a **phase** and a **disruptive action**.
 
-```modsecurity
+```seclang
 SecDefaultAction "phase:1, deny, status:403"
 
 # This rule will deny the request with status 403 because of the default actions
@@ -153,7 +153,7 @@ SecActions are used to create rules that will always match, they don´t contain 
 
 Macro expansions are special messages that can be transformed into it's evaluated value, the syntax is: ```%{VARIABLE.KEY}```, for example ```%{REQUEST_HEADERS.host}``` will return the content of the request header "Host".
 
-```modsecurity
+```seclang
 SecAction "id:1, log, logdata:'Transaction %{unique_id}'"
 
 # we assign a variable to tx.argcount

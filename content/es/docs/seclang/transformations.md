@@ -12,7 +12,7 @@ toc: true
 
 En el siguiente ejemplo, los valores de los parámetros de la solicitud se convierten a minúsculas antes de la coincidencia:
 
-```modsecurity
+```seclang
 SecRule ARGS "xp_cmdshell" "t:lowercase,id:91"
 ```
 
@@ -20,7 +20,7 @@ Se pueden utilizar múltiples acciones de transformación en la misma regla, for
 
 En la mayoría de los casos, el orden en que se realizan las transformaciones es muy importante. En el siguiente ejemplo, se realiza una serie de funciones de transformación para contrarrestar la evasión. Realizar las transformaciones en cualquier otro orden permitiría a un atacante hábil evadir la detección:
 
-```modsecurity
+```seclang
 SecRule ARGS "(asfunction|javascript|vbscript|data|mocha|livescript):" "id:92,t:none,t:htmlEntityDecode,t:lowercase,t:removeNulls,t:removeWhitespace"
 ```
 
@@ -33,7 +33,7 @@ El resto de esta sección documenta las funciones de transformación disponibles
 
 Decodifica una cadena codificada en Base64.
 
-```modsecurity
+```seclang
 SecRule REQUEST_HEADERS:Authorization "^Basic ([a-zA-Z0-9]+=*)$" "phase:1,id:93,capture,chain,logdata:%{TX.1}"
   SecRule TX:1 ^(\w+): t:base64Decode,capture,chain
     SecRule TX:1 ^(admin|root|backup)$
@@ -76,7 +76,7 @@ La función de transformación cmdLine evita este problema manipulando el conten
 
 **Ejemplo de uso:**
 
-```modsecurity
+```seclang
 SecRule ARGS "(?:command(?:.com)?|cmd(?:.exe)?)(?:/.*)?/[ck]" "phase:2,id:94,t:none, t:cmdLine"
 ```
 

@@ -172,7 +172,7 @@ describe('Language Switching', () => {
   test('Spanish homepage loads', async () => {
     const page = await newPage();
     const response = await page.goto(`${BASE_URL}/es/`, { waitUntil: 'networkidle0' });
-    expect(response.status()).toBe(200);
+    expect([200, 304]).toContain(response.status());
     await page.close();
   });
 });

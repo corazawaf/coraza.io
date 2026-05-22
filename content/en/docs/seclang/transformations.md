@@ -12,7 +12,7 @@ toc: true
 
 In the following example, the request parameter values are converted to lowercase before matching:
 
-```modsecurity
+```seclang
 SecRule ARGS "xp_cmdshell" "t:lowercase,id:91"
 ```
 
@@ -20,7 +20,7 @@ Multiple transformation actions can be used in the same rule, forming a transfor
 
 In most cases, the order in which transformations are performed is very important. In the following example, a series of transformation functions is performed to counter evasion. Performing the transformations in any other order would allow a skillful attacker to evade detection:
 
-```modsecurity
+```seclang
 SecRule ARGS "(asfunction|javascript|vbscript|data|mocha|livescript):" "id:92,t:none,t:htmlEntityDecode,t:lowercase,t:removeNulls,t:removeWhitespace"
 ```
 
@@ -33,7 +33,7 @@ The remainder of this section documents the transformation functions currently a
 
 Decodes a Base64-encoded string.
 
-```modsecurity
+```seclang
 SecRule REQUEST_HEADERS:Authorization "^Basic ([a-zA-Z0-9]+=*)$" "phase:1,id:93,capture,chain,logdata:%{TX.1}"
   SecRule TX:1 ^(\w+): t:base64Decode,capture,chain
     SecRule TX:1 ^(admin|root|backup)$ 
@@ -76,7 +76,7 @@ The cmdLine transformation function avoids this problem by manipulating the vari
 
 **Example Usage:**
 
-```modsecurity
+```seclang
 SecRule ARGS "(?:command(?:.com)?|cmd(?:.exe)?)(?:/.*)?/[ck]" "phase:2,id:94,t:none, t:cmdLine"
 ```
 
