@@ -3,7 +3,7 @@ title: "Variables"
 description: "Reference for all SecLang variables available in Coraza WAF, covering request, response, server, and collection variables used in rules."
 lead: "Reference for all SecLang variables available in Coraza WAF, covering request, response, server, and collection variables used in rules."
 date: 2020-10-06T08:48:57+00:00
-lastmod: "2026-04-13T01:23:18+02:00"
+lastmod: "2026-05-22T18:03:49+02:00"
 draft: false
 images: []
 weight: 100
@@ -47,7 +47,7 @@ Match arguments whose names begin with id_:
 SecRule ARGS:/^id_/ "dirty" "id:11"
 ```
 
-**Note :** Using ```ARGS:p``` will not result in any invocations against the operator if argument p does not exist.
+**Note**: Using ```ARGS:p``` will not result in any invocations against the operator if argument p does not exist.
 
 ## ARGS_COMBINED_SIZE
 
@@ -164,7 +164,7 @@ Contains a key-value set where value is the content of the file which was upload
 SecRule FILES_TMP_CONTENT "@fuzzyHash $ENV{CONF_DIR}/ssdeep.txt 1" "id:192372,log,deny"
 ```
 
-**Note :** SecUploadKeepFiles must be set to 'On' in order to have this collection filled.
+**Note**: SecUploadKeepFiles must be set to 'On' in order to have this collection filled.
 **Note:** This variable is currently NOT implemented by Coraza
 
 ## FULL_REQUEST_LENGTH
@@ -194,7 +194,7 @@ Holds the highest severity of any rules that have matched so far. Severities are
 SecRule HIGHEST_SEVERITY "@le 2" "phase:2,id:23,deny,status:500,msg:'severity %{HIGHEST_SEVERITY}'"
 ```
 
-**Note :** Higher severities have a lower numeric value.
+**Note**: Higher severities have a lower numeric value.
 
 ## INBOUND_DATA_ERROR
 
@@ -219,7 +219,7 @@ SecRule ARGS pattern chain,deny,id:25
   SecRule MATCHED_VAR "further scrutiny"
 ```
 
-**Note :** Be aware that this variable holds data for the last operator match. This means that if there are more than one matches, only the last one will be populated. Use MATCHED_VARS variable if you want all matches.
+**Note**: Be aware that this variable holds data for the last operator match. This means that if there are more than one matches, only the last one will be populated. Use MATCHED_VARS variable if you want all matches.
 
 ## MATCHED_VARS
 
@@ -248,7 +248,7 @@ SecRule ARGS pattern "chain,deny,id:27"
   SecRule MATCHED_VAR_NAME "@eq ARGS:param"
 ```
 
-**Note :** Be aware that this variable holds data for the last operator match. This means that if there are more than one matches, only the last one will be populated. Use MATCHED_VARS_NAMES variable if you want all matches.
+**Note**: Be aware that this variable holds data for the last operator match. This means that if there are more than one matches, only the last one will be populated. Use MATCHED_VARS_NAMES variable if you want all matches.
 
 ## MULTIPART_FILENAME
 
@@ -314,7 +314,7 @@ Contains the status of the request body processor used for request body parsing.
 SecRule REQBODY_ERROR "@eq 1" "phase:2,id:39,deny,log,msg:'Request Body Processor Error Detected'"
 ```
 
-**Note :** Your policies must have a rule to check for request body processor errors at the very beginning of phase 2. Failure to do so will leave the door open for impedance mismatch attacks. It is possible, for example, that a payload that cannot be parsed by Coraza can be successfully parsed by more tolerant parser operating in the application. If your policy dictates blocking, then you should reject the request if error is detected. When operating in detection-only mode, your rule should alert with high severity when request body processing fails.
+**Note**: Your policies must have a rule to check for request body processor errors at the very beginning of phase 2. Failure to do so will leave the door open for impedance mismatch attacks. It is possible, for example, that a payload that cannot be parsed by Coraza can be successfully parsed by more tolerant parser operating in the application. If your policy dictates blocking, then you should reject the request if error is detected. When operating in detection-only mode, your rule should alert with high severity when request body processing fails.
 
 ## REQBODY_ERROR_MSG
 
@@ -352,6 +352,7 @@ Holds the filename part of REQUEST_FILENAME (e.g., index.php).
 Anti-evasion transformations are NOT applied to this variable by default. REQUEST_BASENAME will
 recognize both / and \ as path separators. The value of this variable depends on what was provided
 in request. It does not have to correspond to the resource (on disk) that will be used by the web server.
+
 ```seclang
 SecRule REQUEST_BASENAME "^login\.php$" "phase:2,id:42,pass,t:none,t:lowercase"
 ```
@@ -364,7 +365,7 @@ Holds the raw request body. It is populated only by the URLENCODED and RAW body 
 SecRule REQUEST_BODY "@contains foo" "id:1001,phase:2,deny,log"
 ```
 
-**Note :** Requires request body buffering to be enabled.
+**Note**: Requires request body buffering to be enabled.
 
 ## REQUEST_BODY_LENGTH
 
@@ -398,7 +399,7 @@ Holds the relative request URL without the query string part (e.g., /index.php).
 SecRule REQUEST_FILENAME "^/cgi-bin/login\.php$" phase:2,id:46,t:none,t:normalizePath
 ```
 
-**Note :** Anti-evasion transformations are not used on REQUEST_FILENAME. You will have to specify them in the rules that use this variable.
+**Note**: Anti-evasion transformations are not used on REQUEST_FILENAME. You will have to specify them in the rules that use this variable.
 
 ## REQUEST_HEADERS
 
@@ -452,7 +453,7 @@ Holds the full request URL including the query string data. It is the parsed and
 SecRule REQUEST_URI "attack" "phase:1,id:52,t:none,t:urlDecode,t:lowercase,t:normalizePath,deny"
 ```
 
-**Note :** Anti-evasion transformations are not used on REQUEST_URI. You will have to specify them in the rules that use this variable.
+**Note**: Anti-evasion transformations are not used on REQUEST_URI. You will have to specify them in the rules that use this variable.
 
 ## REQUEST_URI_RAW
 
@@ -462,7 +463,7 @@ Holds the raw request URI exactly as received on the request line, before any pa
 SecRule REQUEST_URI_RAW "^http://" "phase:1,id:53,t:none,t:urlDecode,t:lowercase,t:normalizePath"
 ```
 
-**Note :** Anti-evasion transformations are not used on REQUEST_URI_RAW. You will have to specify them in the rules that use this variable.
+**Note**: Anti-evasion transformations are not used on REQUEST_URI_RAW. You will have to specify them in the rules that use this variable.
 
 ## RESPONSE_BODY
 
@@ -472,13 +473,13 @@ Holds the data for the response body. Populated only when no response body proce
 SecRule RESPONSE_BODY "ODBC Error Code" "phase:4,id:54,t:none, deny"
 ```
 
-**Note :** Requires response body buffering to be enabled.
+**Note**: Requires response body buffering to be enabled.
 
 ## RESPONSE_CONTENT_LENGTH
 
 Response body length in bytes. Available starting from phase 4 only when response body buffering is enabled and no response body processor is active. If a body processor (e.g. XML) is used, this variable will not be populated.
 
-**Note :** Requires response body buffering to be enabled.
+**Note**: Requires response body buffering to be enabled.
 
 
 
@@ -575,6 +576,7 @@ Holds the full response status line sent by the backend server. (e.g., `HTTP/1.1
 ```seclang
 # Generate an alert when the application returns 500 error.
 SecRule STATUS_LINE "@contains 500" "phase:3,id:49,log,pass,logdata:'Application error detected!',t:none"
+```
 
 **Note:** This variable is currently NOT implemented by Coraza, but only kept for compatibility.
 

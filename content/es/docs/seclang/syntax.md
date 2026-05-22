@@ -12,12 +12,12 @@ toc: true
 
 El lenguaje original para configurar el módulo de Apache ModSecurity era un conjunto de directivas de extensión del lenguaje de configuración de Apache. Esta extensión permite generar una Política de Seguridad en la que se toma una decisión de control de acceso basada en un conjunto de parámetros. Las directivas pueden utilizarse para configurar el motor en sí, pero también para enviar instrucciones al motor para el control de acceso. Las directivas tienen el aspecto de los ejemplos siguientes:
 
-```modsecurity
+```seclang
 SecDirective1 some options
 SecDirective2 "some option between brackets \" and escaped"
 ```
 
-```modsecurity
+```seclang
 SecSampleDirective this \
     directive \
     is splitted \
@@ -34,7 +34,7 @@ Las reglas son una directiva especial que debe contener variables, operador y ac
 * Las reglas solo pueden contener una acción disruptiva.
 * Se pueden definir más acciones por defecto con [SecDefaultAction]({{< relref "directives/#SecDefaultAction" >}}).
 
-```modsecurity
+```seclang
 SecRule REMOTE_ADDR "127.0.0.1" "id:1, phase:1, pass, log, logdata:'Request from localhost'"
 ```
 
@@ -46,7 +46,7 @@ Las variables son una estructura de CLAVE:VALOR(ES). Algunas variables son objet
 
 Las variables pueden consultarse por una clave específica sin distinción de mayúsculas y minúsculas, por ejemplo:
 
-```modsecurity
+```seclang
 SecRule REQUEST_HEADERS:user-agent "@contains firefox" "id:1, pass, log, logdata:'someone used firefox to access'"
 ```
 
@@ -54,7 +54,7 @@ SecRule REQUEST_HEADERS:user-agent "@contains firefox" "id:1, pass, log, logdata
 
 (Solo v2): Se puede utilizar una expresión regular compatible con PCRE para consultar una VARIABLE mapeada como ARGS. El siguiente ejemplo coincidirá con todos los parámetros (GET y POST) cuya clave comience con ```param``` y cuyo valor sea ```someval```.
 
-```modsecurity
+```seclang
 SecRule ARGS:/^param.*$/ "someval" "id:1"
 ```
 
@@ -66,7 +66,7 @@ Solo RE2 será soportado en v3.
 
 Se puede contar el número de valores disponibles para una colección utilizando el prefijo **&**, por ejemplo:
 
-```modsecurity
+```seclang
 # You want to block requests without host header
 SecRule &REQUEST_HEADERS:host "@eq 0" "id:1, deny, status:403"
 ```
@@ -75,7 +75,7 @@ SecRule &REQUEST_HEADERS:host "@eq 0" "id:1, deny, status:403"
 
 Se pueden eliminar claves objetivo específicas de la lista de variables utilizando el prefijo **!**, por ejemplo:
 
-```modsecurity
+```seclang
 # We want to apply some Sql Injection validations against the REQUEST_HEADERS
 SecRule REQUEST_HEADERS "@detectSQLi" "id:1,deny,status:403"
 
@@ -90,7 +90,7 @@ SecRule REQUEST_HEADERS|!REQUEST_HEADERS:User-Agent "@detectSQLi" "id:2,deny,sta
 
 Se pueden evaluar múltiples variables separándolas con el carácter pipe (|), por ejemplo:
 
-```modsecurity
+```seclang
 SecRule VARIABLE1|VARIABLE2|VARIABLE3:/some-regex/|!VARIABLE3:id "!@rx \w+" "id:1,pass"
 ```
 
@@ -98,7 +98,7 @@ SecRule VARIABLE1|VARIABLE2|VARIABLE3:/some-regex/|!VARIABLE3:id "!@rx \w+" "id:
 
 Si el procesador de cuerpo está configurado para procesar JSON o XML, se pueden utilizar las variables especiales **XML** y **JSON**, por ejemplo:
 
-```modsecurity
+```seclang
 SecAction "id:1, phase:1,ctl:setRequestBodyProcessor=XML,pass,nolog"
 # We are denying a book because we don't like it
 SecRule XML:/* "name of the book" "id:2,phase:2,log,logdata:'We don´t like this book!',deny,status:403"
@@ -135,7 +135,7 @@ Los valores de las acciones son opcionales. La sintaxis clave-valor es ```key:va
 
 Si se definen acciones por defecto, es obligatorio indicar una **fase** (phase) y una **acción disruptiva**.
 
-```modsecurity
+```seclang
 SecDefaultAction "phase:1, deny, status:403"
 
 # This rule will deny the request with status 403 because of the default actions
@@ -153,7 +153,7 @@ Las SecActions se utilizan para crear reglas que siempre coincidirán; no contie
 
 Las expansiones de macros son mensajes especiales que pueden transformarse en su valor evaluado. La sintaxis es: ```%{VARIABLE.KEY}```, por ejemplo ```%{REQUEST_HEADERS.host}``` devolverá el contenido de la cabecera de solicitud "Host".
 
-```modsecurity
+```seclang
 SecAction "id:1, log, logdata:'Transaction %{unique_id}'"
 
 # we assign a variable to tx.argcount

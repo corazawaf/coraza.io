@@ -220,7 +220,7 @@ func logError(error types.MatchedRule) {
 
 With a simple ``default.conf`` configuration:
 
-```modsecurity
+```seclang
 SecDebugLogLevel 9
 SecDebugLog /dev/stdout
 

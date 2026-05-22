@@ -78,7 +78,7 @@ This phase will evaluate phase 5 rules, save persistent collections and write th
 
 Rules **are not** sorted by id, they are sorted by phase and compilation order. For example:
 
-```modsecurity
+```seclang
 SecAction "id:1,phase:3,logdata:'first rule',log"
 SecAction "id:150,phase:2,logdata:'second rule',log"
 SecAction "id:300,phase:1,logdata:'third rule',log"
@@ -86,7 +86,7 @@ SecAction "id:300,phase:1,logdata:'third rule',log"
 
 This will evaluate the rules based on it's phase, not its id, and show the following `logdata`:
 
-```modsecurity
+```seclang
 third rule
 second rule
 first rule
@@ -96,7 +96,7 @@ first rule
 
 [SecMarker](#) is a directive that creates an abstract rule, without rules, operators and actions, that will only work as a placeholder to tell the transaction under which SecMarker we are.
 
-```modsecurity
+```seclang
 SecMarker BEGIN_HOST_CHECK
 
 SecRule &REQUEST_HEADERS:Host "@eq 0" "phase:1,id:1,pass"
@@ -107,7 +107,7 @@ SecMarker END_HOST_CHECK
 
 This will "mark" rules 1 and 2 as `BEGIN_HOST_CHECK`, which will be used by [skipAfter]({{< relref "actions#skipafter" >}}) action to skip the following rules after the "SecMark" was reached, for example:
 
-```modsecurity
+```seclang
 SecAction "id:1, phase:1,skipAfter:END_HOST_CHECK"
 SecMarker BEGIN_HOST_CHECK
 
@@ -124,7 +124,7 @@ In the example above, rules 2 and 3 will be skipped because they are marked as `
 
 [Skip]({{< relref "actions#skip" >}}) action can also be used to skip the N following rules, for example:
 
-```modsecurity
+```seclang
 SecAction "id:1,phase:1, skip:1"
 
 # The following rule won't be evaluated
