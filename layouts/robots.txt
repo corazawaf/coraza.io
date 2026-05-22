@@ -1,0 +1,5 @@
+User-agent: *
+Disallow: /admin/
+{{- range site.Sites }}
+Sitemap: {{ .Home.Permalink | safeURL }}sitemap.xml
+{{- end }}

@@ -214,7 +214,7 @@ func parseOperator(name string, doc string) Operator {
 		// SecRule ...
 		// ```
 		//
-		if strings.HasSuffix(line, ":") {
+		if strings.HasSuffix(line, ":") && fieldAppenders[line[:len(line)-1]] != nil {
 			key = line[:len(line)-1]
 			value = ""
 		} else {

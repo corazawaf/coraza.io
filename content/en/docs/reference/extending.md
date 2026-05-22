@@ -1,6 +1,6 @@
 ---
 title: "Extending"
-description: "Easily extend Coraza with your own Operators, Actions, Audit Loggers and Persistence engines."
+description: "Extend Coraza WAF with custom operators, actions, audit loggers, and persistence engines using the plugin API for Go applications."
 lead: "Plugins can be used to extend Coraza functionalities, right now, you can only extend Rule Actions, Rule Operators and Rule Transactions, but in the near future you may be able to add many additional functionalities."
 date: 2020-10-06T08:48:57+00:00
 lastmod: 2020-10-06T08:48:57+00:00

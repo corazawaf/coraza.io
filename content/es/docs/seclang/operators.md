@@ -1,6 +1,6 @@
 ---
 title: "Operadores"
-description: "Esta sección documenta los operadores disponibles actualmente en Coraza."
+description: "Referencia completa de los operadores de SecLang disponibles en Coraza WAF para hacer coincidir variables con patrones, rangos y condiciones."
 lead: "Esta sección documenta los operadores disponibles actualmente en Coraza."
 date: 2020-10-06T08:48:57+00:00
 lastmod: "2026-03-13T20:20:14+01:00"

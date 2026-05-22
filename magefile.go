@@ -30,6 +30,10 @@ func Generate() error {
     return err
   }
 
+  if err := sh.RunV("go", "run", "tools/variablesgen/main.go", ".vendor/github.com/corazawaf/coraza/v3"); err != nil {
+    return err
+  }
+
   if err := sh.RunV("go", "run", "tools/readmesync/main.go"); err != nil {
     return err
   }

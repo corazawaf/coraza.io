@@ -1,9 +1,9 @@
 ---
 title: "Privacy Policy"
-description: "We do not use cookies and we do not collect any personal data."
+description: "Privacy policy for coraza.io — we do not use cookies and do not collect any personal data from visitors to our website."
 date: 2020-08-27T19:23:18+02:00
 lastmod: 2020-08-27T19:23:18+02:00
-draft: true
+draft: false
 images: []
 ---
 
@@ -20,6 +20,6 @@ __TLDR__: We do not use cookies and we do not collect any personal data.
 
 ## Contact us
 
-[Contact us]({{< relref "contact/index.md" >}}) if you have any questions.
+[Contact us](https://owasp.org/slack/invite) via the OWASP Slack (#coraza channel) if you have any questions.
 
 Effective Date: _27th August 2020_

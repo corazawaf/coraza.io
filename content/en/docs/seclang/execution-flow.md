@@ -1,6 +1,6 @@
 ---
 title: "Execution flow"
-description: "Learn how to control Coraza rules execution flow using special directives and actions."
+description: "Learn how to control rule execution flow in Coraza WAF using special directives and actions, including phases and short-circuit evaluation."
 lead: "Coraza execution flow can be altered using special directives and actions."
 date: 2020-10-06T08:48:57+00:00
 lastmod: 2020-10-06T08:48:57+00:00

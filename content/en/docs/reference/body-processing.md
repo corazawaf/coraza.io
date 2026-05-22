@@ -1,6 +1,6 @@
 ---
 title: "Body Processing"
-description: "How Coraza handles request and response body processing, including supported body processors."
+description: "How Coraza WAF handles request and response body processing — buffering, inspection, and available body processors for JSON, XML, and multipart."
 lead: "Coraza buffers request and response bodies to enable reliable inspection and blocking. This page explains the body processing pipeline and available processors."
 date: 2020-10-06T08:48:57+00:00
 lastmod: 2020-10-06T08:48:57+00:00

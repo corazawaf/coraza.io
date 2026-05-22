@@ -1,6 +1,6 @@
 ---
 title: "Felipe Zipitria"
-description: "Co-leader of OWASP Coraza"
+description: "Felipe Zipitria is co-leader of OWASP Coraza, an open source Web Application Firewall for Go, and an active contributor to the OWASP community."
 date: 2020-10-06T08:50:45+00:00
 lastmod: 2020-10-06T08:50:45+00:00
 draft: false

@@ -1,11 +1,12 @@
 ---
-title : "OWASP Coraza WAF"
+title : "Open Source Web Application Firewall"
 description: "OWASP Coraza is an open source, enterprise-grade, high performance Web Application Firewall designed for APIs and web applications — from legacy to modern."
 lead: "Open source Web Application Firewall for APIs and web applications. Enterprise-grade protection, 100% compatible with OWASP Core Rule Set."
 date: 2020-10-06T08:47:36+00:00
 lastmod: 2020-10-06T08:47:36+00:00
 draft: false
 images: []
+keywords: ["web application firewall", "WAF", "open source WAF", "Go WAF", "Golang WAF", "ModSecurity alternative", "ModSecurity compatible", "OWASP CRS", "OWASP Core Rule Set", "API security", "HTTP firewall", "Coraza WAF"]
 ---
 
 <div class="col-lg-5 mb-4">

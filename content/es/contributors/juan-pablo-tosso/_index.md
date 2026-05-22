@@ -1,6 +1,6 @@
 ---
 title: "Juan Pablo Tosso"
-description: "Autor y co-líder de Coraza."
+description: "Juan Pablo Tosso es el autor y co-lider de OWASP Coraza, un WAF de codigo abierto de alto rendimiento escrito en Go."
 date: 2020-10-06T08:50:45+00:00
 lastmod: 2020-10-06T08:50:45+00:00
 draft: false

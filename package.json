@@ -17,11 +17,11 @@
     "thulite": "^2.6.5"
   },
   "devDependencies": {
-    "@fullhuman/postcss-purgecss": "^8.0.0",
-    "autoprefixer": "^10.4.20",
-    "jest": "^30.3.0",
-    "postcss-cli": "^11.0.1",
-    "puppeteer": "^24.40.0"
+    "@fullhuman/postcss-purgecss": "8.0.0",
+    "autoprefixer": "10.4.27",
+    "jest": "30.3.0",
+    "postcss-cli": "11.0.1",
+    "puppeteer": "24.40.0"
   },
   "engines": {
     "node": ">=20.0.0"

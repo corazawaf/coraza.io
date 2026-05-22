@@ -1,6 +1,6 @@
 ---
 title: "Acciones"
-description: "Acciones disponibles en Coraza"
+description: "Referencia completa de las acciones de SecLang disponibles en Coraza WAF para definir respuestas a reglas: bloqueo, permitir, registrar y redirigir."
 lead: "La acción de una regla define cómo gestionar las solicitudes HTTP que han coincidido con una o más condiciones de regla."
 date: 2020-10-06T08:48:57+00:00
 lastmod: "2026-03-13T20:20:13+01:00"

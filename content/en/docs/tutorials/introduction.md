@@ -1,6 +1,6 @@
 ---
 title: "Introduction"
-description: "Introduction to Coraza Web Application Firewall. Start protecting your web applications in a few steps."
+description: "Introduction to the OWASP Coraza Web Application Firewall — learn about its architecture, key features, and how to start protecting your applications."
 lead: "Welcome to Coraza Web Application Firewall, this project is a Golang port of ModSecurity with the goal to become the first enterprise-grade Open Source Web Application Firewall, flexible and powerful enough to serve as the baseline for many projects."
 date: 2020-10-06T08:48:57+00:00
 lastmod: 2020-10-06T08:48:57+00:00

@@ -1,13 +1,16 @@
 ---
 title: "Quick Start"
-description: "One page summary of how to start a new Coraza WAF project."
+description: "Get started with Coraza WAF — install the library, write your first SecLang rule, and integrate WAF protection into your Go web application."
 lead: "One page summary of how to start a new Coraza WAF project."
 date: 2020-11-16T13:59:39+01:00
 lastmod: 2020-11-16T13:59:39+01:00
 draft: false
 images: []
+keywords: ["Coraza WAF tutorial", "WAF quick start", "Go WAF setup", "web application firewall Go", "Coraza getting started"]
 weight: 110
 toc: true
+sitemap:
+  priority: 0.8
 ---
 
 If you are not looking to use Coraza WAF as a library and you want a working WAF implementation or integration, check out the [Connectors](/connectors/) page for available integrations.

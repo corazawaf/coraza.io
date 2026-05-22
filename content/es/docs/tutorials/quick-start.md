@@ -1,6 +1,6 @@
 ---
 title: "Inicio Rápido"
-description: "Resumen en una página de cómo iniciar un nuevo proyecto con Coraza WAF."
+description: "Comienza con Coraza WAF: instala la biblioteca, escribe tu primera regla SecLang e integra la proteccion WAF en tu aplicacion web con Go."
 lead: "Resumen en una página de cómo iniciar un nuevo proyecto con Coraza WAF."
 date: 2020-11-16T13:59:39+01:00
 lastmod: 2020-11-16T13:59:39+01:00

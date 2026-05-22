@@ -1,7 +1,7 @@
 ---
 title: "Sintaxis"
-description: ""
-lead: ""
+description: "Aprende la sintaxis de reglas SecLang en Coraza WAF: directivas, operadores, acciones, transformaciones y variables con ejemplos prácticos."
+lead: "Aprende la sintaxis de reglas SecLang en Coraza WAF: directivas, operadores, acciones, transformaciones y variables con ejemplos prácticos."
 date: 2020-10-06T08:48:57+00:00
 lastmod: 2020-10-06T08:48:57+00:00
 draft: false

@@ -1,6 +1,6 @@
 ---
 title: "Juan Pablo Tosso"
-description: "Author and co-leader of Coraza."
+description: "Juan Pablo Tosso is the author and co-leader of OWASP Coraza, a high-performance open source Web Application Firewall written in Go."
 date: 2020-10-06T08:50:45+00:00
 lastmod: 2020-10-06T08:50:45+00:00
 draft: false
