@@ -3,7 +3,7 @@ title: "Variables"
 description: "Reference for all SecLang variables available in Coraza WAF, covering request, response, server, and collection variables used in rules."
 lead: "Reference for all SecLang variables available in Coraza WAF, covering request, response, server, and collection variables used in rules."
 date: 2020-10-06T08:48:57+00:00
-lastmod: "2026-04-13T01:23:18+02:00"
+lastmod: "2026-05-22T18:00:09+02:00"
 draft: false
 images: []
 weight: 100
@@ -140,14 +140,6 @@ Contains a list of form fields that were used for file upload. Available only on
 SecRule FILES_NAMES "^upfile$" "id:19"
 ```
 
-## FULL_REQUEST_LENGTH
-
-Represents the amount of bytes that FULL_REQUEST may use.
-
-```seclang
-SecRule FULL_REQUEST_LENGTH "@eq 205" "id:21"
-```
-
 ## FILES_SIZES
 
 Contains a list of individual file sizes. Useful for implementing a size limitation on individual uploaded files. Available only on inspected multipart/form-data requests.
@@ -257,15 +249,6 @@ SecRule ARGS pattern "chain,deny,id:27"
 ```
 
 **Note :** Be aware that this variable holds data for the last operator match. This means that if there are more than one matches, only the last one will be populated. Use MATCHED_VARS_NAMES variable if you want all matches.
-
-## MATCHED_VARS_NAMES
-
-Similar to MATCHED_VAR_NAME except that it is a collection of all matches for the current operator check.
-
-```seclang
-SecRule ARGS pattern "chain,deny,id:28"
-  SecRule MATCHED_VARS_NAMES "@eq ARGS:param"
-```
 
 ## MULTIPART_FILENAME
 
