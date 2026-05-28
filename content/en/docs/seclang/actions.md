@@ -27,11 +27,22 @@ Actions are categorized into five types:
 1. Disruptive Actions
 
 Trigger Coraza operations such as blocking or allowing transactions.
-Only one disruptive action per rule applies; if multiple are specified,
-the last one takes precedence. Disruptive actions will NOT be executed
-if SecRuleEngine is set to DetectionOnly.
+Only one disruptive action per rule applies. If multiple disruptive actions
+are specified, Coraza uses the first disruptive action in syntactic order
+and ignores the rest. Disruptive actions will NOT be executed if
+SecRuleEngine is set to DetectionOnly.
 
 Examples: deny, drop, redirect, allow, block, pass
+
+Basic precedence examples:
+
+```modsecurity
+# First disruptive action is allow, so the transaction is allowed.
+SecRule REQUEST_URI "@streq /healthz" "id:900100,phase:1,allow,deny,status:403"
+
+# First disruptive action is deny, so the transaction is denied.
+SecRule REQUEST_URI "@streq /admin" "id:900101,phase:1,deny,status:403,allow"
+```
 
 2. Non-disruptive Actions
 
@@ -896,6 +907,5 @@ You can use forward slashes to create a hierarchy of categories (see example), a
 	 	"phase:2,ver:'CRS/2.2.4,capture,t:none,t:htmlEntityDecode,t:compressWhiteSpace,t:lowercase,ctl:auditLogParts=+E,block,msg:'Cross-site Scripting (XSS) Attack',id:'958016',tag:'WEB_ATTACK/XSS',tag:'WASCTC/WASC-8',tag:'WASCTC/WASC-22',tag:'OWASP_TOP_10/A2',tag:'OWASP_AppSensor/IE1',tag:'PCI/6.5.1',logdata:'% \
 		{TX.0}',severity:'2',setvar:'tx.msg=%{rule.msg}',setvar:tx.xss_score=+%{tx.critical_anomaly_score},setvar:tx.anomaly_score=+%{tx.critical_anomaly_score},setvar:tx.%{rule.id}-WEB_ATTACK/XSS-%{matched_var_name}=%{tx.0}"
 ```
-
 
 
