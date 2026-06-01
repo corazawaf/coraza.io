@@ -21,7 +21,7 @@
     "autoprefixer": "10.4.27",
     "jest": "30.3.0",
     "postcss-cli": "11.0.1",
-    "puppeteer": "24.40.0"
+    "puppeteer": "25.1.0"
   },
   "engines": {
     "node": ">=20.0.0"
