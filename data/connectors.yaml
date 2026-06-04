@@ -7,7 +7,16 @@
   license: "Apache-2.0"
   logo: "/images/connectors/nginx.svg"
 
-- title: "Envoy"
+- title: "Envoy (core)"
+  lead: "Deploy Coraza as a runtime Envoy Go Dynamic Module."
+  author: "Tetrate"
+  repo: "https://github.com/tetratelabs/built-on-envoy/tree/main/extensions/composer/waf"
+  official: false
+  compatibility: ["v3.x"]
+  license: "Apache-2.0"
+  logo: "/images/connectors/envoy.svg"
+
+- title: "Envoy (contrib)"
   lead: "Web Application Firewall HTTP filter plugin for Envoy that leverages the Coraza WAF engine."
   author: "United Security Providers"
   repo: "https://github.com/united-security-providers/coraza-envoy-go-filter"

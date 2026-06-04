@@ -116,12 +116,21 @@
     <div class="row g-4 align-items-stretch" style="min-height: 420px;">
       <div class="col-lg-4">
         <div class="d-flex flex-column gap-2 h-100">
-          <button class="connector-tab active" onclick="selectConnector('envoy', this)" type="button">
+          <button class="connector-tab active" onclick="selectConnector('envoy-core', this)" type="button">
             <div class="connector-logo">
               <img src="/images/connectors/envoy.svg" alt="" width="24" height="24" loading="lazy">
             </div>
             <div class="text-start">
-              <div class="fw-semibold">Envoy Proxy</div>
+              <div class="fw-semibold">Envoy Proxy (core)</div>
+              <div class="small text-body-secondary">Istio &amp; Cloud Native</div>
+            </div>
+          </button>
+          <button class="connector-tab" onclick="selectConnector('envoy-contrib', this)" type="button">
+            <div class="connector-logo">
+              <img src="/images/connectors/envoy.svg" alt="" width="24" height="24" loading="lazy">
+            </div>
+            <div class="text-start">
+              <div class="fw-semibold">Envoy Proxy (contrib)</div>
               <div class="small text-body-secondary">Istio &amp; Cloud Native</div>
             </div>
           </button>
@@ -177,10 +186,15 @@
 <script>
 (function () {
   var configs = {
-    envoy: {
+    'envoy-core': {
       file: 'envoy.yaml',
       lang: 'yaml',
-      code: '# Envoy Coraza WAF Filter\nhttp_filters:\n  - name: envoy.filters.http.golang\n    typed_config:\n      "@type": type.googleapis.com/envoy.extensions.filters.http.golang.v3alpha.Config\n      library_id: coraza-waf\n      library_path: /etc/envoy/coraza-waf.so\n      plugin_name: coraza-waf\n      plugin_config:\n        "@type": type.googleapis.com/xds.type.v3.TypedStruct\n        value:\n          directives:\n            waf1:\n              simple_directives:\n                - "SecRuleEngine On"\n                - "Include @coraza-setup"\n                - "Include @crs-setup"\n                - "Include @owasp_crs/*.conf"\n          default_directive: "waf1"'
+      code: '# Envoy Coraza Dynamic Module WAF Filter\nhttp_filters:\n- name: coraza-waf\n  typed_config:\n    \'@type\': type.googleapis.com/envoy.extensions.filters.http.dynamic_modules.v3.DynamicModuleFilter\n    dynamic_module_config:\n      load_globally: true\n      name: composer\n    filter_config:\n      \'@type\': type.googleapis.com/google.protobuf.StringValue\n      value: \'{"config":{"directives":["Include @coraza.conf","SecRuleEngine\n        On","Include @crs-setup.conf","Include @owasp_crs/*.conf"]},"name":"coraza-waf","strict_check":false,"url":"file:///share/boe/extensions/goplugin/coraza-waf/0.6.0/plugin.so"}\'\n    filter_name: goplugin-loader'
+    },
+    'envoy-contrib': {
+      file: 'envoy.yaml',
+      lang: 'yaml',
+      code: '# Envoy Coraza WAF Filter (contrib envoy.filters.http.golang)\nhttp_filters:\n  - name: envoy.filters.http.golang\n    typed_config:\n      "@type": type.googleapis.com/envoy.extensions.filters.http.golang.v3alpha.Config\n      library_id: coraza-waf\n      library_path: /etc/envoy/coraza-waf.so\n      plugin_name: coraza-waf\n      plugin_config:\n        "@type": type.googleapis.com/xds.type.v3.TypedStruct\n        value:\n          directives:\n            waf1:\n              simple_directives:\n                - "SecRuleEngine On"\n                - "Include @coraza-setup"\n                - "Include @crs-setup"\n                - "Include @owasp_crs/*.conf"\n          default_directive: "waf1"'
     },
     caddy: {
       file: 'Caddyfile',
@@ -199,7 +213,7 @@
     }
   };
 
-  var current = 'envoy';
+  var current = 'envoy-core';
 
   function renderCode(id) {
     var el = document.getElementById('cp-code');
@@ -231,9 +245,9 @@
 
   // Initialize after highlighter bundle is ready
   if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', function () { renderCode('envoy'); });
+    document.addEventListener('DOMContentLoaded', function () { renderCode(current); });
   } else {
-    renderCode('envoy');
+    renderCode(current);
   }
 })();
 </script>
