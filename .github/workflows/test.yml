@@ -31,6 +31,18 @@ jobs:
 
       - name: Install deps
         run: npm install
+        env:
+          PUPPETEER_SKIP_DOWNLOAD: 'true'
+
+      - name: Install Chrome for Puppeteer
+        # Puppeteer's bundled unzip leaves Chrome half-extracted on CI; unpack the pinned build ourselves.
+        run: |
+          EXEC=$(node -p "require('puppeteer').executablePath()")
+          DEST=$(dirname "$(dirname "$EXEC")")
+          BUILD=${DEST##*/linux-}
+          curl -fsSL "https://storage.googleapis.com/chrome-for-testing-public/$BUILD/linux64/chrome-linux64.zip" -o /tmp/chrome.zip
+          mkdir -p "$DEST" && unzip -q /tmp/chrome.zip -d "$DEST"
+          test -x "$EXEC"
 
       - name: Start Hugo server
         run: |
