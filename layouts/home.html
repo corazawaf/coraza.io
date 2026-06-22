@@ -189,7 +189,7 @@
     'envoy-core': {
       file: 'envoy.yaml',
       lang: 'yaml',
-      code: '# Envoy Coraza Dynamic Module WAF Filter\nhttp_filters:\n- name: coraza-waf\n  typed_config:\n    \'@type\': type.googleapis.com/envoy.extensions.filters.http.dynamic_modules.v3.DynamicModuleFilter\n    dynamic_module_config:\n      load_globally: true\n      name: composer\n    filter_config:\n      \'@type\': type.googleapis.com/google.protobuf.StringValue\n      value: \'{"config":{"directives":["Include @coraza.conf","SecRuleEngine\n        On","Include @crs-setup.conf","Include @owasp_crs/*.conf"]},"name":"coraza-waf","strict_check":false,"url":"file:///share/boe/extensions/goplugin/coraza-waf/0.6.0/plugin.so"}\'\n    filter_name: goplugin-loader'
+      code: '# Envoy Coraza Dynamic Module WAF Filter\nhttp_filters:\n- name: coraza-waf\n  typed_config:\n    "@type": type.googleapis.com/envoy.extensions.filters.http.dynamic_modules.v3.DynamicModuleFilter\n    dynamic_module_config:\n      load_globally: true\n      name: composer\n    filter_name: coraza-waf\n    filter_config:\n      "@type": type.googleapis.com/google.protobuf.StringValue\n      value: |\n        {\n          "directives": [\n            "Include @coraza.conf",\n            "SecRuleEngine On",\n            "Include @crs-setup.conf",\n            "Include @owasp_crs/*.conf"\n          ]\n        }'
     },
     'envoy-contrib': {
       file: 'envoy.yaml',
