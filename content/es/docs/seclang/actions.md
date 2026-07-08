@@ -16,7 +16,17 @@ Las acciones se definen como parte de un `SecRule` o como parámetro para `SecAc
 
 Las acciones pueden categorizarse según cómo afectan al procesamiento general:
 
-* **Acciones disruptivas** - Hacen que Coraza realice algo. En muchos casos, ese algo significa bloquear la transacción, pero no en todos. Por ejemplo, la acción allow se clasifica como una acción disruptiva, pero hace lo opuesto al bloqueo. Solo puede haber una acción disruptiva por regla (si hay múltiples acciones disruptivas presentes o heredadas, solo la última tendrá efecto), o cadena de reglas (en una cadena, una acción disruptiva solo puede aparecer en la primera regla).
+* **Acciones disruptivas** - Hacen que Coraza realice algo. En muchos casos, ese algo significa bloquear la transacción, pero no en todos. Por ejemplo, la acción allow se clasifica como una acción disruptiva, pero hace lo opuesto al bloqueo. Solo puede haber una acción disruptiva por regla (si se especifican varias acciones disruptivas, Coraza usa la primera acción disruptiva según el orden sintáctico e ignora el resto), o cadena de reglas (en una cadena, una acción disruptiva solo puede aparecer en la primera regla).
+
+Ejemplos básicos de precedencia:
+
+```modsecurity
+# First disruptive action is allow, so the transaction is allowed.
+SecRule REQUEST_URI "@streq /healthz" "id:900100,phase:1,allow,deny,status:403"
+
+# First disruptive action is deny, so the transaction is denied.
+SecRule REQUEST_URI "@streq /admin" "id:900101,phase:1,deny,status:403,allow"
+```
 {{< callout context="note" >}}
 Las acciones disruptivas NO se ejecutarán si `SecRuleEngine` está establecido en `DetectionOnly`. Si está creando reglas de excepción/lista de permitidos que utilizan la acción allow, también debería añadir la acción `ctl:ruleEngine=On` para ejecutar la acción.
 {{< /callout >}}
@@ -827,5 +837,3 @@ Puede usar barras diagonales para crear una jerarquía de categorías (véase el
 	 	"phase:2,ver:'CRS/2.2.4,capture,t:none,t:htmlEntityDecode,t:compressWhiteSpace,t:lowercase,ctl:auditLogParts=+E,block,msg:'Cross-site Scripting (XSS) Attack',id:'958016',tag:'WEB_ATTACK/XSS',tag:'WASCTC/WASC-8',tag:'WASCTC/WASC-22',tag:'OWASP_TOP_10/A2',tag:'OWASP_AppSensor/IE1',tag:'PCI/6.5.1',logdata:'% \
 		{TX.0}',severity:'2',setvar:'tx.msg=%{rule.msg}',setvar:tx.xss_score=+%{tx.critical_anomaly_score},setvar:tx.anomaly_score=+%{tx.critical_anomaly_score},setvar:tx.%{rule.id}-WEB_ATTACK/XSS-%{matched_var_name}=%{tx.0}"
 ```
-
-
