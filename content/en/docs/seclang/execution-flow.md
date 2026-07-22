@@ -12,7 +12,7 @@ toc: true
 
 ## Phases
 
-Phases are an abstract concept designed to fit most web servers execution flows and give it more oportunities to stop a request.
+Phases are an abstract concept designed to fit most web servers execution flows and give it more opportunities to stop a request.
 
 ```mermaid
 flowchart TD
