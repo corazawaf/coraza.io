@@ -14,7 +14,7 @@ toc: true
 
 Phases are an abstract concept designed to fit most web servers execution flows and give it more oportunities to stop a request.
 
-```kroki {type=mermaid}
+```mermaid
 flowchart TD
     A["Incoming Request"] --> B["Phase 1\nRequest Headers"]
     B -->|"Disrupted"| X["Return Error"]

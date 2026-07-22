@@ -14,7 +14,7 @@ toc: true
 
 Las fases son un concepto abstracto diseñado para adaptarse a la mayoría de los flujos de ejecución de servidores web y ofrecer más oportunidades para detener una solicitud.
 
-```kroki {type=mermaid}
+```mermaid
 flowchart TD
     A["Solicitud entrante"] --> B["Fase 1\nCabeceras de solicitud"]
     B -->|"Interrumpida"| X["Devolver error"]

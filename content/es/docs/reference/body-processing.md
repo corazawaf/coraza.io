@@ -30,7 +30,7 @@ Los procesadores de cuerpo están diseñados para manejar solicitudes y respuest
 | JSON                      | Sí        | Sí        | No          | Sí             |
 | GraphQL                   | PD        | PD        | Sí          | PD             |
 
-```kroki {type=mermaid}
+```mermaid
 flowchart TD
     A[Request Arrives] --> B{RequestBodyAccess On?}
     B -->|No| G[Skip to Phase 3]
