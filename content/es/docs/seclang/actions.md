@@ -16,15 +16,15 @@ Las acciones se definen como parte de un `SecRule` o como parámetro para `SecAc
 
 Las acciones pueden categorizarse según cómo afectan al procesamiento general:
 
-* **Acciones disruptivas** - Hacen que Coraza realice algo. En muchos casos, ese algo significa bloquear la transacción, pero no en todos. Por ejemplo, la acción allow se clasifica como una acción disruptiva, pero hace lo opuesto al bloqueo. Solo puede haber una acción disruptiva por regla (si se especifican varias acciones disruptivas, Coraza usa la primera acción disruptiva según el orden sintáctico e ignora el resto), o cadena de reglas (en una cadena, una acción disruptiva solo puede aparecer en la primera regla).
+* **Acciones disruptivas** - Hacen que Coraza realice algo. En muchos casos, ese algo significa bloquear la transacción, pero no en todos. Por ejemplo, la acción allow se clasifica como una acción disruptiva, pero hace lo opuesto al bloqueo. Solo puede haber una acción disruptiva por regla (si se especifican varias acciones disruptivas, solo la última tendrá efecto), o cadena de reglas (en una cadena, una acción disruptiva solo puede aparecer en la primera regla).
 
 Ejemplos básicos de precedencia:
 
 ```modsecurity
-# First disruptive action is allow, so the transaction is allowed.
+# Last disruptive action is deny, so the transaction is denied.
 SecRule REQUEST_URI "@streq /healthz" "id:900100,phase:1,allow,deny,status:403"
 
-# First disruptive action is deny, so the transaction is denied.
+# Last disruptive action is allow, so the transaction is allowed.
 SecRule REQUEST_URI "@streq /admin" "id:900101,phase:1,deny,status:403,allow"
 ```
 {{< callout context="note" >}}

@@ -28,19 +28,18 @@ Actions are categorized into five types:
 
 Trigger Coraza operations such as blocking or allowing transactions.
 Only one disruptive action per rule applies. If multiple disruptive actions
-are specified, Coraza uses the first disruptive action in syntactic order
-and ignores the rest. Disruptive actions will NOT be executed if
-SecRuleEngine is set to DetectionOnly.
+are specified, only the last one takes precedence. Disruptive actions will
+NOT be executed if SecRuleEngine is set to DetectionOnly.
 
 Examples: deny, drop, redirect, allow, block, pass
 
 Basic precedence examples:
 
 ```modsecurity
-# First disruptive action is allow, so the transaction is allowed.
+# Last disruptive action is deny, so the transaction is denied.
 SecRule REQUEST_URI "@streq /healthz" "id:900100,phase:1,allow,deny,status:403"
 
-# First disruptive action is deny, so the transaction is denied.
+# Last disruptive action is allow, so the transaction is allowed.
 SecRule REQUEST_URI "@streq /admin" "id:900101,phase:1,deny,status:403,allow"
 ```
 
