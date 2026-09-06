@@ -164,14 +164,14 @@ func getOperatorFromFile(file string, page Page) Page {
 	return page
 }
 
-// addModsecurityLang replaces plain opening code fences with ```modsecurity
-func addModsecurityLang(s string) string {
+// addSecLang replaces plain opening code fences with ```seclang
+func addSecLang(s string) string {
 	lines := strings.Split(s, "\n")
 	inCode := false
 	for i, line := range lines {
 		if strings.TrimSpace(line) == "```" {
 			if !inCode {
-				lines[i] = "```modsecurity"
+				lines[i] = "```seclang"
 			}
 			inCode = !inCode
 		}
@@ -251,6 +251,6 @@ func parseOperator(name string, doc string) Operator {
 		}
 		// If key is empty and previousKey is empty, just skip the line
 	}
-	o.Example = addModsecurityLang(o.Example)
+	o.Example = addSecLang(o.Example)
 	return o
 }

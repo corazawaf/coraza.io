@@ -21,7 +21,7 @@ Admite expansión de macros para coincidencia dinámica de cadenas.
 
 **Ejemplo:**
 
-```modsecurity
+```seclang
 # Block requests that don't start with GET
 SecRule REQUEST_LINE "!@beginsWith GET" "id:149,deny,log"
 # Check if URI starts with /admin
@@ -38,7 +38,7 @@ Admite expansión de macros para coincidencia dinámica de cadenas.
 
 **Ejemplo:**
 
-```modsecurity
+```seclang
 # Detect PHP files in request line
 SecRule REQUEST_LINE "@contains .php" "id:150,deny,log"
 # Check if URI contains admin
@@ -55,7 +55,7 @@ encuentra una carga útil de inyección SQL en la entrada. Captura la huella de 
 
 **Ejemplo:**
 
-```modsecurity
+```seclang
 # Detect SQLi in query string
 SecRule ARGS "@detectSQLi" "id:185,deny,log,msg:'SQL Injection Detected'"
 # Check request body for SQLi
@@ -72,7 +72,7 @@ encuentra una carga útil de XSS en la entrada. Utiliza coincidencia avanzada de
 
 **Ejemplo:**
 
-```modsecurity
+```seclang
 # Detect XSS in request parameters
 SecRule ARGS "@detectXSS" "id:187,deny,log,msg:'XSS Attack Detected'"
 # Check request body for XSS
@@ -89,7 +89,7 @@ Admite expansión de macros para coincidencia dinámica de cadenas.
 
 **Ejemplo:**
 
-```modsecurity
+```seclang
 # Block requests that don't end with HTTP/1.1
 SecRule REQUEST_LINE "!@endsWith HTTP/1.1" "id:152,deny,log"
 # Check if filename ends with .exe
@@ -106,7 +106,7 @@ Ambos valores se convierten a enteros antes de la comparación. Admite expansió
 
 **Ejemplo:**
 
-```modsecurity
+```seclang
 # Check if request header count is exactly 15
 SecRule &REQUEST_HEADERS_NAMES "@eq 15" "id:153,deny,log"
 # Compare parameter value to expected number
@@ -123,7 +123,7 @@ Ambos valores se convierten a enteros antes de la comparación. Admite expansió
 
 **Ejemplo:**
 
-```modsecurity
+```seclang
 # Block if too many request headers
 SecRule &REQUEST_HEADERS_NAMES "@ge 15" "id:155,deny,log"
 # Check minimum value requirement
@@ -140,7 +140,7 @@ Ambos valores se convierten a enteros antes de la comparación. Admite expansió
 
 **Ejemplo:**
 
-```modsecurity
+```seclang
 # Deny if request header count exceeds limit
 SecRule &REQUEST_HEADERS_NAMES "@gt 15" "id:158,deny,log"
 # Check if quantity exceeds threshold
@@ -158,7 +158,7 @@ el valor de la variable como argumento de línea de comandos y tiene un tiempo d
 
 **Ejemplo:**
 
-```modsecurity
+```seclang
 # Scan uploaded files with external antivirus
 SecRule FILES_TMPNAMES "@inspectFile /usr/local/bin/av-scan.sh" "id:203,deny,log,msg:'Virus detected'"
 # Custom content validation script
@@ -176,7 +176,7 @@ Puede coincidir con IPs individuales o rangos de IPs. Añade automáticamente la
 
 **Ejemplo:**
 
-```modsecurity
+```seclang
 # Block specific IPs and ranges
 SecRule REMOTE_ADDR "@ipMatch 192.168.1.100,192.168.1.50,10.10.50.0/24" "id:160,deny,log"
 # Allow internal network
@@ -193,7 +193,7 @@ Ambos valores se convierten a enteros antes de la comparación. Admite expansió
 
 **Ejemplo:**
 
-```modsecurity
+```seclang
 # Allow requests with reasonable header count
 SecRule &REQUEST_HEADERS_NAMES "@le 15" "id:164,pass,log"
 # Check maximum value constraint
@@ -210,7 +210,7 @@ Ambos valores se convierten a enteros antes de la comparación. Admite expansió
 
 **Ejemplo:**
 
-```modsecurity
+```seclang
 # Ensure header count stays below threshold
 SecRule &REQUEST_HEADERS_NAMES "@lt 15" "id:166,pass,log"
 # Check value is under limit
@@ -228,7 +228,7 @@ acciones sin necesidad de coincidir.
 
 **Ejemplo:**
 
-```modsecurity
+```seclang
 # Disabled rule that never matches
 SecRule ARGS "@noMatch" "id:205,deny,log,msg:'This rule will never fire'"
 # Rule that only executes actions without matching
@@ -245,7 +245,7 @@ búsqueda eficiente de múltiples patrones. Coincide con palabras clave o patron
 
 **Ejemplo:**
 
-```modsecurity
+```seclang
 # Detect known malicious user agents
 SecRule REQUEST_HEADERS:User-Agent "@pm WebZIP WebCopier Webster" "id:170,deny,log"
 # Match multiple attack patternsonerror=" "id:171,deny"
@@ -262,7 +262,7 @@ el texto de respuesta si se encuentra. Tiene un tiempo de espera de 500 ms para 
 
 **Ejemplo:**
 
-```modsecurity
+```seclang
 # Check IP against Spamhaus blocklist
 SecRule REMOTE_ADDR "@rbl sbl-xbl.spamhaus.org" "id:183,deny,log,msg:'IP found in RBL'"
 # Multiple RBL checks
@@ -280,7 +280,7 @@ Extrae parámetros de ruta de la URI y los almacena en la colección ARGS_PATH p
 
 **Ejemplo:**
 
-```modsecurity
+```seclang
 # Match REST endpoint and extract path parameters
 SecRule REQUEST_URI "@restpath /api/v1/users/{userId}/posts/{postId}" "id:201,pass,log"
 # Validate extracted path parameter
@@ -298,7 +298,7 @@ Por defecto habilita el modo dotall (?s) donde . coincide con saltos de línea p
 
 **Ejemplo:**
 
-```modsecurity
+```seclang
 # Match User-Agent containing "nikto" (with explicit @rx)
 SecRule REQUEST_HEADERS:User-Agent "@rx nikto" "id:180,deny,log"
 # Implicit operator usage (same as @rx)
@@ -317,7 +317,7 @@ Este es un operador de coincidencia exacta sensible a mayúsculas. Admite expans
 
 **Ejemplo:**
 
-```modsecurity
+```seclang
 # Block if foo parameter is not exactly "bar"
 SecRule ARGS:foo "!@streq bar" "id:176,deny,log"
 # Check if request method is exactly POST
@@ -335,7 +335,7 @@ variables, registrar o realizar tareas de inicialización.
 
 **Ejemplo:**
 
-```modsecurity
+```seclang
 # Always execute action to set variable
 SecRule REMOTE_ADDR "@unconditionalMatch" "id:207,phase:1,pass,nolog,setvar:tx.initialized=1"
 # Force rule to always match and log
@@ -353,7 +353,7 @@ detectar datos binarios, caracteres de control o restringir conjuntos de caracte
 
 **Ejemplo:**
 
-```modsecurity
+```seclang
 # Allow only printable ASCII characters
 SecRule ARGS "@validateByteRange 10, 13, 32-126" "id:189,deny,log,msg:'Invalid characters'"
 # Detect null bytes
@@ -371,7 +371,7 @@ Admite múltiples códigos de país con patrones regex personalizados.
 
 **Ejemplo:**
 
-```modsecurity
+```seclang
 # Validate Chilean RUT format
 SecRule ARGS:rut "@validateNid cl ^[0-9]{7,8}-[0-9Kk]$" "id:195,pass,log"
 # Reject invalid Chilean national IDs
@@ -389,7 +389,7 @@ según la fase actual. Devuelve verdadero si la validación falla (violación de
 
 **Ejemplo:**
 
-```modsecurity
+```seclang
 # Validate request body against API schema
 SecRule REQUEST_BODY "@validateSchema /schemas/api-request.json" "id:197,deny,log,phase:2"
 # Validate response body schema
@@ -407,7 +407,7 @@ una codificación inválida (caracteres no hexadecimales o secuencias incompleta
 
 **Ejemplo:**
 
-```modsecurity
+```seclang
 # Ensure proper URL encoding in request URI
 SecRule REQUEST_URI_RAW "@validateUrlEncoding" "id:191,deny,log,msg:'Invalid URL encoding'"
 # Check query string encoding
@@ -425,7 +425,7 @@ de UTF-8 y garantizar una codificación de caracteres correcta.
 
 **Ejemplo:**
 
-```modsecurity
+```seclang
 # Ensure valid UTF-8 in request parameters
 SecRule ARGS "@validateUtf8Encoding" "id:193,deny,log,msg:'Invalid UTF-8 encoding'"
 # Check request body encoding
@@ -443,7 +443,7 @@ Admite expansión de macros para coincidencia dinámica.
 
 **Ejemplo:**
 
-```modsecurity
+```seclang
 # Allow only specific HTTP methods
 SecRule REQUEST_METHOD "!@within GET,POST,HEAD" "id:178,deny,log"
 # Check if parameter value is in allowed list

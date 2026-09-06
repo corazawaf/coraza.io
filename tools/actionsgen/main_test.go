@@ -20,7 +20,7 @@ func TestParseAction(t *testing.T) {
 				Name:        "test",
 				ActionGroup: "Disruptive",
 				Description: "This is a test action.",
-				Example:     "\n```modsecurity\nSecRule ARGS \"@rx test\" \"phase:2,block,id:1\"\n```",
+				Example:     "\n```seclang\nSecRule ARGS \"@rx test\" \"phase:2,block,id:1\"\n```",
 			},
 		},
 		"action with phases": {
@@ -31,7 +31,7 @@ func TestParseAction(t *testing.T) {
 				ActionGroup: "Non-disruptive",
 				Description: "This action works in multiple phases.",
 				Phases:      "1, 2, 3",
-				Example:     "\n```modsecurity\nSecAction \"phase:1,setvar:tx.test=1,id:2\"\n```",
+				Example:     "\n```seclang\nSecAction \"phase:1,setvar:tx.test=1,id:2\"\n```",
 			},
 		},
 		"action with complex description": {
@@ -41,7 +41,7 @@ func TestParseAction(t *testing.T) {
 				Name:        "test3",
 				ActionGroup: "Disruptive",
 				Description: "This action has a complex description.\nIt spans multiple lines and has bullet points.\n- First bullet point\n- Second bullet point",
-				Example:     "\n```modsecurity\nSecRule ARGS \"@rx complex\" \"phase:2,block,id:3\"\n```",
+				Example:     "\n```seclang\nSecRule ARGS \"@rx complex\" \"phase:2,block,id:3\"\n```",
 			},
 		},
 		"description with colon in continuation line": {
@@ -71,7 +71,7 @@ func TestParseAction(t *testing.T) {
 				Name:        "test5",
 				ActionGroup: "Disruptive",
 				Description: "This is a description that starts on a new line.",
-				Example:     "\n```modsecurity\nSecAction \"phase:1,id:5\"\n```",
+				Example:     "\n```seclang\nSecAction \"phase:1,id:5\"\n```",
 			},
 		},
 	}
@@ -125,7 +125,7 @@ type DenyFn struct{}
 					Name:        "Deny",
 					ActionGroup: "Disruptive",
 					Description: "Denies access to the request.",
-					Example:     "\n" + "```modsecurity" + "\nSecRule ARGS \"@rx test\" \"phase:2,deny,id:1\"\n" + "```",
+					Example:     "\n" + "```seclang" + "\nSecRule ARGS \"@rx test\" \"phase:2,deny,id:1\"\n" + "```",
 					Phases:      "",
 				},
 			},
@@ -150,7 +150,7 @@ type SetvarFn struct{}
 					Name:        "Setvar",
 					ActionGroup: "Non-disruptive",
 					Description: "Sets a variable.",
-					Example:     "\n" + "```modsecurity" + "\nSecAction \"phase:1,setvar:tx.test=1,id:2\"\n" + "```",
+					Example:     "\n" + "```seclang" + "\nSecAction \"phase:1,setvar:tx.test=1,id:2\"\n" + "```",
 					Phases:      "1, 2, 3, 4, 5",
 				},
 			},

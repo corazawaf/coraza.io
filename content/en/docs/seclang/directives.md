@@ -3,7 +3,7 @@ title: "Directives"
 description: "Complete reference for all Coraza WAF SecLang directives used to configure the engine, load rules, and control request and response inspection."
 lead: "The following section outlines all of the Coraza directives."
 date: 2020-10-06T08:48:57+00:00
-lastmod: "2026-04-13T01:23:16+02:00"
+lastmod: "2026-05-22T18:03:47+02:00"
 draft: false
 images: []
 weight: 10
@@ -20,7 +20,7 @@ versions: v3.0+
 Include loads a file or a list of files from the filesystem using golang Glob syntax.
 
 **Example:**
-```modsecurity
+```seclang
 Include /path/coreruleset/rules/*.conf
 ```
 
@@ -28,6 +28,7 @@ Quoting [Glob documentation](https://pkg.go.dev/path/filepath#Glob):
 > The syntax of patterns is the same as in Match. The pattern may describe hierarchical
 > names such as /usr/*/bin/ed (assuming the Separator is ‘/’).
 > Glob ignores file system errors such as I/O errors reading directories. The only possible returned error is ErrBadPattern, when pattern is malformed.
+
 
 ## SecAction
 
@@ -39,9 +40,10 @@ This directive is commonly used to set variables and initialize persistent colle
 `initcol` action. The syntax of the parameter is identical to that of the third parameter of [`SecRule`](#secrule).
 
 **Example:**
-```modsecurity
+```seclang
 SecAction "nolog,phase:1,initcol:RESOURCE=%{REQUEST_FILENAME}"
 ```
+
 
 ## SecArgumentsLimit
 
@@ -54,9 +56,10 @@ SecAction "nolog,phase:1,initcol:RESOURCE=%{REQUEST_FILENAME}"
 Exceeding the limit will not be included.
 With JSON body processing, there is nothing to do when exceed the limit.
 **Example:**
-```modsecurity
+```seclang
 SecArgumentsLimit 1000
 ```
+
 
 ## SecAuditEngine
 
@@ -80,7 +83,7 @@ The possible values for the audit log engine are as follows:
 in response to some transaction data), use the `ctl` action.
 
 The following example demonstrates how [`SecAuditEngine`](#secauditengine) is used:
-```modsecurity
+```seclang
 SecAuditEngine RelevantOnly
 SecAuditLog logs/audit/audit.log
 SecAuditLogParts ABCFHZ
@@ -88,6 +91,7 @@ SecAuditLogType concurrent
 SecAuditLogStorageDir logs/audit
 SecAuditLogRelevantStatus ^(?:5|4(?!04))
 ```
+
 
 ## SecAuditLog
 
@@ -97,13 +101,14 @@ SecAuditLogRelevantStatus ^(?:5|4(?!04))
 
 
 **Example:**
-```modsecurity
+```seclang
 SecAuditLog "/path/to/audit.log"
 ```
 
 **Note:** This audit log file is opened on startup when the server typically still runs
 as root. You should not allow non-root users to have write privileges for this file
 or for the directory.
+
 
 ## SecAuditLogDirMode
 
@@ -117,9 +122,10 @@ The default mode for new audit log directories (0600) only grants read/write acc
 to the owner.
 
 **Example:**
-```modsecurity
+```seclang
 SecAuditLogDirMode 02750
 ```
+
 
 ## SecAuditLogFileMode
 
@@ -130,9 +136,10 @@ SecAuditLogDirMode 02750
 **Default:** `0600`
 
 **Example:**
-```modsecurity
+```seclang
 SecAuditLogFileMode 00640
 ```
+
 
 ## SecAuditLogFormat
 
@@ -152,7 +159,7 @@ SecAuditLogFileMode 00640
 **Default:** `ABCFHZ`
 
 **Example:**
-```modsecurity
+```seclang
 SecAuditLogParts ABCFHZ
 ```
 
@@ -175,10 +182,11 @@ response body, in which case the actual response body will contain the error mes
 `multipart/form-data` encoding in used. In this case, it will log a fake `application/x-www-form-urlencoded`
 body that contains the information about parameters but not about the files. This is handy if
 you don’t want to have (often large) files stored in your audit logs; not implemented yet.
-- J: This part contains information about the files uploaded using `multipart/form-data` encoding; not implemented yet.
+- J: This part contains information about the files uploaded using `multipart/form-data` encoding. Available from Coraza v3.7.0.
 - K: This part contains a full list of every rule that matched (one per line) in the order they were
 matched. The rules are fully qualified and will thus show inherited actions and default operators.
 - Z: Final boundary, signifies the end of the entry (mandatory).
+
 
 ## SecAuditLogRelevantStatus
 
@@ -191,7 +199,7 @@ only the transactions that have the status code that matches the supplied regula
 expression.
 
 **Example:**
-```
+```seclang
 SecAuditLogRelevantStatus "^(?:5|40[1235])"
 ```
 This example would log all 5xx and 4xx level status codes,
@@ -204,6 +212,7 @@ is present by default in rules, this will make the engine bypass the [`SecAuditL
 and send rule matches to the audit log regardless of status. You must specify noauditlog in the
 rules manually or set it in [`SecDefaultAction`](#secdefaultaction).
 
+
 ## SecAuditLogStorageDir
 
 **Description:** Configures the directory where concurrent audit log entries are stored.
@@ -214,9 +223,10 @@ This directive is required only when concurrent audit logging is used. Ensure th
 specify a file system location with adequate disk space.
 
 **Example:**
-```modsecurity
+```seclang
 SecAuditLogStorageDir /tmp/auditlogs/
 ```
+
 
 ## SecAuditLogType
 
@@ -236,9 +246,10 @@ The possible values are:
     in one of formats: "ADDRESS:PORT" (TCP), "udp://ADDRESS:PORT", or "unixgram:///var/run/syslog".
 
 **Example:**
-```modsecurity
+```seclang
 SecAuditLogType Serial
 ```
+
 
 ## SecComponentSignature
 
@@ -249,9 +260,10 @@ SecAuditLogType Serial
 Appends component signature to the Coraza signature.
 
 **Example:**
-```modsecurity
+```seclang
 SecComponentSignature "OWASP_CRS/4.18.0"
 ```
+
 
 ## SecDebugLog
 
@@ -261,6 +273,7 @@ SecComponentSignature "OWASP_CRS/4.18.0"
 
 Logs will be written to this file. Make sure the process user has write access to the
 directory.
+
 
 ## SecDebugLogLevel
 
@@ -284,6 +297,7 @@ The possible values for the debug log level are:
 
 Levels outside the 0-9 range will default to level 3 (Info)
 
+
 ## SecDefaultAction
 
 **Description:** Defines the default list of actions, which will be inherited by the rules in the same configuration context.
@@ -305,6 +319,7 @@ the connection.
 Important: Every [`SecDefaultAction`](#secdefaultaction) directive must specify a disruptive action and a processing
 phase and cannot contain metadata actions.
 
+
 ## SecMarker
 
 **Description:** Adds a fixed rule marker that can be used as a target in a `skipAfter` action. A [`SecMarker`](#secmarker) directive essentially creates a rule that does nothing and whose only purpose is to carry the given ID.
@@ -315,7 +330,7 @@ The value can be either a number or a text string. The SecMarker directive is av
 allow you to choose the best way to implement a skip-over. Here is an example used from the
 Core Rule Set:
 
-```modsecurity
+```seclang
 
 	SecMarker BEGIN_HOST_CHECK
 
@@ -339,6 +354,7 @@ Core Rule Set:
 
 ```
 
+
 ## SecRequestBodyAccess
 
 **Description:** Configures whether request bodies will be buffered and processed by Coraza.
@@ -353,6 +369,7 @@ blocking possible. The possible values are:
 - On: buffer request bodies
 - Off: do not buffer request bodies
 
+
 ## SecRequestBodyInMemoryLimit
 
 **Description:** Configures the maximum request body size that Coraza will store in memory.
@@ -364,6 +381,7 @@ blocking possible. The possible values are:
 When a `multipart/form-data` request is being processed, once the in-memory limit is reached,
 the request body will start to be streamed into a temporary file on disk.
 
+
 ## SecRequestBodyJsonDepthLimit
 
 **Description:** Configures the maximum JSON recursion depth limit Coraza will accept.
@@ -373,6 +391,7 @@ the request body will start to be streamed into a temporary file on disk.
 **Default:** `1024`
 
 Anything over the limit will generate a REQBODY_ERROR in the JSON body processor.
+
 
 ## SecRequestBodyLimit
 
@@ -387,9 +406,10 @@ Depends on [`SecRequestBodyLimitAction`](#secrequestbodylimitaction)
 - ProcessPartial: The first N bytes of the request body will be processed.
 There is a hard limit of 1 GiB.
 
+
 ## SecRequestBodyLimitAction
 
-**Description:** Controls what happens once a request body limit, configured with SecRequestBodyLimit, is encountered
+**Description:** Controls what happens once a request body limit, configured with SecRequestBodyLimit, is encountered.
 
 **Syntax:** `SecRequestBodyLimitAction Reject|ProcessPartial`
 
@@ -397,6 +417,10 @@ There is a hard limit of 1 GiB.
 
 By default, Coraza will reject a request body that is longer than specified to
 avoid OOM issues while buffering the request body prior the inspection.
+
+**Note:** When SecRuleEngine is set to DetectionOnly, this directive is set to
+ProcessPartial to minimize disruptions when initially deploying Coraza.
+
 
 ## SecRequestBodyNoFilesLimit
 
@@ -410,6 +434,7 @@ Generally speaking, the default value is not small enough. For most applications
 should be able to reduce it down to 128 KB or lower. Anything over the limit will be
 rejected with status code 413 (Request Entity Too Large). There is a hard limit of 1 GiB.
 **Note:** not implemented yet
+
 
 ## SecResponseBodyAccess
 
@@ -425,6 +450,7 @@ response blocking. Possible values are:
 configured with [`SecResponseBodyMimeType`](#secresponsebodymimetype)).
 - Off: do not buffer response bodies.
 
+
 ## SecResponseBodyLimit
 
 **Description:** Configures the maximum response body size that will be accepted for buffering.
@@ -438,6 +464,7 @@ Depends on [`SecResponseBodyLimitAction`](#secresponsebodylimitaction)
 - ProcessPartial: The first N bytes of the response body will be processed.
 This setting will not affect the responses with MIME types that are not selected for
 buffering. There is a hard limit of 1 GiB.
+
 
 ## SecResponseBodyLimitAction
 
@@ -459,6 +486,10 @@ cases, however, it is not possible to prevent leakage anyway. The attacker could
 compress, obfuscate, or even encrypt data before it is sent back, and therefore
 bypass any monitoring device.
 
+**Note:** When SecRuleEngine is set to DetectionOnly, this directive is set to
+ProcessPartial to minimize disruptions when initially deploying Coraza.
+
+
 ## SecResponseBodyMimeType
 
 **Description:** Configures which MIME types are to be considered for response body buffering.
@@ -469,9 +500,10 @@ Multiple SecResponseBodyMimeType directives can be used to add MIME types.
 Use SecResponseBodyMimeTypesClear to clear previously configured MIME types and start over.
 
 **Example:**
-```modsecurity
+```seclang
 SecResponseBodyMimeType text/plain text/html text/xml
 ```
+
 
 ## SecResponseBodyMimeTypesClear
 
@@ -494,9 +526,10 @@ to form the final actions that will be used. (The actions in the rule will overw
 those in the default list.) Refer to [`SecDefaultAction`](#secdefaultaction) for more information.
 
 **Example:**
-```modsecurity
+```seclang
 SecRule ARGS "@rx attack" "phase:1,log,deny,id:1"
 ```
+
 
 ## SecRuleEngine
 
@@ -511,6 +544,7 @@ The possible values are:
 - Off: do not process rules
 - DetectionOnly: process rules but never executes any disruptive actions
 (block, deny, drop, allow, proxy and redirect)
+
 
 ## SecRuleRemoveByID
 
@@ -530,9 +564,10 @@ be easier to disable one or more rules with [`SecRuleRemoveByMsg`](#secruleremov
 by case-sensitive string equality.
 
 **Example:**
-```modsecurity
+```seclang
 SecRuleRemoveByMsg "Directory Listing"
 ```
+
 
 ## SecRuleRemoveByTag
 
@@ -545,11 +580,12 @@ be easier to disable an entire group of rules with [`SecRuleRemoveByTag`](#secru
 by case-sensitive string equality.
 
 **Example:**
-```modsecurity
+```seclang
 SecRuleRemoveByTag attack-dos
 ```
 
 **Note:** OWASP CRS has a list of supported tags https://coreruleset.org/docs/rules/metadata/
+
 
 ## SecRuleUpdateActionByID
 
@@ -562,10 +598,11 @@ It has two limitations: it cannot be used to change the ID or phase of a rule.
 Only the actions that can appear only once are overwritten.
 The actions that are allowed to appear multiple times in a list, will be appended to the end of the list.
 The following example demonstrates how [`SecRuleUpdateActionById`](#secruleupdateactionbyid) is used:
-```modsecurity
+```seclang
 SecRuleUpdateActionById 12345 "deny,status:403"
 ```
 The rule ID can be single IDs or ranges of IDs. The targets are separated by a pipe character.
+
 
 ## SecRuleUpdateTargetByID
 
@@ -575,6 +612,7 @@ The rule ID can be single IDs or ranges of IDs. The targets are separated by a p
 
 This directive will append variables to the specified rule with the targets provided in the second parameter.
 The rule ID can be single IDs or ranges of IDs. The targets are separated by a pipe character.
+
 
 ## SecRuleUpdateTargetByTag
 
@@ -587,7 +625,30 @@ with the targets provided in the second parameter. It can be handy for updating 
 Matching is by case-sensitive string equality.
 This directive will append variables to the specified rule with the targets provided in the second parameter.
 The rule ID can be single IDs or ranges of IDs. The targets are separated by a pipe character.
-**Note:** OWASP CRS has a list of supported tags https://coreruleset.org/docs/rules/metadata/
+
+**Note:** OWASP CRS provides a list of [supported tags](https://coreruleset.org/docs/3-about-rules/metadata/#tags-about-rule-classification).
+
+
+## SecRxPreFilter
+
+**Description:** Enables or disables pre-filtering for the @rx operator.
+
+**Syntax:** `SecRxPreFilter On|Off`
+
+**Default:** `Off`
+
+When enabled, Coraza analyses each regex pattern at rule-load time to extract required
+literal substrings and compute the minimum match length. At request time these fast
+checks run before the full regex, allowing the engine to skip the regex entirely when
+an input clearly cannot match.
+
+**Example:**
+```seclang
+SecRxPreFilter On
+
+> **Warning**: This is an experimental feature.
+```
+
 
 ## SecUploadDir
 
@@ -598,6 +659,7 @@ The rule ID can be single IDs or ranges of IDs. The targets are separated by a p
 **Default:** `""`
 
 This directive is required when enabling SecUploadKeepFiles.
+
 
 ## SecUploadKeepFiles
 
@@ -616,5 +678,6 @@ Possible values are:
   - Off: Do not keep uploaded files.
   - RelevantOnly: Keep only uploaded files that matched at least one rule that would be
     logged (excluding rules with the `nolog` action).
+
 
 

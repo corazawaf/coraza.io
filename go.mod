@@ -3,8 +3,8 @@ module github.com/corazawaf/coraza.io
 go 1.25.0
 
 require (
-	github.com/corazawaf/coraza/v3 v3.6.0
-	github.com/magefile/mage v1.17.1
+	github.com/corazawaf/coraza/v3 v3.7.0
+	github.com/magefile/mage v1.17.2
 )
 
 require (
@@ -20,9 +20,9 @@ require (
 	github.com/tidwall/match v1.2.0 // indirect
 	github.com/tidwall/pretty v1.2.1 // indirect
 	github.com/valllabh/ocsf-schema-golang v1.0.3 // indirect
-	golang.org/x/net v0.52.0 // indirect
-	golang.org/x/sync v0.20.0 // indirect
-	golang.org/x/text v0.35.0 // indirect
+	golang.org/x/net v0.56.0 // indirect
+	golang.org/x/sync v0.21.0 // indirect
+	golang.org/x/text v0.39.0 // indirect
 	google.golang.org/protobuf v1.36.11 // indirect
 	rsc.io/binaryregexp v0.2.0 // indirect
 )

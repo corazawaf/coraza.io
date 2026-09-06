@@ -30,7 +30,7 @@ Body processors are designed to handle requests and responses in the same contex
 | JSON                      | Yes     | Yes      | No          | Yes            |
 | GraphQL                   | TBD     | TBD      | Yes         | TBD            |
 
-```kroki {type=mermaid}
+```mermaid
 flowchart TD
     A[Request Arrives] --> B{RequestBodyAccess On?}
     B -->|No| G[Skip to Phase 3]
