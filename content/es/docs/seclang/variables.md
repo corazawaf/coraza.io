@@ -1,6 +1,6 @@
 ---
 title: "Variables"
-description: "Referencia de todas las variables SecLang disponibles en Coraza WAF, incluyendo variables de solicitud, respuesta, servidor y colecciones de reglas."
+description: "Referencia de todas las variables SecLang disponibles en Coraza WAF, incluyendo variables de request, response, servidor y colecciones usadas en reglas."
 lead: "Variables disponibles en el lenguaje SecLang de Coraza."
 date: 2020-10-06T08:48:57+00:00
 lastmod: "2026-09-20T12:00:00+02:00"
@@ -15,7 +15,7 @@ toc: true
 
 ## ARGS
 
-Colección de todos los argumentos de la solicitud, incluyendo tanto los parámetros de la cadena de consulta como los del cuerpo de la solicitud. Para examinar solo los argumentos de la cadena de consulta o del cuerpo, véanse ARGS_GET y ARGS_POST.
+Colección de todos los argumentos del request, incluyendo tanto los parámetros de la cadena de consulta como los del request body. Para examinar solo los argumentos de la cadena de consulta o del body, véanse ARGS_GET y ARGS_POST.
 
 Coincidir con todos los argumentos:
 
@@ -51,7 +51,7 @@ SecRule ARGS:/^id_/ "dirty" "id:11"
 
 ## ARGS_COMBINED_SIZE
 
-Contiene el tamaño combinado de todos los parámetros de la solicitud. Los archivos se excluyen del cálculo. Esta variable puede ser útil, por ejemplo, para crear una regla que asegure que el tamaño total de los datos de los argumentos esté por debajo de un cierto umbral. La siguiente regla detecta una solicitud cuyos parámetros tienen más de 2500 bytes de longitud:
+Contiene el tamaño combinado de todos los parámetros del request. Los ficheros se excluyen del cálculo. Esta variable puede ser útil, por ejemplo, para crear una regla que asegure que el tamaño total de los datos de los argumentos esté por debajo de un cierto umbral. La siguiente regla detecta un request cuyos parámetros tienen más de 2500 bytes de longitud:
 
 ```seclang
 SecRule ARGS_COMBINED_SIZE "@gt 2500" "id:12"
@@ -71,7 +71,7 @@ SecRule ARGS_COMBINED_SIZE "@gt 2500" "id:12"
 
 ## ARGS_NAMES
 
-Contiene todos los nombres de los parámetros de la solicitud. Puede buscar nombres de parámetros específicos que desee inspeccionar. En un escenario de política positiva, también puede permitir (usando una regla invertida con el signo de exclamación) solo los nombres de argumentos autorizados. Esta regla de ejemplo permite solo dos nombres de argumento: p y a:
+Contiene todos los nombres de los parámetros del request. Puede buscar nombres de parámetros específicos que desee inspeccionar. En un escenario de política positiva, también puede permitir (usando una regla invertida con el signo de exclamación) solo los nombres de argumentos autorizados. Esta regla de ejemplo permite solo dos nombres de argumento: p y a:
 
 ```seclang
 SecRule ARGS_NAMES "!^(p|a)$" "id:13"
@@ -85,13 +85,13 @@ Contiene los componentes de la ruta de la URL como elementos individuales. Es ú
 
 ## ARGS_POST
 
-**ARGS_POST** es similar a **ARGS**, pero solo contiene los argumentos del cuerpo del POST.
+**ARGS_POST** es similar a **ARGS**, pero solo contiene los argumentos del body del POST.
 
 
 
 ## ARGS_POST_NAMES
 
-**ARGS_POST_NAMES** es similar a **ARGS_NAMES**, pero contiene solo los nombres de los parámetros del cuerpo de la solicitud.
+**ARGS_POST_NAMES** es similar a **ARGS_NAMES**, pero contiene solo los nombres de los parámetros del request body.
 
 
 
@@ -108,17 +108,17 @@ Contiene la cantidad de microsegundos transcurridos desde el inicio de la transa
 Colección que proporciona acceso a variables de entorno establecidas mediante la acción `setenv`. Requiere un único parámetro que especifica el nombre de la variable deseada.
 
 ```seclang
-# Establecer variable de entorno
+# Set environment variable
 SecRule REQUEST_FILENAME "printenv" \
 "phase:2,id:15,pass,setenv:tag=suspicious"
 
-# Inspeccionar variable de entorno
+# Inspect environment variable
 SecRule ENV:tag "suspicious" "id:16"
 ```
 
 ## FILES
 
-Contiene los nombres originales de los archivos tal como fueron enviados por el cliente en la subida multipart (el campo filename de Content-Disposition). Disponible solo en solicitudes multipart/form-data inspeccionadas.
+Contiene los nombres originales de los ficheros tal como los envió el cliente en la subida multipart (el campo filename de Content-Disposition). Disponible solo en requests multipart/form-data inspeccionados.
 
 ```seclang
 SecRule FILES "@rx \.conf$" "id:17"
@@ -126,7 +126,7 @@ SecRule FILES "@rx \.conf$" "id:17"
 
 ## FILES_COMBINED_SIZE
 
-Contiene el tamaño total de los archivos transportados en el cuerpo de la solicitud. Disponible solo en solicitudes multipart/form-data inspeccionadas.
+Contiene el tamaño total de los ficheros transportados en el request body. Disponible solo en requests multipart/form-data inspeccionados.
 
 ```seclang
 SecRule FILES_COMBINED_SIZE "@gt 100000" "id:18"
@@ -134,7 +134,7 @@ SecRule FILES_COMBINED_SIZE "@gt 100000" "id:18"
 
 ## FILES_NAMES
 
-Contiene una lista de los campos del formulario que se usaron para la subida de archivos. Disponible solo en solicitudes multipart/form-data inspeccionadas.
+Contiene una lista de los campos del formulario que se usaron para la subida de ficheros. Disponible solo en requests multipart/form-data inspeccionados.
 
 ```seclang
 SecRule FILES_NAMES "^upfile$" "id:19"
@@ -142,7 +142,7 @@ SecRule FILES_NAMES "^upfile$" "id:19"
 
 ## FILES_SIZES
 
-Contiene una lista de los tamaños de cada archivo individual. Útil para implementar una limitación de tamaño en los archivos subidos individualmente. Disponible solo en solicitudes multipart/form-data inspeccionadas.
+Contiene una lista de los tamaños de cada fichero individual. Útil para implementar una limitación de tamaño en los ficheros subidos individualmente. Disponible solo en requests multipart/form-data inspeccionados.
 
 ```seclang
 SecRule FILES_SIZES "@gt 100" "id:20"
@@ -150,7 +150,7 @@ SecRule FILES_SIZES "@gt 100" "id:20"
 
 ## FILES_TMPNAMES
 
-Contiene una lista de los nombres de los archivos temporales en el disco. Útil cuando se usa junto con @inspectFile. Disponible solo en solicitudes multipart/form-data inspeccionadas.
+Contiene una lista de los nombres de los ficheros temporales en el disco. Útil cuando se usa junto con @inspectFile. Disponible solo en requests multipart/form-data inspeccionados.
 
 ```seclang
 SecRule FILES_TMPNAMES "@inspectFile /path/to/inspect_script.pl" "id:21"
@@ -158,7 +158,7 @@ SecRule FILES_TMPNAMES "@inspectFile /path/to/inspect_script.pl" "id:21"
 
 ## FILES_TMP_CONTENT
 
-Contiene un conjunto clave-valor donde el valor es el contenido del archivo que fue subido. Útil cuando se usa junto con @fuzzyHash.
+Contiene un conjunto clave-valor donde el valor es el contenido del fichero que fue subido. Útil cuando se usa junto con @fuzzyHash.
 
 ```seclang
 SecRule FILES_TMP_CONTENT "@fuzzyHash $ENV{CONF_DIR}/ssdeep.txt 1" "id:192372,log,deny"
@@ -198,9 +198,9 @@ SecRule HIGHEST_SEVERITY "@le 2" "phase:2,id:23,deny,status:500,msg:'severity %{
 
 ## INBOUND_DATA_ERROR
 
-Esta variable se establecerá a 1 cuando el tamaño del cuerpo de la solicitud supere el límite configurado por la directiva **SecRequestBodyLimit**. Sus políticas siempre deben contener una regla que compruebe esta variable. Según la tasa de falsos positivos y su política por defecto, deberá decidir si bloquear o solo advertir cuando la regla se active.
+Esta variable se establecerá a 1 cuando el tamaño del request body supere el límite configurado por la directiva **SecRequestBodyLimit**. Sus políticas siempre deben contener una regla que compruebe esta variable. Según la tasa de falsos positivos y su política por defecto, deberá decidir si bloquear o solo advertir cuando la regla se active.
 
-El comportamiento depende de SecRequestBodyLimitAction: - ProcessPartial: el cuerpo se trunca en el límite, INBOUND_DATA_ERROR se establece a 1 y las reglas de la fase 2 se ejecutan sobre el cuerpo parcial. Las reglas pueden inspeccionar esta variable. - Reject (por defecto): INBOUND_DATA_ERROR se establece a 1 pero la transacción se interrumpe inmediatamente antes de que las reglas de la fase 2 puedan ejecutarse. El error se propaga como una interrupción (estado 413) al conector; la variable es efectivamente inaccesible para las reglas.
+El comportamiento depende de SecRequestBodyLimitAction: - ProcessPartial: el body se trunca en el límite, INBOUND_DATA_ERROR se establece a 1 y las reglas de la fase 2 se ejecutan sobre el body parcial. Las reglas pueden inspeccionar esta variable. - Reject (por defecto): INBOUND_DATA_ERROR se establece a 1 pero la transacción se interrumpe inmediatamente antes de que las reglas de la fase 2 puedan ejecutarse. El error se propaga como una interrupción (estado 413) al conector; la variable es efectivamente inaccesible para las reglas.
 
 Por lo tanto, esta variable solo es accionable en reglas cuando SecRequestBodyLimitAction está establecido en ProcessPartial.
 
@@ -268,13 +268,13 @@ Esta variable contiene los datos multipart del campo NAME.
 
 ## OUTBOUND_DATA_ERROR
 
-Esta variable se establecerá a 1 cuando el tamaño del cuerpo de la respuesta supere el límite configurado por la directiva SecResponseBodyLimit.
+Esta variable se establecerá a 1 cuando el tamaño del response body supere el límite configurado por la directiva SecResponseBodyLimit.
 
-El comportamiento depende de SecResponseBodyLimitAction: - ProcessPartial: el cuerpo se trunca en el límite, OUTBOUND_DATA_ERROR se establece a 1 y las reglas de la fase 4 se ejecutan sobre el cuerpo parcial. Las reglas pueden inspeccionar esta variable para registrar o bloquear la respuesta truncada. - Reject (por defecto): OUTBOUND_DATA_ERROR se establece a 1 pero la transacción se interrumpe inmediatamente con un error 500 antes de que las reglas de la fase 4 puedan ejecutarse. El error se propaga como una interrupción al conector; la variable es efectivamente inaccesible para las reglas.
+El comportamiento depende de SecResponseBodyLimitAction: - ProcessPartial: el body se trunca en el límite, OUTBOUND_DATA_ERROR se establece a 1 y las reglas de la fase 4 se ejecutan sobre el body parcial. Las reglas pueden inspeccionar esta variable para registrar o bloquear la response truncada. - Reject (por defecto): OUTBOUND_DATA_ERROR se establece a 1 pero la transacción se interrumpe inmediatamente con un error 500 antes de que las reglas de la fase 4 puedan ejecutarse. El error se propaga como una interrupción al conector; la variable es efectivamente inaccesible para las reglas.
 
 Por lo tanto, esta variable solo es accionable en reglas cuando SecResponseBodyLimitAction está establecido en ProcessPartial.
 
-Ejemplo de regla para denegar cuando el cuerpo de la respuesta supera el límite configurado (requiere ProcessPartial):
+Ejemplo de regla para denegar cuando el response body supera el límite configurado (requiere ProcessPartial):
 
 ```seclang
 SecRule OUTBOUND_DATA_ERROR "@eq 1" "phase:4,id:32,t:none,deny,status:413,msg:'Response Body Larger than SecResponseBodyLimit Setting'"
@@ -282,7 +282,7 @@ SecRule OUTBOUND_DATA_ERROR "@eq 1" "phase:4,id:32,t:none,deny,status:413,msg:'R
 
 ## QUERY_STRING
 
-Contiene la parte de la cadena de consulta de un URI de solicitud. El valor de QUERY_STRING siempre se proporciona en crudo, sin que se realice ninguna decodificación de URL.
+Contiene la parte de la cadena de consulta de un URI de request. El valor de QUERY_STRING siempre se proporciona en crudo, sin que se realice ninguna decodificación de URL.
 
 ```seclang
 SecRule QUERY_STRING "attack" "id:34"
@@ -308,17 +308,17 @@ SecRule REMOTE_PORT "@lt 1024" "phase:1,id:37,log, pass,msg:'Request from a priv
 
 ## REQBODY_ERROR
 
-Contiene el estado del procesador del cuerpo de la solicitud usado para el análisis del cuerpo de la solicitud. Los valores pueden ser 0 (sin error) o 1 (error). Esta variable será establecida por los procesadores del cuerpo de la solicitud (típicamente el analizador multipart/request-data, el analizador JSON o el analizador XML) cuando fallan en su trabajo.
+Contiene el estado del procesador del request body usado para el análisis del request body. Los valores pueden ser 0 (sin error) o 1 (error). Esta variable será establecida por los procesadores del request body (típicamente el analizador multipart/request-data, el analizador JSON o el analizador XML) cuando fallan en su trabajo.
 
 ```seclang
 SecRule REQBODY_ERROR "@eq 1" "phase:2,id:39,deny,log,msg:'Request Body Processor Error Detected'"
 ```
 
-**Nota**: Sus políticas deben tener una regla que compruebe los errores del procesador del cuerpo de la solicitud al principio mismo de la fase 2. No hacerlo dejará la puerta abierta a ataques de impedance mismatch. Es posible, por ejemplo, que una carga útil que no puede ser analizada por Coraza sea analizada con éxito por un analizador más tolerante que opera en la aplicación. Si su política dicta bloqueo, entonces debe rechazar la solicitud si se detecta un error. Cuando opera en modo de solo detección, su regla debe alertar con severidad alta cuando falla el procesamiento del cuerpo de la solicitud.
+**Nota**: Sus políticas deben tener una regla que compruebe los errores del procesador del request body al principio mismo de la fase 2. No hacerlo dejará la puerta abierta a ataques de impedance mismatch. Es posible, por ejemplo, que una carga útil que no puede ser analizada por Coraza sea analizada con éxito por un analizador más tolerante que opera en la aplicación. Si su política dicta bloqueo, entonces debe rechazar el request si se detecta un error. Cuando opera en modo de solo detección, su regla debe alertar con severidad alta cuando falla el procesamiento del request body.
 
 ## REQBODY_ERROR_MSG
 
-Si ha habido un error durante el análisis del cuerpo de la solicitud, la variable contendrá el siguiente mensaje de error:
+Si ha habido un error durante el análisis del request body, la variable contendrá el siguiente mensaje de error:
 
 ```seclang
 SecRule REQBODY_ERROR_MSG "failed to parse" "id:40"
@@ -326,7 +326,7 @@ SecRule REQBODY_ERROR_MSG "failed to parse" "id:40"
 
 ## REQBODY_PROCESSOR
 
-Contiene el nombre del procesador del cuerpo de la solicitud actualmente en uso. Los valores posibles por defecto son URLENCODED, MULTIPART, XML, JSON y RAW.
+Contiene el nombre del procesador del request body actualmente en uso. Los valores posibles por defecto son URLENCODED, MULTIPART, XML, JSON y RAW.
 
 ```seclang
 SecRule REQBODY_PROCESSOR "^XML$" "chain,id:41"
@@ -335,21 +335,21 @@ SecRule REQBODY_PROCESSOR "^XML$" "chain,id:41"
 
 ## REQBODY_PROCESSOR_ERROR
 
-Igual que REQBODY_ERROR, se establece a 1 cuando el procesador del cuerpo de la solicitud falla. A diferencia de REQBODY_ERROR_MSG, el mensaje de error correspondiente en REQBODY_PROCESSOR_ERROR_MSG contiene solo la cadena de error sin el prefijo del nombre del procesador.
+Igual que REQBODY_ERROR, se establece a 1 cuando el procesador del request body falla. A diferencia de REQBODY_ERROR_MSG, el mensaje de error correspondiente en REQBODY_PROCESSOR_ERROR_MSG contiene solo la cadena de error sin el prefijo del nombre del procesador.
 
 
 
 ## REQBODY_PROCESSOR_ERROR_MSG
 
-Igual que REQBODY_ERROR_MSG, pero contiene solo la cadena de error cruda del procesador del cuerpo, sin el nombre del procesador prepuesto.
+Igual que REQBODY_ERROR_MSG, pero contiene solo la cadena de error cruda del procesador del body, sin el nombre del procesador prepuesto.
 
 
 
 ## REQUEST_BASENAME
 
-Contiene la parte del nombre de archivo de REQUEST_FILENAME (p. ej., index.php).
+Contiene la parte del nombre de fichero de REQUEST_FILENAME (p. ej., index.php).
 
-Las transformaciones anti-evasión NO se aplican a esta variable por defecto. REQUEST_BASENAME reconocerá tanto / como \ como separadores de ruta. El valor de esta variable depende de lo que se proporcionó en la solicitud. No tiene por qué corresponderse con el recurso (en disco) que usará el servidor web.
+Las transformaciones anti-evasión NO se aplican a esta variable por defecto. REQUEST_BASENAME reconocerá tanto / como \ como separadores de ruta. El valor de esta variable depende de lo que se proporcionó en el request. No tiene por qué corresponderse con el recurso (en disco) que usará el servidor web.
 
 ```seclang
 SecRule REQUEST_BASENAME "^login\.php$" "phase:2,id:42,pass,t:none,t:lowercase"
@@ -357,25 +357,25 @@ SecRule REQUEST_BASENAME "^login\.php$" "phase:2,id:42,pass,t:none,t:lowercase"
 
 ## REQUEST_BODY
 
-Contiene el cuerpo de la solicitud en crudo. Solo es poblada por los procesadores de cuerpo URLENCODED y RAW. Los procesadores MULTIPART, XML y JSON analizan el cuerpo en sus propias colecciones y no pueblan esta variable. Se puede usar ```ctl:forceRequestBodyVariable=on``` en la fase REQUEST_HEADERS para forzar la población de esta variable estableciendo URLENCODED como procesador cuando no se seleccionaría ninguno.
+Contiene el request body en crudo. Solo es poblada por los procesadores de body URLENCODED y RAW. Los procesadores MULTIPART, XML y JSON analizan el body en sus propias colecciones y no pueblan esta variable. Se puede usar ```ctl:forceRequestBodyVariable=on``` en la fase REQUEST_HEADERS para forzar la población de esta variable estableciendo URLENCODED como procesador cuando no se seleccionaría ninguno.
 
 ```seclang
 SecRule REQUEST_BODY "@contains foo" "id:1001,phase:2,deny,log"
 ```
 
-**Nota**: Requiere que el almacenamiento en búfer del cuerpo de la solicitud esté habilitado.
+**Nota**: Requiere que el almacenamiento en búfer del request body esté habilitado.
 
 ## REQUEST_BODY_LENGTH
 
-Contiene la cantidad de bytes leídos del cuerpo de la solicitud. El cálculo se basa en el tamaño real del búfer del cuerpo, no en la cabecera content-length.
+Contiene la cantidad de bytes leídos del request body. El cálculo se basa en el tamaño real del búfer del body, no en el header content-length.
 
 
 
 ## REQUEST_COOKIES
 
-Esta variable es una colección de todas las cookies de la solicitud (solo valores).
+Esta variable es una colección de todas las cookies del request (solo valores).
 
-Ejemplo: el siguiente ejemplo usa el operador especial del signo comercial (&) para contar cuántas variables hay en la colección. En esta regla, se activaría si la solicitud no incluye ninguna cabecera Cookie.
+Ejemplo: el siguiente ejemplo usa el operador especial del signo comercial (&) para contar cuántas variables hay en la colección. En esta regla, se activaría si el request no incluye ningún header Cookie.
 
 ```seclang
 SecRule &REQUEST_COOKIES "@eq 0" "id:44"
@@ -383,7 +383,7 @@ SecRule &REQUEST_COOKIES "@eq 0" "id:44"
 
 ## REQUEST_COOKIES_NAMES
 
-Esta variable es una colección de los nombres de todas las cookies de la solicitud. Por ejemplo, la siguiente regla se activará si la cookie JSESSIONID no está presente:
+Esta variable es una colección de los nombres de todas las cookies del request. Por ejemplo, la siguiente regla se activará si la cookie JSESSIONID no está presente:
 
 ```seclang
 SecRule &REQUEST_COOKIES_NAMES:JSESSIONID "@eq 0" "id:45"
@@ -391,7 +391,7 @@ SecRule &REQUEST_COOKIES_NAMES:JSESSIONID "@eq 0" "id:45"
 
 ## REQUEST_FILENAME
 
-Contiene la URL de solicitud relativa sin la parte de la cadena de consulta (p. ej., /index.php).
+Contiene la URL de request relativa sin la parte de la cadena de consulta (p. ej., /index.php).
 
 ```seclang
 SecRule REQUEST_FILENAME "^/cgi-bin/login\.php$" phase:2,id:46,t:none,t:normalizePath
@@ -401,17 +401,17 @@ SecRule REQUEST_FILENAME "^/cgi-bin/login\.php$" phase:2,id:46,t:none,t:normaliz
 
 ## REQUEST_HEADERS
 
-Esta variable puede usarse tanto como una colección de todas las cabeceras de la solicitud como para inspeccionar cabeceras seleccionadas (usando la sintaxis REQUEST_HEADERS:Nombre-de-Cabecera).
+Esta variable puede usarse tanto como una colección de todos los request headers como para inspeccionar headers seleccionados (usando la sintaxis REQUEST_HEADERS:Header-Name).
 
 ```seclang
 SecRule REQUEST_HEADERS:Host "^[\d\.]+$" "deny,id:47,log,status:400,msg:'Host header is a numeric IP address'"
 ```
 
-**Nota:** Coraza tratará las cabeceras múltiples que tienen nombres idénticos como una "lista", procesando cada valor individual.
+**Nota:** Coraza tratará los headers múltiples que tienen nombres idénticos como una "lista", procesando cada valor individual.
 
 ## REQUEST_HEADERS_NAMES
 
-Colección de los nombres de todas las cabeceras de la solicitud.
+Colección de los nombres de todos los request headers.
 
 ```seclang
 SecRule REQUEST_HEADERS_NAMES "^x-forwarded-for" "log,deny,id:48,status:403,t:lowercase,msg:'Proxy Server Used'"
@@ -419,17 +419,17 @@ SecRule REQUEST_HEADERS_NAMES "^x-forwarded-for" "log,deny,id:48,status:403,t:lo
 
 ## REQUEST_LINE
 
-Contiene la línea de solicitud completa enviada al servidor (incluyendo el método de solicitud y la información de versión HTTP).
+Contiene la request line completa enviada al servidor (incluyendo el método de request y la información de versión HTTP).
 
 ```seclang
-# Permitir solo los métodos de solicitud POST, GET y HEAD, así como solo
-# las versiones de protocolo válidas
+# Allow only POST, GET and HEAD request methods, as well as only
+# the valid protocol versions
 SecRule REQUEST_LINE "!(^((?:(?:POS|GE)T|HEAD))|HTTP/(0\.9|1\.0|1\.1)$)" "phase:1,id:49,log,block,t:none"
 ```
 
 ## REQUEST_METHOD
 
-Contiene el método de solicitud usado en la transacción.
+Contiene el método de request usado en la transacción.
 
 ```seclang
 SecRule REQUEST_METHOD "^(?:CONNECT|TRACE)$" "id:50,t:none,deny,log,msg:'Suspicious HTTP method used'"
@@ -437,7 +437,7 @@ SecRule REQUEST_METHOD "^(?:CONNECT|TRACE)$" "id:50,t:none,deny,log,msg:'Suspici
 
 ## REQUEST_PROTOCOL
 
-Contiene la información de la versión del protocolo de la solicitud.
+Contiene la información de la versión del protocolo de request.
 
 ```seclang
 SecRule REQUEST_PROTOCOL "!^HTTP/(0\.9|1\.0|1\.1)$" "id:51,t:none,deny,log,msg:'Suspicious HTTP protocol version used'"
@@ -445,7 +445,7 @@ SecRule REQUEST_PROTOCOL "!^HTTP/(0\.9|1\.0|1\.1)$" "id:51,t:none,deny,log,msg:'
 
 ## REQUEST_URI
 
-Contiene la URL de solicitud completa incluyendo los datos de la cadena de consulta. Es la forma analizada y normalizada de REQUEST_URI_RAW: los fragmentos se eliminan y la URL se reconstruye a partir de los componentes analizados. Si el análisis falla, se usa el URI crudo tal cual.
+Contiene la URL de request completa incluyendo los datos de la cadena de consulta. Es la forma analizada y normalizada de REQUEST_URI_RAW: los fragmentos se eliminan y la URL se reconstruye a partir de los componentes analizados. Si el análisis falla, se usa el URI crudo tal cual.
 
 ```seclang
 SecRule REQUEST_URI "attack" "phase:1,id:52,t:none,t:urlDecode,t:lowercase,t:normalizePath,deny"
@@ -455,7 +455,7 @@ SecRule REQUEST_URI "attack" "phase:1,id:52,t:none,t:urlDecode,t:lowercase,t:nor
 
 ## REQUEST_URI_RAW
 
-Contiene el URI de solicitud crudo exactamente como se recibió en la línea de solicitud, antes de cualquier análisis o normalización. Esto incluye el nombre de dominio si el cliente envió un URI absoluto (p. ej., http://www.example.com/index.php?p=X).
+Contiene el URI de request crudo exactamente como se recibió en la request line, antes de cualquier análisis o normalización. Esto incluye el nombre de dominio si el cliente envió un URI absoluto (p. ej., http://www.example.com/index.php?p=X).
 
 ```seclang
 SecRule REQUEST_URI_RAW "^http://" "phase:1,id:53,t:none,t:urlDecode,t:lowercase,t:normalizePath"
@@ -465,31 +465,31 @@ SecRule REQUEST_URI_RAW "^http://" "phase:1,id:53,t:none,t:urlDecode,t:lowercase
 
 ## RESPONSE_BODY
 
-Contiene los datos del cuerpo de la respuesta. Solo se puebla cuando no hay ningún procesador del cuerpo de la respuesta activo. Cuando se usa un procesador (p. ej., XML), el cuerpo se analiza en las colecciones propias del procesador en su lugar. Por defecto, el almacenamiento en búfer solo ocurre para los tipos MIME listados en SecResponseBodyMimeType. ```ctl:forceResponseBodyVariable=on``` omite esta comprobación de tipo MIME, forzando el almacenamiento en búfer independientemente del Content-Type.
+Contiene los datos del response body. Solo se puebla cuando no hay ningún procesador del response body activo. Cuando se usa un procesador (p. ej., XML), el body se analiza en las colecciones propias del procesador en su lugar. Por defecto, el almacenamiento en búfer solo ocurre para los tipos MIME listados en SecResponseBodyMimeType. ```ctl:forceResponseBodyVariable=on``` omite esta comprobación de tipo MIME, forzando el almacenamiento en búfer independientemente del Content-Type.
 
 ```seclang
 SecRule RESPONSE_BODY "ODBC Error Code" "phase:4,id:54,t:none, deny"
 ```
 
-**Nota**: Requiere que el almacenamiento en búfer del cuerpo de la respuesta esté habilitado.
+**Nota**: Requiere que el almacenamiento en búfer del response body esté habilitado.
 
 ## RESPONSE_CONTENT_LENGTH
 
-Longitud del cuerpo de la respuesta en bytes. Disponible a partir de la fase 4 solo cuando el almacenamiento en búfer del cuerpo de la respuesta está habilitado y no hay ningún procesador del cuerpo de la respuesta activo. Si se usa un procesador de cuerpo (p. ej., XML), esta variable no se poblará.
+Longitud del response body en bytes. Disponible a partir de la fase 4 solo cuando el almacenamiento en búfer del response body está habilitado y no hay ningún procesador del response body activo. Si se usa un procesador de body (p. ej., XML), esta variable no se poblará.
 
-**Nota**: Requiere que el almacenamiento en búfer del cuerpo de la respuesta esté habilitado.
+**Nota**: Requiere que el almacenamiento en búfer del response body esté habilitado.
 
 
 
 ## RESPONSE_CONTENT_TYPE
 
-Tipo de contenido de la respuesta. Disponible solo a partir de la fase 3. El valor se extrae de la cabecera de respuesta Content-Type, sin los parámetros (p. ej., charset). Es equivalente a usar RESPONSE_HEADERS:Content-Type, pero sin el sufijo de parámetros.
+Tipo de contenido de la response. Disponible solo a partir de la fase 3. El valor se extrae del header Content-Type de la response, sin los parámetros (p. ej., charset). Es equivalente a usar RESPONSE_HEADERS:Content-Type, pero sin el sufijo de parámetros.
 
 
 
 ## RESPONSE_HEADERS
 
-Esta variable se refiere a las cabeceras de la respuesta, de la misma manera que REQUEST_HEADERS lo hace con las cabeceras de la solicitud.
+Esta variable se refiere a los response headers, de la misma manera que REQUEST_HEADERS lo hace con los request headers.
 
 ```seclang
 SecRule RESPONSE_HEADERS:X-Cache "MISS" "id:55"
@@ -497,7 +497,7 @@ SecRule RESPONSE_HEADERS:X-Cache "MISS" "id:55"
 
 ## RESPONSE_HEADERS_NAMES
 
-Colección de los nombres de las cabeceras de la respuesta.
+Colección de los nombres de los response headers.
 
 ```seclang
 SecRule RESPONSE_HEADERS_NAMES "Set-Cookie" "phase:3,id:56,t:none,log,pass,msg:'Response contains Set-Cookie header'"
@@ -507,7 +507,7 @@ Se aplican las mismas limitaciones discutidas en RESPONSE_HEADERS.
 
 ## RESPONSE_PROTOCOL
 
-Contiene la información del protocolo de la respuesta HTTP.
+Contiene la información del protocolo de la response HTTP.
 
 ```seclang
 SecRule RESPONSE_PROTOCOL "^HTTP\/0\.9" "phase:3,id:57,t:none"
@@ -515,7 +515,7 @@ SecRule RESPONSE_PROTOCOL "^HTTP\/0\.9" "phase:3,id:57,t:none"
 
 ## RESPONSE_STATUS
 
-Contiene el código de estado de la respuesta HTTP devuelto por el backend. Disponible a partir de la fase 3.
+Contiene el código de estado de la response HTTP devuelto por el backend. Disponible a partir de la fase 3.
 
 ```seclang
 SecRule RESPONSE_STATUS "^[45]" "phase:3,id:58,t:none,pass,log,msg:'Response status matches 4xx or 5xx'"
@@ -523,7 +523,7 @@ SecRule RESPONSE_STATUS "^[45]" "phase:3,id:58,t:none,pass,log,msg:'Response sta
 
 ## RESPONSE_XML
 
-Colección para interactuar con el cuerpo XML de la respuesta mediante expresiones XPath.
+Colección para interactuar con el body XML de la response mediante expresiones XPath.
 
 **Aún no implementada**
 
@@ -531,7 +531,7 @@ Colección para interactuar con el cuerpo XML de la respuesta mediante expresion
 
 ## RES_BODY_PROCESSOR
 
-Contiene el nombre del procesador del cuerpo de la respuesta actualmente en uso (p. ej., XML).
+Contiene el nombre del procesador del response body actualmente en uso (p. ej., XML).
 
 
 
@@ -553,7 +553,7 @@ SecRule SERVER_ADDR "@ipMatch 192.168.1.100" "phase:1,id:67,log,pass,msg:'Reques
 
 ## SERVER_NAME
 
-Contiene el nombre de host o la dirección IP del servidor. Dado que proviene de la cabecera Host suministrada por el cliente, NO se debe confiar en ella de forma implícita.
+Contiene el nombre de host o la dirección IP del servidor. Dado que proviene del header Host suministrado por el cliente, NO se debe confiar en él de forma implícita.
 
 ```seclang
 SecRule SERVER_NAME "hostname\.com$" "phase:1,id:68,log,pass,msg:'Request to a specific hostname'"
@@ -561,7 +561,7 @@ SecRule SERVER_NAME "hostname\.com$" "phase:1,id:68,log,pass,msg:'Request to a s
 
 ## SERVER_PORT
 
-Contiene el puerto de destino de la solicitud.
+Contiene el puerto de destino del request.
 
 ```seclang
 SecRule SERVER_PORT "^80$" "phase:1,id:69,log,pass,msg:'Request to a specific port'"
@@ -569,10 +569,10 @@ SecRule SERVER_PORT "^80$" "phase:1,id:69,log,pass,msg:'Request to a specific po
 
 ## STATUS_LINE
 
-Contiene la línea de estado completa de la respuesta enviada por el servidor backend (p. ej., `HTTP/1.1 200 OK`).
+Contiene la status line completa de la response enviada por el servidor backend (p. ej., `HTTP/1.1 200 OK`).
 
 ```seclang
-# Generar una alerta cuando la aplicación devuelve un error 500.
+# Generate an alert when the application returns 500 error.
 SecRule STATUS_LINE "@contains 500" "phase:3,id:49,log,pass,logdata:'Application error detected!',t:none"
 ```
 
@@ -602,7 +602,7 @@ Esta variable contiene el tiempo en segundos desde 1970.
 
 ## TIME_HOUR
 
-Esta variable contiene la hora actual (0–23). La siguiente regla se activa cuando se realiza una solicitud "fuera de horario":
+Esta variable contiene la hora actual (0–23). La siguiente regla se activa cuando se realiza un request "fuera de horario":
 
 ```seclang
 SecRule TIME_HOUR "^(0|1|2|3|4|5|6|[1](8|9)|[2](0|1|2|3))$" "id:76"
@@ -653,10 +653,10 @@ SecRule TIME_YEAR "^2006$" "id:81"
 Colección transitoria de la transacción usada para almacenar datos arbitrarios durante la duración de la transacción, como puntuaciones de anomalías o marcadores de estado.
 
 ```seclang
-# Incrementar la puntuación de ataque de la transacción ante un ataque
+# Increment transaction attack score on attack
 SecRule ARGS "attack" "phase:2,id:82,nolog,pass,setvar:TX.score=+5"
 
-# Bloquear las transacciones cuyas puntuaciones son demasiado altas
+# Block the transactions whose scores are too high
 SecRule TX:SCORE "@gt 20" "phase:2,id:83,log,deny"
 ```
 
@@ -673,13 +673,13 @@ Esta variable contiene el identificador único de la transacción.
 
 ## URLENCODED_ERROR
 
-Esta variable se crea cuando se encuentra una codificación de URL inválida durante el análisis de una cadena de consulta (en todas las solicitudes) o durante el análisis de un cuerpo de solicitud application/x-www-form-urlencoded (solo en las solicitudes que usan el procesador del cuerpo de la solicitud URLENCODED).
+Esta variable se crea cuando se encuentra una codificación de URL inválida durante el análisis de una cadena de consulta (en todos los requests) o durante el análisis de un request body application/x-www-form-urlencoded (solo en los requests que usan el procesador del request body URLENCODED).
 
 
 
 ## XML
 
-Colección especial usada para interactuar con el analizador XML. Debe contener una expresión XPath válida, que será evaluada contra un árbol DOM XML analizado previamente. Requiere que el procesador del cuerpo XML esté activo.
+Colección especial usada para interactuar con el analizador XML. Debe contener una expresión XPath válida, que será evaluada contra un árbol DOM XML analizado previamente. Requiere que el procesador del body XML esté activo.
 
 ```seclang
 SecRule REQUEST_HEADERS:Content-Type "^text/xml$" "phase:1,id:87,t:lowercase,nolog,pass,ctl:requestBodyProcessor=XML"
