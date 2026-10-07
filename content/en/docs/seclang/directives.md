@@ -3,7 +3,7 @@ title: "Directives"
 description: "Complete reference for all Coraza WAF SecLang directives used to configure the engine, load rules, and control request and response inspection."
 lead: "The following section outlines all of the Coraza directives."
 date: 2020-10-06T08:48:57+00:00
-lastmod: "2026-05-22T18:03:47+02:00"
+lastmod: "2026-10-07T16:40:57-03:00"
 draft: false
 images: []
 weight: 10
@@ -41,20 +41,24 @@ This directive is commonly used to set variables and initialize persistent colle
 
 **Example:**
 ```seclang
-SecAction "nolog,phase:1,initcol:RESOURCE=%{REQUEST_FILENAME}"
+SecAction "id:100,nolog,phase:1,initcol:RESOURCE=%{REQUEST_FILENAME}"
 ```
 
 
 ## SecArgumentsLimit
 
-**Description:** Configures the maximum number of ARGS that will be accepted for processing.
+**Description:** Configures the maximum number of arguments Coraza keeps from each source.
 
 **Syntax:** `SecArgumentsLimit [LIMIT]`
 
 **Default:** `1000`
 
-Exceeding the limit will not be included.
-With JSON body processing, there is nothing to do when exceed the limit.
+The query string (ARGS_GET), the path (ARGS_PATH), and urlencoded or JSON request
+bodies (ARGS_POST) are each counted separately; JSON response bodies (RESPONSE_ARGS)
+use the same limit. Arguments beyond the limit are dropped and ARGUMENTS_LIMIT_REACHED
+is set to 1, so a rule can reject the request (see rules 200004 and 200005 in
+coraza.conf-recommended). The value must be greater than 0.
+
 **Example:**
 ```seclang
 SecArgumentsLimit 1000
@@ -89,7 +93,7 @@ SecAuditLog logs/audit/audit.log
 SecAuditLogParts ABCFHZ
 SecAuditLogType concurrent
 SecAuditLogStorageDir logs/audit
-SecAuditLogRelevantStatus ^(?:5|4(?!04))
+SecAuditLogRelevantStatus ^(?:5|4(?:0[0-35-9]|[1-9][0-9]))
 ```
 
 
@@ -98,7 +102,6 @@ SecAuditLogRelevantStatus ^(?:5|4(?!04))
 **Description:** Defines the path to the main audit log file (serial logging format) or the concurrent logging index file (concurrent logging format).
 
 **Syntax:** `SecAuditLog [ABSOLUTE_PATH_TO_LOG_FILE]`
-
 
 **Example:**
 ```seclang
@@ -147,7 +150,7 @@ SecAuditLogFileMode 00640
 
 **Syntax:** `SecAuditLogFormat JSON|JsonLegacy|Native|OCSF`
 
-**Default:** `Native`
+**Default:** `Native Example: ```seclang SecAuditLogFormat JSON ````
 
 
 ## SecAuditLogParts
@@ -251,6 +254,21 @@ SecAuditLogType Serial
 ```
 
 
+## SecCollectionTimeout
+
+**Description:** Would set how long persistent collection records are retained, in seconds.
+
+**Syntax:** `SecCollectionTimeout [SECONDS]`
+
+****Note:**** Coraza accepts this directive for compatibility with ModSecurity configurations, but
+it has no effect.
+
+**Example:**
+```seclang
+SecCollectionTimeout 600
+```
+
+
 ## SecComponentSignature
 
 **Description:** Appends component signature to the Coraza signature.
@@ -265,6 +283,78 @@ SecComponentSignature "OWASP_CRS/4.18.0"
 ```
 
 
+## SecConnEngine
+
+**Description:** Would enable per-connection tracking.
+
+**Syntax:** `SecConnEngine On|Off|DetectOnly`
+
+****Note:**** Coraza accepts this directive for compatibility with ModSecurity configurations, but
+it has no effect.
+
+**Example:**
+```seclang
+SecConnEngine Off
+```
+
+
+## SecConnReadStateLimit
+
+**Description:** Would limit the number of connections in the read state per IP address.
+
+**Syntax:** `SecConnReadStateLimit [NUMBER]`
+
+****Note:**** Coraza accepts this directive for compatibility with ModSecurity configurations, but
+it has no effect.
+
+**Example:**
+```seclang
+SecConnReadStateLimit 50
+```
+
+
+## SecConnWriteStateLimit
+
+**Description:** Would limit the number of connections in the write state per IP address.
+
+**Syntax:** `SecConnWriteStateLimit [NUMBER]`
+
+****Note:**** Coraza accepts this directive for compatibility with ModSecurity configurations, but
+it has no effect.
+
+**Example:**
+```seclang
+SecConnWriteStateLimit 50
+```
+
+
+## SecDataDir
+
+**Description:** Sets the directory where persistent collection data is stored.
+
+**Syntax:** `SecDataDir /path/to/dir`
+
+**Example:**
+```seclang
+SecDataDir /tmp/coraza/data
+```
+
+
+## SecDataset
+
+**Description:** Defines a named, inline dataset that operators such as @pmFromDataset and @ipMatchFromDataset can reference. The records are given as a backtick-quoted block, one per line.
+
+**Syntax:** `SecDataset NAME `\n...\n``
+
+**Example:**
+```seclang
+SecDataset test `
+123
+456
+`
+```
+
+
 ## SecDebugLog
 
 **Description:** Path to the Coraza debug log file.
@@ -273,6 +363,11 @@ SecComponentSignature "OWASP_CRS/4.18.0"
 
 Logs will be written to this file. Make sure the process user has write access to the
 directory.
+
+**Example:**
+```seclang
+SecDebugLog /var/log/coraza/debug.log
+```
 
 
 ## SecDebugLogLevel
@@ -297,6 +392,11 @@ The possible values for the debug log level are:
 
 Levels outside the 0-9 range will default to level 3 (Info)
 
+**Example:**
+```seclang
+SecDebugLogLevel 3
+```
+
 
 ## SecDefaultAction
 
@@ -318,6 +418,128 @@ the connection.
 
 Important: Every [`SecDefaultAction`](#secdefaultaction) directive must specify a disruptive action and a processing
 phase and cannot contain metadata actions.
+
+**Example:**
+```seclang
+SecDefaultAction "phase:2,log,auditlog,pass"
+```
+
+
+## SecGsbLookupDb
+
+**Description:** Would set the path to the Google Safe Browsing database used by @gsbLookup.
+
+**Syntax:** `SecGsbLookupDb /path/to/db`
+
+****Note:**** Coraza accepts this directive for compatibility with ModSecurity configurations, but
+it has no effect.
+
+**Example:**
+```seclang
+SecGsbLookupDb /path/to/GsbMalware.dat
+```
+
+
+## SecHTTPBlKey
+
+**Description:** Would set the API key used by the @rbl operator for Project Honey Pot lookups.
+
+**Syntax:** `SecHttpBlKey "KEY"`
+
+****Note:**** Coraza accepts this directive for compatibility with ModSecurity configurations, but
+it has no effect.
+
+**Example:**
+```seclang
+SecHttpBlKey "my_api_key"
+```
+
+
+## SecHashEngine
+
+**Description:** Would enable the response hashing engine used to sign links and form fields.
+
+**Syntax:** `SecHashEngine On|Off`
+
+****Note:**** Coraza accepts this directive for compatibility with ModSecurity configurations, but
+it has no effect.
+
+**Example:**
+```seclang
+SecHashEngine On
+```
+
+
+## SecHashKey
+
+**Description:** Would set the key used by the response hashing engine.
+
+**Syntax:** `SecHashKey [KEY] [KeyOnly|SessionID|RemoteIP]`
+
+****Note:**** Coraza accepts this directive for compatibility with ModSecurity configurations, but
+it has no effect.
+
+**Example:**
+```seclang
+SecHashKey "my_secret_key" KeyOnly
+```
+
+
+## SecHashMethodPm
+
+**Description:** Would select, by phrase match, which response elements the hashing engine signs.
+
+**Syntax:** `SecHashMethodPm TYPE PHRASES`
+
+****Note:**** Coraza accepts this directive for compatibility with ModSecurity configurations, but
+it has no effect.
+
+**Example:**
+```seclang
+SecHashMethodPm HashHref "example.com"
+```
+
+
+## SecHashMethodRx
+
+**Description:** Would select, by regular expression, which response elements the hashing engine signs.
+
+**Syntax:** `SecHashMethodRx TYPE REGEX`
+
+****Note:**** Coraza accepts this directive for compatibility with ModSecurity configurations, but
+it has no effect.
+
+**Example:**
+```seclang
+SecHashMethodRx HashHref "^/admin"
+```
+
+
+## SecHashParam
+
+**Description:** Would set the parameter name carrying the hash added by the response hashing engine.
+
+**Syntax:** `SecHashParam "NAME"`
+
+****Note:**** Coraza accepts this directive for compatibility with ModSecurity configurations, but
+it has no effect.
+
+**Example:**
+```seclang
+SecHashParam "hmac"
+```
+
+
+## SecIgnoreRuleCompilationErrors
+
+**Description:** Continues loading a rule set when a rule fails to compile, instead of aborting.a faulty rule that does not load cannot protect anything, so this is a migration aid rather than a setting to run with.
+
+**Syntax:** `SecIgnoreRuleCompilationErrors On|Off`
+
+**Example:**
+```seclang
+SecIgnoreRuleCompilationErrors Off
+```
 
 
 ## SecMarker
@@ -343,7 +565,7 @@ Core Rule Set:
 		setvar:tx.protocol_violation_score=+%{tx.notice_anomaly_score},\
 		setvar:tx.%{rule.id}-PROTOCOL_VIOLATION/MISSING_HEADER-%{matched_var_name}=%{matched_var}"
 	SecRule REQUEST_HEADERS:Host "^$" \
-		"id:'960008',phase:2,rev:'2.1.1',t:none,block,msg:'Request Missing a Host Header',\
+		"id:'960009',phase:2,rev:'2.1.1',t:none,block,msg:'Request Missing a Host Header',\
 		tag:'PROTOCOL_VIOLATION/MISSING_HEADER_HOST',tag:'WASCTC/WASC-21',\
 		tag:'OWASP_TOP_10/A7',tag:'PCI/6.5.10',severity:'5',\
 		setvar:'tx.msg=%{rule.msg}',setvar:tx.anomaly_score=+%{tx.notice_anomaly_score},\
@@ -352,6 +574,64 @@ Core Rule Set:
 
 	SecMarker END_HOST_CHECK
 
+```
+
+
+## SecPcreMatchLimit
+
+**Description:** Would set the PCRE match limit.
+
+**Syntax:** `SecPcreMatchLimit [NUMBER]`
+
+****Note:**** Coraza accepts this directive for compatibility with ModSecurity configurations, but
+it has no effect. Coraza matches with RE2, which runs in linear time and has no backtracking
+limit to configure.
+
+**Example:**
+```seclang
+SecPcreMatchLimit 1500
+```
+
+
+## SecPcreMatchLimitRecursion
+
+**Description:** Would set the PCRE match recursion limit.
+
+**Syntax:** `SecPcreMatchLimitRecursion [NUMBER]`
+
+****Note:**** Coraza accepts this directive for compatibility with ModSecurity configurations, but
+it has no effect. Coraza matches with RE2, which does not recurse while matching.
+
+**Example:**
+```seclang
+SecPcreMatchLimitRecursion 1500
+```
+
+
+## SecRemoteRules
+
+**Description:** Loads rules from a remote URL.
+
+**Syntax:** `SecRemoteRules [KEY] URL`
+
+****Note:**** Coraza rejects this directive: fetching rules over the network is not implemented, so
+a configuration using it fails to load with an error rather than being ignored.
+
+**Example:**
+```seclang
+SecRemoteRules https://example.com/rules.conf
+```
+
+
+## SecRemoteRulesFailAction
+
+**Description:** Controls what happens when rules cannot be retrieved from a remote source: Abort fails the configuration load, Warn continues.
+
+**Syntax:** `SecRemoteRulesFailAction Abort|Warn`
+
+**Example:**
+```seclang
+SecRemoteRulesFailAction Abort
 ```
 
 
@@ -369,6 +649,11 @@ blocking possible. The possible values are:
 - On: buffer request bodies
 - Off: do not buffer request bodies
 
+**Example:**
+```seclang
+SecRequestBodyAccess On
+```
+
 
 ## SecRequestBodyInMemoryLimit
 
@@ -381,6 +666,11 @@ blocking possible. The possible values are:
 When a `multipart/form-data` request is being processed, once the in-memory limit is reached,
 the request body will start to be streamed into a temporary file on disk.
 
+**Example:**
+```seclang
+SecRequestBodyInMemoryLimit 131072
+```
+
 
 ## SecRequestBodyJsonDepthLimit
 
@@ -391,6 +681,11 @@ the request body will start to be streamed into a temporary file on disk.
 **Default:** `1024`
 
 Anything over the limit will generate a REQBODY_ERROR in the JSON body processor.
+
+**Example:**
+```seclang
+SecRequestBodyJsonDepthLimit 1024
+```
 
 
 ## SecRequestBodyLimit
@@ -405,6 +700,11 @@ Depends on [`SecRequestBodyLimitAction`](#secrequestbodylimitaction)
 - Reject: Anything over this limit will be rejected with status code 413 (Request Entity Too Large).
 - ProcessPartial: The first N bytes of the request body will be processed.
 There is a hard limit of 1 GiB.
+
+**Example:**
+```seclang
+SecRequestBodyLimit 134217728
+```
 
 
 ## SecRequestBodyLimitAction
@@ -421,6 +721,11 @@ avoid OOM issues while buffering the request body prior the inspection.
 **Note:** When SecRuleEngine is set to DetectionOnly, this directive is set to
 ProcessPartial to minimize disruptions when initially deploying Coraza.
 
+**Example:**
+```seclang
+SecRequestBodyLimitAction Reject
+```
+
 
 ## SecRequestBodyNoFilesLimit
 
@@ -433,7 +738,13 @@ ProcessPartial to minimize disruptions when initially deploying Coraza.
 Generally speaking, the default value is not small enough. For most applications, you
 should be able to reduce it down to 128 KB or lower. Anything over the limit will be
 rejected with status code 413 (Request Entity Too Large). There is a hard limit of 1 GiB.
+
 **Note:** not implemented yet
+
+**Example:**
+```seclang
+SecRequestBodyNoFilesLimit 131072
+```
 
 
 ## SecResponseBodyAccess
@@ -450,6 +761,28 @@ response blocking. Possible values are:
 configured with [`SecResponseBodyMimeType`](#secresponsebodymimetype)).
 - Off: do not buffer response bodies.
 
+**Example:**
+```seclang
+SecResponseBodyAccess On
+```
+
+
+## SecResponseBodyJsonDepthLimit
+
+**Description:** Configures the maximum JSON recursion depth limit Coraza will accept in response bodies.
+
+**Syntax:** `SecResponseBodyJsonDepthLimit [LIMIT]`
+
+**Default:** `1024`
+
+Anything over the limit will generate a RES_BODY_ERROR in the JSON body processor.
+Requires `SecResponseBodyAccess On` to have any effect.
+
+**Example:**
+```seclang
+SecResponseBodyJsonDepthLimit 1024
+```
+
 
 ## SecResponseBodyLimit
 
@@ -464,6 +797,11 @@ Depends on [`SecResponseBodyLimitAction`](#secresponsebodylimitaction)
 - ProcessPartial: The first N bytes of the response body will be processed.
 This setting will not affect the responses with MIME types that are not selected for
 buffering. There is a hard limit of 1 GiB.
+
+**Example:**
+```seclang
+SecResponseBodyLimit 524288
+```
 
 
 ## SecResponseBodyLimitAction
@@ -489,6 +827,11 @@ bypass any monitoring device.
 **Note:** When SecRuleEngine is set to DetectionOnly, this directive is set to
 ProcessPartial to minimize disruptions when initially deploying Coraza.
 
+**Example:**
+```seclang
+SecResponseBodyLimitAction ProcessPartial
+```
+
 
 ## SecResponseBodyMimeType
 
@@ -509,7 +852,7 @@ SecResponseBodyMimeType text/plain text/html text/xml
 
 **Description:** Clears the list of MIME types considered for response body buffering, allowing you to start populating the list from scratch.
 
-**Syntax:** `SecResponseBodyMimeTypesClear`
+**Syntax:** `SecResponseBodyMimeTypesClear Example: ```seclang SecResponseBodyMimeTypesClear ````
 
 
 ## SecRule
@@ -545,12 +888,32 @@ The possible values are:
 - DetectionOnly: process rules but never executes any disruptive actions
 (block, deny, drop, allow, proxy and redirect)
 
+**Example:**
+```seclang
+SecRuleEngine DetectionOnly
+```
+
 
 ## SecRuleRemoveByID
 
 **Description:** Removes the matching rules from the current configuration context.
 
-**Syntax:** `SecRuleRemoveById ...[ID OR RANGE]`
+**Syntax:** `SecRuleRemoveById ID|RANGE [ID|RANGE ...]`
+
+Permanently removes rules by ID or inclusive range from the WAF configuration at
+parse time. The removal applies to all transactions, check the per-transaction run time
+`ctl:ruleRemoveById` action for more granular control when disabling a rule.
+
+**Note:** This directive operates on the rules already loaded at the point it is parsed,
+so it must appear AFTER any Include directive that loads the rules to be removed.
+Placing it before the include has no effect because those rules do not yet exist in
+the configuration.
+
+**Example:**
+```seclang
+SecRule REQUEST_URI "@rx attack" "id:1000,phase:1,log,deny"
+SecRuleRemoveById 1000
+```
 
 
 ## SecRuleRemoveByMsg
@@ -559,13 +922,20 @@ The possible values are:
 
 **Syntax:** `SecRuleRemoveByMsg MESSAGE`
 
-Normally, you would use [`SecRuleRemoveById`](#secruleremovebyid) to remove rules, but it may occasionally
-be easier to disable one or more rules with [`SecRuleRemoveByMsg`](#secruleremovebymsg). Matching is
-by case-sensitive string equality.
+Permanently removes all rules with the given message from the WAF configuration at
+parse time. The removal applies to all transactions, check the per-transaction run time
+`ctl:ruleRemoveByMsg` action for more granular control when disabling rules.
+
+Matching is by case-sensitive string equality.
+
+**Note:** This directive operates on the rules already loaded at the point it is parsed,
+so it must appear AFTER any directive that loads the rules to be removed.
+Placing it before has no effect because those rules do not yet exist in the configuration.
 
 **Example:**
 ```seclang
-SecRuleRemoveByMsg "Directory Listing"
+SecRule REQUEST_URI "@rx attack" "id:1000,phase:1,log,deny,msg:'My Custom Rule Msg'"
+SecRuleRemoveByMsg "My Custom Rule Msg"
 ```
 
 
@@ -575,13 +945,20 @@ SecRuleRemoveByMsg "Directory Listing"
 
 **Syntax:** `SecRuleRemoveByTag [TAG]`
 
-Normally, you would use [`SecRuleRemoveById`](#secruleremovebyid) to remove rules, but it may occasionally
-be easier to disable an entire group of rules with [`SecRuleRemoveByTag`](#secruleremovebytag). Matching is
-by case-sensitive string equality.
+Permanently removes all rules carrying the given tag from the WAF configuration at
+parse time. The removal applies to all transactions, check the per-transaction run time
+`ctl:ruleRemoveByTag` action for more granular control when disabling rules.
+
+Matching is by case-sensitive string equality.
+
+**Note:** This directive operates on the rules already loaded at the point it is parsed,
+so it must appear AFTER any directive that loads the rules to be removed.
+Placing it before has no effect because those rules do not yet exist in the configuration.
 
 **Example:**
 ```seclang
-SecRuleRemoveByTag attack-dos
+SecRule REQUEST_URI "@rx attack" "id:1000,phase:1,log,deny,tag:my-tag"
+SecRuleRemoveByTag my-tag
 ```
 
 **Note:** OWASP CRS has a list of supported tags https://coreruleset.org/docs/rules/metadata/
@@ -613,6 +990,11 @@ The rule ID can be single IDs or ranges of IDs. The targets are separated by a p
 This directive will append variables to the specified rule with the targets provided in the second parameter.
 The rule ID can be single IDs or ranges of IDs. The targets are separated by a pipe character.
 
+**Example:**
+```seclang
+SecRuleUpdateTargetById 7 "!REQUEST_HEADERS:/xyz/"
+```
+
 
 ## SecRuleUpdateTargetByTag
 
@@ -628,6 +1010,11 @@ The rule ID can be single IDs or ranges of IDs. The targets are separated by a p
 
 **Note:** OWASP CRS provides a list of [supported tags](https://coreruleset.org/docs/3-about-rules/metadata/#tags-about-rule-classification).
 
+**Example:**
+```seclang
+SecRuleUpdateTargetByTag "attack-sqli" "!ARGS:query"
+```
+
 
 ## SecRxPreFilter
 
@@ -642,11 +1029,35 @@ literal substrings and compute the minimum match length. At request time these f
 checks run before the full regex, allowing the engine to skip the regex entirely when
 an input clearly cannot match.
 
+**Warning:** This is an experimental feature.
+
 **Example:**
 ```seclang
 SecRxPreFilter On
+```
 
-> **Warning**: This is an experimental feature.
+
+## SecSensorID
+
+**Description:** Sets an identifier for this Coraza instance, useful when several sensors write to a shared log.
+
+**Syntax:** `SecSensorID "ID"`
+
+**Example:**
+```seclang
+SecSensorID "sensor-01"
+```
+
+
+## SecServerSignature
+
+**Description:** Sets the server signature Coraza reports. Surrounding quotes, if present, are removed.
+
+**Syntax:** `SecServerSignature "SIGNATURE"`
+
+**Example:**
+```seclang
+SecServerSignature "Apache/2.2.15"
 ```
 
 
@@ -659,6 +1070,35 @@ SecRxPreFilter On
 **Default:** `""`
 
 This directive is required when enabling SecUploadKeepFiles.
+
+**Example:**
+```seclang
+SecUploadDir /tmp/coraza/uploads
+```
+
+
+## SecUploadFileLimit
+
+**Description:** Sets the maximum number of uploaded files handled per request. The value is parsed but not yet enforced; see corazawaf/coraza#1686 for the surrounding discussion.
+
+**Syntax:** `SecUploadFileLimit [NUMBER]`
+
+**Example:**
+```seclang
+SecUploadFileLimit 10
+```
+
+
+## SecUploadFileMode
+
+**Description:** Sets the file mode applied to files stored by SecUploadDir. The value is parsed as octal.
+
+**Syntax:** `SecUploadFileMode OCTAL_MODE`
+
+**Example:**
+```seclang
+SecUploadFileMode 0600
+```
 
 
 ## SecUploadKeepFiles
@@ -678,6 +1118,39 @@ Possible values are:
   - Off: Do not keep uploaded files.
   - RelevantOnly: Keep only uploaded files that matched at least one rule that would be
     logged (excluding rules with the `nolog` action).
+
+**Example:**
+```seclang
+SecUploadKeepFiles RelevantOnly
+```
+
+
+## SecWebAppID
+
+**Description:** Sets an identifier for the web application being protected. The value is exposed to rules and audit logs.
+
+**Syntax:** `SecWebAppID "NAME"`
+
+**Example:**
+```seclang
+SecWebAppID "my_application"
+```
+
+
+## Unsupported
+
+**Description:** Shared handler for ModSecurity directives that Coraza parses and discards, so existing configurations continue to load.
+
+**Syntax:** `SecTmpDir /path/to/dir`
+
+****Note:**** This handler backs [`SecArgumentSeparator`](#secargumentseparator), [`SecCookieFormat`](#seccookieformat),
+[`SecRuleUpdateTargetByMsg`](#secruleupdatetargetbymsg), [`SecRuleScript`](#secrulescript), [`SecRulePerfTime`](#secruleperftime), [`SecUnicodeMap`](#secunicodemap) and
+[`SecTmpDir`](#sectmpdir). All are accepted and ignored.
+
+**Example:**
+```seclang
+SecTmpDir /tmp
+```
 
 
 

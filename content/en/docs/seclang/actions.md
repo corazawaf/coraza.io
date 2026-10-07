@@ -3,7 +3,7 @@ title: "Actions"
 description: "Complete reference for all SecLang actions in Coraza WAF, used to define rule responses such as blocking, allowing, logging, and redirecting."
 lead: "The action of a rule defines how to handle HTTP requests that have matched one or more rule conditions."
 date: 2020-10-06T08:48:57+00:00
-lastmod: "2026-05-22T18:03:48+02:00"
+lastmod: "2026-10-07T16:40:58-03:00"
 draft: false
 images: []
 weight: 100
@@ -74,6 +74,26 @@ When using the `allow` action for allowlisting, it's recommended to add
 
 For the complete list of available actions, see [docs/seclang/actions](https://coraza.io/docs/seclang/actions/).
 
+## accuracy
+
+**Description**: Specifies the relative accuracy level of the rule related to the number of false positives and false negatives.
+The value is a string based on a numeric scale (1-9 where 9 is extensively tested and 1 is a brand new experimental rule).
+
+**Action Group**: Metadata
+
+
+
+
+**Example**:
+
+
+```seclang
+	SecRule REQUEST_FILENAME|ARGS_NAMES|ARGS|XML:/* "\bgetparentfolder\b" \
+		"phase:2,ver:'CRS/2.2.4',accuracy:'9',maturity:'9',capture,t:none,t:htmlEntityDecode,t:compressWhiteSpace,t:lowercase,ctl:auditLogParts=+E,block,msg:'Cross-site Scripting (XSS) Attack',id:'958016',tag:'WEB_ATTACK/XSS',severity:'2'"
+```seclang
+
+
+
 ## allow
 
 **Description**: Stops rule processing on a successful match and allows a transaction to be proceed.
@@ -100,7 +120,7 @@ SecAction phase:1,allow:request,id:96
 SecAction phase:1,allow,id:97
 # If you want to allow a response through, put a rule in phase RESPONSE_HEADERS and use allow
 SecAction phase:3,allow,id:98
-```
+```seclang
 
 
 
@@ -119,7 +139,7 @@ SecAction phase:3,allow,id:98
 ```seclang
 # The action is explicit if the log is specified.
 SecRule REMOTE_ADDR "^192\.168\.1\.100$" "auditlog,phase:1,id:100,allow"
-```
+```seclang
 
 
 
@@ -159,7 +179,7 @@ SecDefaultAction "phase:2,deny,status:403,log,auditlog,id:104"
 SecRule ARGS "@rx attack1" "phase:2,id:1,deny"
 # Change how rule ID 1 blocks
 SecRuleUpdateActionById 1 "block"
-```
+```seclang
 
 
 
@@ -183,7 +203,7 @@ All the other variables contain the captured values, in the order in which the c
 ```seclang
 	  SecRule REQUEST_BODY "^username=(\w{25,})" "phase:2,capture,t:none,chain,id:105"
 		   SecRule TX:1 "(?:(?:a(dmin|nonymous)))"
-```
+```seclang
 
 
 
@@ -221,7 +241,7 @@ Special rules control the usage of actions in a chained rule:
 # Noted that the rule should be preceded by a rule that verifies only valid request methods are used.
 	SecRule REQUEST_METHOD "^POST$" "phase:1,chain,t:none,id:105"
 		SecRule &REQUEST_HEADERS:Content-Length "@eq 0" "t:none"
-```
+```seclang
 
 
 
@@ -257,7 +277,8 @@ Here are some notes about the options:
     (e.g. `/foo\/` is treated as the literal string `/foo\/`, not a regex). An empty pattern (`//`) is rejected.
     Pattern matching is always case-insensitive because variable names are lowercased before comparison.
     Users do not need to use the `!` character before the target list.
- 2. Option `ruleRemoveById` is triggered at run time and should be specified before the rule in which it is disabling.
+ 2. Options `ruleRemoveById`, `ruleRemoveByMsg`, and `ruleRemoveByTag` are per-transaction run-time removals
+    and should be specified before the rule they are disabling.
  3. Option `requestBodyProcessor` allows you to configure the request body processor.
     By default, Coraza will use the `URLENCODED` and `MULTIPART` processors to process an `application/x-www-form-urlencoded` and a `multipart/form-data` body respectively.
     Other processors also supported: `JSON` and `XML`, but they are never used implicitly.
@@ -286,7 +307,7 @@ SecRule REQUEST_CONTENT_TYPE ^text/xml "nolog,pass,id:106,phase:1,ctl:requestBod
 # white-list all JSON array fields matching a pattern for rule #932125 when the REQUEST_URI begins with /api/jobs
 		SecRule REQUEST_URI "@beginsWith /api/jobs" "phase:1,t:none,pass,\
 	 	nolog,ctl:ruleRemoveTargetById=932125;ARGS:/^json\.\d+\.jobdescription$/"
-```
+```seclang
 
 
 
@@ -305,7 +326,7 @@ If status action is not used, deny action defaults to status 403.
 
 ```seclang
 SecRule REQUEST_HEADERS:User-Agent "nikto" "log,deny,id:107,msg:'Nikto Scanners Identified'"
-```
+```seclang
 
 
 
@@ -331,7 +352,7 @@ This action causes error message to appear in the log `(9)Bad file descriptor: c
 SecAction phase:1,id:109,initcol:ip=%{REMOTE_ADDR},nolog
 SecRule ARGS:login "!^$" "nolog,phase:1,id:110,setvar:ip.auth_attempt=+1,deprecatevar:ip.auth_attempt=25/120"
 SecRule IP:AUTH_ATTEMPT "@gt 25" "log,drop,phase:1,id:111,msg:'Possible Brute Force Attack'"
-```
+```seclang
 
 
 
@@ -360,7 +381,7 @@ Forking can therefore incur larger overhead in a multithreaded deployment.
 SecRule REQUEST_URI "^/cgi-bin/script\.pl" "phase:2,id:112,t:none,t:lowercase,t:normalizePath,block,\ exec:/usr/local/apache/bin/test.sh"
 # Run Lua script on rule match
 SecRule ARGS:p attack "phase:2,id:113,block,exec:/usr/local/apache/conf/exec.lua"
-```
+```seclang
 
 
 
@@ -382,7 +403,7 @@ The expire time will be reset if they are used on their own (perhaps in a SecAct
 	SecRule REQUEST_COOKIES:JSESSIONID "!^$" "nolog,phase:1,id:114,pass,setsid:%{REQUEST_COOKIES:JSESSIONID}"
 	SecRule REQUEST_URI "^/cgi-bin/script\.pl" "phase:2,id:115,t:none,t:lowercase,t:normalizePath,log,allow,\
 		setvar:session.suspicious=1,expirevar:session.suspicious=3600,phase:1"
-```
+```seclang
 
 
 
@@ -401,7 +422,7 @@ a numeric value and is mandatory for all `SecRule` and `SecAction`.
 
 ```seclang
 SecRule &REQUEST_HEADERS:Host "@eq 0" "log,id:60008,severity:2,msg:'Request Missing a Host Header'"
-```
+```seclang
 
 
 
@@ -423,7 +444,7 @@ See the `Persistent Storage` section for further details.
 ```seclang
 # Initiates IP address tracking, which is best done in phase 1
 SecAction "phase:1,id:116,nolog,pass,initcol:ip=%{REMOTE_ADDR}"
-```
+```seclang
 
 
 
@@ -442,7 +463,7 @@ SecAction "phase:1,id:116,nolog,pass,initcol:ip=%{REMOTE_ADDR}"
 ```seclang
 # log matches from the error log file to the Coraza audit log.
 SecAction "phase:1,id:117,pass,initcol:ip=%{REMOTE_ADDR},log"
-```
+```seclang
 
 
 
@@ -463,7 +484,7 @@ The information is properly escaped for use with logging of binary data.
 
 ```seclang
 SecRule ARGS:p "@rx <script>" "phase:2,id:118,log,pass,logdata:%{MATCHED_VAR}"
-```
+```seclang
 
 
 
@@ -484,7 +505,7 @@ The value is a string based on a numeric scale (1-9 where 9 is extensively teste
 	SecRule REQUEST_FILENAME|ARGS_NAMES|ARGS|XML:/* "\bgetparentfolder\b" \
 		"phase:2,ver:'CRS/2.2.4,accuracy:'9',maturity:'9',capture,t:none,t:htmlEntityDecode,t:compressWhiteSpace,t:lowercase,ctl:auditLogParts=+E,block,msg:'Cross-site Scripting (XSS) Attack',id:'958016',tag:'WEB_ATTACK/XSS',tag:'WASCTC/WASC-8',tag:'WASCTC/WASC-22',tag:'OWASP_TOP_10/A2',tag:'OWASP_AppSensor/IE1',tag:'PCI/6.5.1',logdata:'% \
 	 	{TX.0}',severity:'2',setvar:'tx.msg=%{rule.msg}',setvar:tx.xss_score=+%{tx.critical_anomaly_score},setvar:tx.anomaly_score=+%{tx.critical_anomaly_score},setvar:tx.%{rule.id}-WEB_ATTACK/XSS-%{matched_var_name}=%{tx.0}"
-```
+```seclang
 
 
 
@@ -503,7 +524,7 @@ Noted that the msg information appears in the error and/or audit log files and i
 
 ```seclang
 SecRule &REQUEST_HEADERS:Host "@eq 0" "log,id:60008,severity:2,msg:'Request Missing a Host Header'"
-```
+```seclang
 
 
 
@@ -523,7 +544,7 @@ With `multiMatch`, variables are checked against the operator before and after e
 
 ```seclang
 SecRule ARGS "attack" "phase1,log,deny,id:119,t:removeNulls,t:lowercase,multiMatch"
-```
+```seclang
 
 
 
@@ -546,7 +567,7 @@ If you want to prevent audit logging from taking place, regardless of whether an
 
 ```seclang
 SecRule REQUEST_HEADERS:User-Agent "@streq Test" "allow,noauditlog,id:120"
-```
+```seclang
 
 
 
@@ -565,7 +586,7 @@ Although `nolog` implies `noauditlog`, you can override the former by using `nol
 
 ```seclang
 SecRule REQUEST_HEADERS:User-Agent "@streq Test" "allow,nolog,id:121"
-```
+```seclang
 
 
 
@@ -590,7 +611,7 @@ SecRule REQUEST_HEADERS:User-Agent "@streq Test" "log,pass,id:122"
 SecAction "phase:2,nolog,pass,setvar:TX.test=0,id:123"
 # Increment TX.test for every request parameter
 SecRule ARGS "test" "phase:2,log,pass,setvar:TX.test=+1,id:124"
-```
+```seclang
 
 
 
@@ -619,7 +640,7 @@ Besides, There are aliases for some phase numbers:
 SecAction phase:1,nolog,pass,id:126,initcol:IP=%{REMOTE_ADDR}
 # Example of using phase alias
 SecRule REQUEST_HEADERS:User-Agent "Test" "phase:request,log,deny,id:127"
-```
+```seclang
 
 
 
@@ -640,7 +661,7 @@ Otherwise, status code 302 will be used.
 
 ```seclang
 SecRule REQUEST_HEADERS:User-Agent "@streq Test" "phase:1,id:130,log,redirect:http://www.example.com/failed.html"
-```
+```seclang
 
 
 
@@ -660,7 +681,7 @@ and it can still provide some indication about the rule changes.
 ```seclang
 	SecRule REQUEST_FILENAME|ARGS_NAMES|ARGS|XML:/* "(?:(?:[\;\|\`]\W*?\bcc|\b(wget|curl))\b|\/cc(?:[\'\"\|\;\`\-\s]|$))" \
 		"phase:2,rev:'2.1.3',capture,t:none,t:normalizePath,t:lowercase,ctl:auditLogParts=+E,block,msg:'System Command Injection',id:'950907',tag:'WEB_ATTACK/COMMAND_INJECTION',tag:'WASCTC/WASC-31',tag:'OWASP_TOP_10/A1',tag:'PCI/6.5.2',logdata:'%{TX.0}',severity:'2',setvar:'tx.msg=%{rule.msg}',setvar:tx.anomaly_score=+%{tx.critical_anomaly_score},setvar:tx.command_injection_score=+%{tx.critical_anomaly_score},setvar:tx.%{rule.id}-WEB_ATTACK/COMMAND_INJECTION-%{matched_var_name}=%{tx.0},skipAfter:END_COMMAND_INJECTION1"
-```
+```seclang
 
 
 
@@ -682,7 +703,7 @@ SecRule RESPONSE_HEADERS:/Set-Cookie2?/ "(?i:(j?sessionid|(php)?sessid|(asp|jser
 SecRule TX:SESSIONID "!(?i:\;? ?httponly;?)" "phase:3,id:140,t:none,setenv:httponly_cookie=%{matched_var},pass,log,auditlog,msg:'AppDefect: Missing HttpOnly Cookie Flag.'"
 # In Apache
 Header set Set-Cookie "%{httponly_cookie}e; HTTPOnly" env=httponly_cookie
-```
+```seclang
 
 
 
@@ -721,7 +742,7 @@ Header set Set-Cookie "%{httponly_cookie}e; HTTPOnly" env=httponly_cookie
 # it should be included in the last rule of the chain.
 	SecRule REQUEST_FILENAME "@streq test.php" "chain,id:7,phase:1,t:none,nolog"
 		SecRule ARGS_POST:action "@streq login" "t:none,setvar:tx.auth_attempt=+1"
-```
+```seclang
 
 
 
@@ -753,7 +774,7 @@ The data below is used by the OWASP Core Rule Set (CRS):
 
 ```seclang
 SecRule REQUEST_METHOD "^PUT$" "id:340002,rev:1,severity:CRITICAL,msg:'Restricted HTTP function'"
-```
+```seclang
 
 
 
@@ -777,7 +798,7 @@ it will skip over the next phase 1 rule that follows it in the phase.
 SecRule REMOTE_ADDR "^127\.0\.0\.1$" "phase:1,skip:1,id:141"
 # This rule will be skipped over when REMOTE_ADDR is 127.0.0.1
 SecRule &REQUEST_HEADERS:Accept "@eq 0" "phase:1,id:142,deny,msg:'Request Missing an Accept Header'"
-```
+```seclang
 
 
 
@@ -813,7 +834,7 @@ SecMarker BEGIN_HOST_CHECK
 		tag:'PCI/6.5.10',severity:'5',setvar:'tx.msg=%{rule.msg}',setvar:tx.anomaly_score=+%{tx.notice_anomaly_score},setvar:tx.protocol_violation_score=+%{tx.notice_anomaly_score}, \
 		setvar:tx.%{rule.id}-PROTOCOL_VIOLATION/MISSING_HEADER-%{matched_var_name}=%{matched_var}"
 SecMarker END_HOST_CHECK
-```
+```seclang
 
 
 
@@ -833,7 +854,7 @@ If status is not set, deny action defaults to status 403.
 ```seclang
 # Deny status 403
 SecDefaultAction "phase:1,log,deny,id:145,status:403"
-```
+```seclang
 
 
 
@@ -853,7 +874,7 @@ It is recommended that you always use `t:none` in your rules, which prevents the
 
 ```seclang
 SecRule ARGS "(asfunction|javascript|vbscript|data|mocha|livescript):" "id:146,t:none,t:htmlEntityDecode,t:lowercase,t:removeNulls,t:removeWhitespace"
-```
+```seclang
 
 
 
@@ -875,7 +896,7 @@ You can use forward slashes to create a hierarchy of categories (see example), a
 	SecRule REQUEST_FILENAME|ARGS_NAMES|ARGS|XML:/* "\bgetparentfolder\b" \
 	 	"phase:2,rev:'2.1.3',capture,t:none,t:htmlEntityDecode,t:compressWhiteSpace,t:lowercase,ctl:auditLogParts=+E,block,msg:'Cross-site Scripting (XSS) Attack',id:'958016',tag:'WEB_ATTACK/XSS',tag:'WASCTC/WASC-8',tag:'WASCTC/WASC-22',tag:'OWASP_TOP_10/A2',tag:'OWASP_AppSensor/IE1',tag:'PCI/6.5.1',logdata:'% \
 		{TX.0}',severity:'2',setvar:'tx.msg=%{rule.msg}',setvar:tx.xss_score=+%{tx.critical_anomaly_score},setvar:tx.anomaly_score=+%{tx.critical_anomaly_score},setvar:tx.%{rule.id}-WEB_ATTACK/XSS-%{matched_var_name}=%{tx.0}"
-```
+```seclang
 
 
 
@@ -895,7 +916,7 @@ You can use forward slashes to create a hierarchy of categories (see example), a
 	SecRule REQUEST_FILENAME|ARGS_NAMES|ARGS|XML:/* "\bgetparentfolder\b" \
 	 	"phase:2,ver:'CRS/2.2.4,capture,t:none,t:htmlEntityDecode,t:compressWhiteSpace,t:lowercase,ctl:auditLogParts=+E,block,msg:'Cross-site Scripting (XSS) Attack',id:'958016',tag:'WEB_ATTACK/XSS',tag:'WASCTC/WASC-8',tag:'WASCTC/WASC-22',tag:'OWASP_TOP_10/A2',tag:'OWASP_AppSensor/IE1',tag:'PCI/6.5.1',logdata:'% \
 		{TX.0}',severity:'2',setvar:'tx.msg=%{rule.msg}',setvar:tx.xss_score=+%{tx.critical_anomaly_score},setvar:tx.anomaly_score=+%{tx.critical_anomaly_score},setvar:tx.%{rule.id}-WEB_ATTACK/XSS-%{matched_var_name}=%{tx.0}"
-```
+```seclang
 
 
 

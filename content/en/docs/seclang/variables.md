@@ -3,7 +3,7 @@ title: "Variables"
 description: "Reference for all SecLang variables available in Coraza WAF, covering request, response, server, and collection variables used in rules."
 lead: "Reference for all SecLang variables available in Coraza WAF, covering request, response, server, and collection variables used in rules."
 date: 2020-10-06T08:48:57+00:00
-lastmod: "2026-05-22T18:03:49+02:00"
+lastmod: "2026-10-07T16:40:59-03:00"
 draft: false
 images: []
 weight: 100
@@ -250,19 +250,42 @@ SecRule ARGS pattern "chain,deny,id:27"
 
 **Note**: Be aware that this variable holds data for the last operator match. This means that if there are more than one matches, only the last one will be populated. Use MATCHED_VARS_NAMES variable if you want all matches.
 
+## MULTIPART_DUPLICATE_PART_HEADER
+
+Set to 1 when a multipart part repeats a part header (for example two Content-Disposition headers), or repeats a parameter inside its Content-Disposition header (for example two "filename" parameters). Such a part is interpreted differently by different backends, so the duplicate itself is the signal. This variable also contributes to MULTIPART_STRICT_ERROR.
+
+```seclang
+SecRule MULTIPART_STRICT_ERROR "@eq 1" "id:201,phase:2,deny,t:none,chain"
+  SecRule MULTIPART_DUPLICATE_PART_HEADER "@eq 1"
+```
+
 ## MULTIPART_FILENAME
 
-This variable contains the multipart data from field FILENAME.
+Contains the filename submitted for a multipart file upload part, keyed by the part's field name. When a part carries both an RFC 5987 "filename*" (percent-decoded) and a plain "filename" with different values, both are added, since backends disagree on which one wins.
 
-**Note:** This variable is currently NOT implemented by Coraza
+```seclang
+SecRule MULTIPART_FILENAME:upfile "@rx \.(?:php|jsp|exe)$" "id:198"
+```
 
+## MULTIPART_FILENAME_CHARSET
 
+Contains the RFC 5987 charset declared by a multipart part's Content-Disposition "filename*" parameter, keyed by the part's field name. Absent when the part has no "filename*" parameter. The charset is exposed as-is, without validation against the RFC 5987 grammar or the IANA charset registry, and may be empty: enforce an allowlist with an anchored @rx, since !@within never matches an empty value.
+
+```seclang
+SecRule MULTIPART_FILENAME_CHARSET "!@rx ^(?:utf-8|iso-8859-1|us-ascii)$" "id:199,t:lowercase"
+```
+
+## MULTIPART_FILENAME_LANGUAGE
+
+Contains the RFC 5987 language tag declared by a multipart part's Content-Disposition "filename*" parameter, keyed by the part's field name. Empty when the part has no "filename*" parameter, or when the (optional) language segment was omitted.
+
+```seclang
+SecRule MULTIPART_FILENAME_LANGUAGE:upfile "@rx ." "id:200"
+```
 
 ## MULTIPART_NAME
 
-This variable contains the multipart data from field NAME.
-
-**Note:** This variable is currently NOT implemented by Coraza
+Contains the field name of each multipart part, keyed by that name.
 
 
 
@@ -676,6 +699,8 @@ This variable holds the unique id for the transaction.
 ## URLENCODED_ERROR
 
 This variable is created when an invalid URL encoding is encountered during the parsing of a query string (on every request) or during the parsing of an application/x-www-form-urlencoded request body (only on the requests that use the URLENCODED request body processor).
+
+**Note:** This variable is currently NOT implemented by Coraza. Coraza's query and body decoder (internal/url) is deliberately non-strict -- it mirrors what backends accept rather than rejecting malformed percent-encoding -- so no invalid-encoding condition is ever detected to set this from. It was previously set on a different condition entirely, a structural URI parse failure, which URI_PARSE_ERROR now reports. CRS does not consume it either: coreruleset/coreruleset#482.
 
 
 

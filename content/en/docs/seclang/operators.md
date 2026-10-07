@@ -3,7 +3,7 @@ title: "Operators"
 description: "Complete reference for all operators available in Coraza WAF SecLang rules, used to match variables against patterns, ranges, and conditions."
 lead: "This section documents the operators currently available in Coraza."
 date: 2020-10-06T08:48:57+00:00
-lastmod: "2026-03-23T20:12:27+01:00"
+lastmod: "2026-10-07T16:40:59-03:00"
 draft: false
 images: []
 weight: 100
@@ -26,7 +26,7 @@ Supports macro expansion for dynamic string matching.
 SecRule REQUEST_LINE "!@beginsWith GET" "id:149,deny,log"
 # Check if URI starts with /admin
 SecRule REQUEST_URI "@beginsWith /admin" "id:151,deny"
-```
+```seclang
 
 
 
@@ -43,7 +43,7 @@ Supports macro expansion for dynamic string matching.
 SecRule REQUEST_LINE "@contains .php" "id:150,deny,log"
 # Check if URI contains admin
 SecRule REQUEST_URI "@contains admin" "id:151,deny"
-```
+```seclang
 
 
 
@@ -60,7 +60,7 @@ payload is found in the input. Captures the SQLi fingerprint in field 0 for logg
 SecRule ARGS "@detectSQLi" "id:185,deny,log,msg:'SQL Injection Detected'"
 # Check request body for SQLi
 SecRule REQUEST_BODY "@detectSQLi" "id:186,deny"
-```
+```seclang
 
 
 
@@ -77,7 +77,7 @@ XSS payload is found in the input. Uses advanced pattern matching to identify XS
 SecRule ARGS "@detectXSS" "id:187,deny,log,msg:'XSS Attack Detected'"
 # Check request body for XSS
 SecRule REQUEST_BODY "@detectXSS" "id:188,deny"
-```
+```seclang
 
 
 
@@ -94,7 +94,7 @@ Supports macro expansion for dynamic string matching.
 SecRule REQUEST_LINE "!@endsWith HTTP/1.1" "id:152,deny,log"
 # Check if filename ends with .exe
 SecRule REQUEST_FILENAME "@endsWith .exe" "id:154,deny"
-```
+```seclang
 
 
 
@@ -111,7 +111,7 @@ Both values are converted to integers before comparison. Supports macro expansio
 SecRule &REQUEST_HEADERS_NAMES "@eq 15" "id:153,deny,log"
 # Compare parameter value to expected number
 SecRule ARGS:quantity "@eq 100" "id:154,pass"
-```
+```seclang
 
 
 
@@ -128,7 +128,7 @@ Both values are converted to integers before comparison. Supports macro expansio
 SecRule &REQUEST_HEADERS_NAMES "@ge 15" "id:155,deny,log"
 # Check minimum value requirement
 SecRule ARGS:age "@ge 18" "id:156,pass"
-```
+```seclang
 
 
 
@@ -145,7 +145,7 @@ Both values are converted to integers before comparison. Supports macro expansio
 SecRule &REQUEST_HEADERS_NAMES "@gt 15" "id:158,deny,log"
 # Check if quantity exceeds threshold
 SecRule ARGS:count "@gt 100" "id:159,deny"
-```
+```seclang
 
 
 
@@ -163,7 +163,7 @@ the variable value as a command-line argument and has a 10-second timeout.
 SecRule FILES_TMPNAMES "@inspectFile /usr/local/bin/av-scan.sh" "id:203,deny,log,msg:'Virus detected'"
 # Custom content validation script
 SecRule REQUEST_BODY "@inspectFile /opt/waf/scripts/validate-content.py" "id:204,deny"
-```
+```seclang
 
 
 
@@ -181,7 +181,7 @@ Can match individual IPs or IP ranges. Automatically adds appropriate subnet mas
 SecRule REMOTE_ADDR "@ipMatch 192.168.1.100,192.168.1.50,10.10.50.0/24" "id:160,deny,log"
 # Allow internal network
 SecRule REMOTE_ADDR "@ipMatch 10.0.0.0/8,172.16.0.0/12" "id:161,pass"
-```
+```seclang
 
 
 
@@ -198,7 +198,7 @@ Both values are converted to integers before comparison. Supports macro expansio
 SecRule &REQUEST_HEADERS_NAMES "@le 15" "id:164,pass,log"
 # Check maximum value constraint
 SecRule ARGS:limit "@le 100" "id:165,pass"
-```
+```seclang
 
 
 
@@ -215,7 +215,7 @@ Both values are converted to integers before comparison. Supports macro expansio
 SecRule &REQUEST_HEADERS_NAMES "@lt 15" "id:166,pass,log"
 # Check value is under limit
 SecRule ARGS:quantity "@lt 1000" "id:167,pass"
-```
+```seclang
 
 
 
@@ -233,7 +233,7 @@ actions without needing to match.
 SecRule ARGS "@noMatch" "id:205,deny,log,msg:'This rule will never fire'"
 # Rule that only executes actions without matching
 SecRule REQUEST_URI "@noMatch" "id:206,pass,setvar:tx.test=1"
-```
+```seclang
 
 
 
@@ -250,7 +250,7 @@ multi-pattern searching. Matches space-separated keywords or patterns provided a
 SecRule REQUEST_HEADERS:User-Agent "@pm WebZIP WebCopier Webster" "id:170,deny,log"
 # Match multiple attack patterns
 SecRule ARGS "@pm <script> javascript: onerror=" "id:171,deny"
-```
+```seclang
 
 
 
@@ -268,7 +268,7 @@ the response text if found. Has a 500ms timeout for DNS queries.
 SecRule REMOTE_ADDR "@rbl sbl-xbl.spamhaus.org" "id:183,deny,log,msg:'IP found in RBL'"
 # Multiple RBL checks
 SecRule REMOTE_ADDR "@rbl dnsbl.example.com" "id:184,deny"
-```
+```seclang
 
 
 
@@ -286,7 +286,7 @@ Useful for validating REST API endpoints with dynamic path segments.
 SecRule REQUEST_URI "@restpath /api/v1/users/{userId}/posts/{postId}" "id:201,pass,log"
 # Validate extracted path parameter
 SecRule ARGS_PATH:userId "@rx ^[0-9]+$" "id:202,deny,msg:'Invalid user ID format'"
-```
+```seclang
 
 
 
@@ -306,7 +306,7 @@ SecRule REQUEST_HEADERS:User-Agent "@rx nikto" "id:180,deny,log"
 SecRule ARGS "(?i)union.*select" "id:181,deny"
 # Capture groups for reuse in actions
 SecRule REQUEST_URI "@rx ^/api/v(\d+)" "id:182,setvar:tx.api_version=%{TX.1}"
-```
+```seclang
 
 
 
@@ -323,7 +323,7 @@ This is a case-sensitive exact match operator. Supports macro expansion for dyna
 SecRule ARGS:foo "!@streq bar" "id:176,deny,log"
 # Check if request method is exactly POST
 SecRule REQUEST_METHOD "@streq POST" "id:177,deny"
-```
+```seclang
 
 
 
@@ -341,7 +341,7 @@ To perform case-insensitive matching, use the t:lowercase transformation.
 SecRule REQUEST_HEADERS:User-Agent "@strmatch WebZIP" "id:1,deny"
 # Detect suspicious patterns in URI
 SecRule REQUEST_URI "@strmatch ../../../" "id:2,deny,log"
-```
+```seclang
 
 
 
@@ -359,7 +359,7 @@ variables, logging, or performing initialization tasks.
 SecRule REMOTE_ADDR "@unconditionalMatch" "id:207,phase:1,pass,nolog,setvar:tx.initialized=1"
 # Force rule to always match and log
 SecRule REQUEST_URI "@unconditionalMatch" "id:208,pass,log,msg:'Request logged'"
-```
+```seclang
 
 
 
@@ -377,7 +377,7 @@ detecting binary data, control characters, or restricting character sets.
 SecRule ARGS "@validateByteRange 10, 13, 32-126" "id:189,deny,log,msg:'Invalid characters'"
 # Detect null bytes
 SecRule REQUEST_URI "@validateByteRange 1-255" "id:190,deny"
-```
+```seclang
 
 
 
@@ -395,7 +395,7 @@ Supports multiple country codes with custom regex patterns.
 SecRule ARGS:rut "@validateNid cl ^[0-9]{7,8}-[0-9Kk]$" "id:195,pass,log"
 # Reject invalid Chilean national IDs
 SecRule ARGS:nid "!@validateNid cl ^[0-9]{7,8}-[0-9Kk]$" "id:196,deny,msg:'Invalid RUT'"
-```
+```seclang
 
 
 
@@ -413,7 +413,7 @@ based on the current phase. Returns true if validation fails (schema violation).
 SecRule REQUEST_BODY "@validateSchema /schemas/api-request.json" "id:197,deny,log,phase:2"
 # Validate response body schema
 SecRule RESPONSE_BODY "@validateSchema /schemas/api-response.json" "id:198,log,phase:4"
-```
+```seclang
 
 
 
@@ -431,7 +431,7 @@ encoding is detected (non-hex characters or incomplete sequences).
 SecRule REQUEST_URI_RAW "@validateUrlEncoding" "id:191,deny,log,msg:'Invalid URL encoding'"
 # Check query string encoding
 SecRule QUERY_STRING "@validateUrlEncoding" "id:192,deny"
-```
+```seclang
 
 
 
@@ -449,7 +449,7 @@ attacks and ensuring proper character encoding.
 SecRule ARGS "@validateUtf8Encoding" "id:193,deny,log,msg:'Invalid UTF-8 encoding'"
 # Check request body encoding
 SecRule REQUEST_BODY "@validateUtf8Encoding" "id:194,deny"
-```
+```seclang
 
 
 
@@ -467,7 +467,7 @@ Supports macro expansion for dynamic matching.
 SecRule REQUEST_METHOD "!@within GET,POST,HEAD" "id:178,deny,log"
 # Check if parameter value is in allowed list
 SecRule ARGS:action "@within view,list,search" "id:179,pass"
-```
+```seclang
 
 
 
