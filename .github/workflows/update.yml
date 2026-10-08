@@ -4,6 +4,8 @@ on:
   pull_request:
     paths:
       - .github/workflows/update.yml
+  schedule:
+    - cron: '0 6 * * 1' # weekly, Monday 06:00 UTC
   workflow_dispatch:
 
 permissions: {}
@@ -52,7 +54,7 @@ jobs:
         id: verify-changed-files
         with:
           files: |
-             content/docs/*
+             content/en/docs/seclang/*
              go.mod
              go.sum
 
@@ -81,7 +83,10 @@ jobs:
         uses: peter-evans/create-pull-request@5f6978faf089d4d20b00c7766989d076bb2fc7f1 # v8
         id: create-pr
         with:
-          add-paths: content/docs
+          add-paths: |
+            content/en/docs/seclang
+            go.mod
+            go.sum
           commit-message: 'docs: upgrades coraza docs to ${{ steps.coraza-latest-commit.outputs.short }}'
           signoff: true
           branch: upgrades_coraza_${{ steps.coraza-latest-commit.outputs.short }}
