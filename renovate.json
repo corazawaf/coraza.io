@@ -3,5 +3,8 @@
   "extends": [
     "local>corazawaf/renovate-config",
     "schedule:weekly"
+  ],
+  "ignoreDeps": [
+    "github.com/corazawaf/coraza/v3"
   ]
 }
