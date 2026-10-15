@@ -3,7 +3,7 @@ title: "Directivas"
 Description: "Referencia completa de las directivas SecLang de Coraza WAF para configurar el motor, cargar reglas y controlar la inspección de solicitudes."
 lead: "La siguiente sección describe todas las directivas de Coraza."
 date: 2020-10-06T08:48:57+00:00
-lastmod: "2026-10-05T16:38:46+02:00"
+lastmod: "2026-10-15T17:34:19+02:00"
 draft: false
 images: []
 weight: 10
@@ -51,10 +51,10 @@ SecAction "id:100,nolog,phase:1,initcol:RESOURCE=%{REQUEST_FILENAME}"
 
 **Por defecto:** `1000`
 
-La query string (ARGS_GET), la ruta (ARGS_PATH) y los request bodies urlencoded o JSON
-(ARGS_POST) se cuentan por separado; los response bodies JSON (RESPONSE_ARGS)
+La query string (ARGS_GET), la ruta (ARGS_PATH) y los cuerpos de solicitud urlencoded o JSON
+(ARGS_POST) se cuentan por separado; los cuerpos de respuesta JSON (RESPONSE_ARGS)
 usan el mismo límite. Los argumentos que superan el límite se descartan y ARGUMENTS_LIMIT_REACHED
-se establece en 1, de modo que una regla pueda rechazar la request (véanse las reglas 200004 y 200005 en
+se establece en 1, de modo que una regla pueda rechazar la solicitud (véanse las reglas 200004 y 200005 en
 coraza.conf-recommended). El valor debe ser mayor que 0.
 
 **Ejemplo:**
@@ -731,7 +731,7 @@ SecResponseBodyAccess On
 
 ## SecResponseBodyJsonDepthLimit
 
-**Descripción:** Configura la profundidad máxima de recursión JSON que acepta Coraza en los response bodies.
+**Descripción:** Configura la profundidad máxima de recursión JSON que acepta Coraza en los cuerpos de respuesta.
 
 **Sintaxis:** `SecResponseBodyJsonDepthLimit [LIMIT]`
 

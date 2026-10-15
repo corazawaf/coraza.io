@@ -3,7 +3,7 @@ title: "Variables"
 description: "Referencia de todas las variables SecLang disponibles en Coraza WAF, incluyendo variables de solicitud, respuesta, servidor y colecciones de reglas."
 lead: "Variables disponibles en el lenguaje SecLang de Coraza."
 date: 2020-10-06T08:48:57+00:00
-lastmod: "2026-10-05T16:35:11+02:00"
+lastmod: "2026-10-15T17:34:21+02:00"
 draft: false
 images: []
 weight: 100

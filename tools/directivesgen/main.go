@@ -157,7 +157,7 @@ func parseDirective(name string, doc string) Directive {
 			// Not a field: the whole line continues the previous one, even
 			// when it happens to contain a colon.
 			if previousKey == "" {
-				log.Fatalf("unknown field %q", key)
+				log.Fatalf("directive %s: unknown field %q", name, key)
 			}
 			key = previousKey
 			value = " " + scanner.Text()
