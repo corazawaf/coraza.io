@@ -42,7 +42,7 @@ var contentTemplate string
 const dstFile = "./content/en/docs/seclang/directives.md"
 
 func main() {
-	tmpl, err := template.New("directive").Parse(contentTemplate)
+	tmpl, err := template.New("directive").Funcs(template.FuncMap{"codeSpan": codeSpan}).Parse(contentTemplate)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -95,6 +95,18 @@ func main() {
 		return page.Directives[i].Name < page.Directives[j].Name
 	})
 
+	// Links are added once every directive is known, so that mentions of
+	// directives without an entry in the page do not become dead anchors.
+	documented := make(map[string]bool, len(page.Directives))
+	for _, d := range page.Directives {
+		documented[strings.ToLower(d.Name)] = true
+	}
+	for i := range page.Directives {
+		d := &page.Directives[i]
+		d.Description = addsLinksToDirectives(d.Description, documented)
+		d.Content = addsLinksToDirectives(d.Content, documented)
+	}
+
 	content := bytes.Buffer{}
 	err = tmpl.Execute(&content, page)
 	if err != nil {
@@ -133,28 +145,33 @@ func parseDirective(name string, doc string) Directive {
 			break
 		}
 
+		// Some directives go straight to the example, without the "---"
+		// that separates the fields from the content.
+		if strings.HasPrefix(scanner.Text(), "Example:") {
+			d.Content += decorateExample(scanner.Text()) + "\n"
+			break
+		}
+
 		key, value, ok := strings.Cut(scanner.Text(), ": ")
-		if !ok {
+		if _, isField := fieldAppenders[key]; !ok || !isField {
+			// Not a field: the whole line continues the previous one, even
+			// when it happens to contain a colon.
+			if previousKey == "" {
+				log.Fatalf("unknown field %q", key)
+			}
 			key = previousKey
 			value = " " + scanner.Text()
 		}
 
-		if fn, ok := fieldAppenders[key]; ok {
-			fn(&d, value)
-			previousKey = key
-		} else if previousKey != "" {
-			fieldAppenders[previousKey](&d, value)
-		} else {
-			log.Fatalf("unknown field %q", key)
-		}
+		fieldAppenders[key](&d, value)
+		previousKey = key
 	}
 
 	for scanner.Scan() {
 		d.Content += decorateExample(decorateNote(scanner.Text())) + "\n"
 	}
 
-	d.Description = addsLinksToDirectives(d.Description)
-	d.Content = normalizeSecLangFences(addsLinksToDirectives(d.Content))
+	d.Content = normalizeSecLangFences(d.Content)
 
 	return d
 }
@@ -191,17 +208,40 @@ func normalizeSecLangFences(s string) string {
 }
 
 func decorateNote(s string) string {
-	return strings.Replace(s, "Note:", "**Note:**", -1)
+	return decorateLabel(s, "Note:")
 }
 
 func decorateExample(s string) string {
-	return strings.Replace(s, "Example:", "**Example:**", -1)
+	return decorateLabel(s, "Example:")
+}
+
+// decorateLabel makes label bold, without doubling the markers when the
+// source comment already wrote it in bold.
+func decorateLabel(s string, label string) string {
+	bold := "**" + label + "**"
+	return strings.ReplaceAll(strings.ReplaceAll(s, bold, label), label, bold)
 }
 
 var directivesRegex = regexp.MustCompile("(`Sec[a-zA-Z0-9]+`)")
 
-func addsLinksToDirectives(s string) string {
+// addsLinksToDirectives turns backticked directive names into links to their
+// section, leaving untouched the ones that are not in documented, which is
+// keyed by lowercased directive name.
+func addsLinksToDirectives(s string, documented map[string]bool) string {
 	return directivesRegex.ReplaceAllStringFunc(s, func(s string) string {
-		return "[" + s + "](#" + strings.ToLower(s[1:len(s)-1]) + ")"
+		anchor := strings.ToLower(s[1 : len(s)-1])
+		if !documented[anchor] {
+			return s
+		}
+		return "[" + s + "](#" + anchor + ")"
 	})
+}
+
+// codeSpan wraps s in an inline code span, using a longer delimiter when s
+// itself contains backticks.
+func codeSpan(s string) string {
+	if strings.Contains(s, "`") {
+		return "`` " + s + " ``"
+	}
+	return "`" + s + "`"
 }

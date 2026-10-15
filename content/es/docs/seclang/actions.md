@@ -3,7 +3,7 @@ title: "Acciones"
 description: "Referencia completa de las acciones de SecLang disponibles en Coraza WAF para definir respuestas a reglas: bloqueo, permitir, registrar y redirigir."
 lead: "La acción de una regla define cómo gestionar las solicitudes HTTP que han coincidido con una o más condiciones de regla."
 date: 2020-10-06T08:48:57+00:00
-lastmod: "2026-03-13T20:20:13+01:00"
+lastmod: "2026-10-05T16:35:10+02:00"
 draft: false
 images: []
 weight: 100
@@ -24,6 +24,26 @@ Las acciones disruptivas NO se ejecutarán si `SecRuleEngine` está establecido 
 * **Acciones de flujo** - Estas acciones afectan al flujo de las reglas (por ejemplo skip o skipAfter).
 * **Acciones de metadatos** - Se utilizan para proporcionar más información sobre las reglas. Los ejemplos incluyen id, rev, severity y msg.
 * **Acciones de datos** - No son realmente acciones, sino meros contenedores que almacenan datos utilizados por otras acciones. Por ejemplo, la acción status contiene el estado que se utilizará para el bloqueo (si este tiene lugar).
+
+## accuracy
+
+**Descripción**: Especifica el nivel relativo de precisión de la regla en relación con el número de falsos positivos y falsos negativos.
+El valor es una cadena basada en una escala numérica (1-9 donde 9 es extensamente probada y 1 es una regla experimental nueva).
+
+**Grupo de acción**: Metadatos
+
+
+
+
+**Ejemplo**:
+
+
+```seclang
+	SecRule REQUEST_FILENAME|ARGS_NAMES|ARGS|XML:/* "\bgetparentfolder\b" \
+		"phase:2,ver:'CRS/2.2.4',accuracy:'9',maturity:'9',capture,t:none,t:htmlEntityDecode,t:compressWhiteSpace,t:lowercase,ctl:auditLogParts=+E,block,msg:'Cross-site Scripting (XSS) Attack',id:'958016',tag:'WEB_ATTACK/XSS',severity:'2'"
+```
+
+
 
 ## allow
 
@@ -195,7 +215,8 @@ La configuración por defecto, así como las demás transacciones que se ejecute
 - `hashEngine` (**No soportado en Coraza (TBI)**)
 - `hashEnforcement` (**No soportado en Coraza (TBI)**)
  1. Con las opciones `ruleRemoveTargetById`, `ruleRemoveTargetByMsg` y `ruleRemoveTargetByTag`, los usuarios no necesitan usar el carácter ! antes de la lista de destinos.
- 2. La opción `ruleRemoveById` se activa en tiempo de ejecución y debe especificarse antes de la regla que está deshabilitando.
+ 2. Las opciones `ruleRemoveById`, `ruleRemoveByMsg` y `ruleRemoveByTag` eliminan reglas en tiempo de ejecución, solo para la transacción en curso,
+    y deben especificarse antes de la regla que deshabilitan.
  3. La opción `requestBodyProcessor` le permite configurar el procesador del cuerpo de la solicitud.
     Por defecto, Coraza utilizará los procesadores `URLENCODED` y `MULTIPART` para procesar cuerpos `application/x-www-form-urlencoded` y `multipart/form-data` respectivamente.
     Otros procesadores también soportados: `JSON` y `XML`, pero nunca se usan implícitamente.

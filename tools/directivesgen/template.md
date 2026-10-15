@@ -15,9 +15,9 @@ versions: v3.0+
 
 **Description:** {{ .Description }}
 {{if .Syntax}}
-**Syntax:** `{{ .Syntax }}`
+**Syntax:** {{ codeSpan .Syntax }}
 {{end}}{{if .Default}}
-**Default:** `{{ .Default }}`
+**Default:** {{ codeSpan .Default }}
 {{end}}
 {{ .Content }}
 {{end}}

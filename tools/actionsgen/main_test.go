@@ -23,6 +23,16 @@ func TestParseAction(t *testing.T) {
 				Example:     "\n```seclang\nSecRule ARGS \"@rx test\" \"phase:2,block,id:1\"\n```",
 			},
 		},
+		"action with seclang fence": {
+			name: "test",
+			doc:  "Action Group: Disruptive\n\nDescription: This is a test action.\n\nExample:\n```seclang\nSecRule ARGS \"@rx test\" \"phase:2,block,id:1\"\n```",
+			expected: Action{
+				Name:        "test",
+				ActionGroup: "Disruptive",
+				Description: "This is a test action.",
+				Example:     "\n```seclang\nSecRule ARGS \"@rx test\" \"phase:2,block,id:1\"\n```",
+			},
+		},
 		"action with phases": {
 			name: "test2",
 			doc:  "Action Group: Non-disruptive\n\nDescription: This action works in multiple phases.\n\nProcessing Phases: 1, 2, 3\n\nExample:\n```\nSecAction \"phase:1,setvar:tx.test=1,id:2\"\n```",
