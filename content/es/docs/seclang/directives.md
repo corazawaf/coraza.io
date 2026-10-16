@@ -1,9 +1,9 @@
 ---
 title: "Directivas"
-Description: "Referencia completa de las directivas SecLang de Coraza WAF para configurar el motor, cargar reglas y controlar la inspeccion de solicitudes."
+Description: "Referencia completa de las directivas SecLang de Coraza WAF para configurar el motor, cargar reglas y controlar la inspección de solicitudes."
 lead: "La siguiente sección describe todas las directivas de Coraza."
 date: 2020-10-06T08:48:57+00:00
-lastmod: "2026-03-13T20:20:12+01:00"
+lastmod: "2026-10-15T17:34:19+02:00"
 draft: false
 images: []
 weight: 10
@@ -40,19 +40,23 @@ acción `initcol`. La sintaxis del parámetro es idéntica a la del tercer pará
 
 **Ejemplo:**
 ```seclang
-SecAction "nolog,phase:1,initcol:RESOURCE=%{REQUEST_FILENAME}"
+SecAction "id:100,nolog,phase:1,initcol:RESOURCE=%{REQUEST_FILENAME}"
 ```
 
 ## SecArgumentsLimit
 
-**Descripción:** Configura el número máximo de ARGS que se aceptarán para su procesamiento.
+**Descripción:** Configura el número máximo de argumentos que Coraza conserva de cada origen.
 
 **Sintaxis:** `SecArgumentsLimit [LIMIT]`
 
 **Por defecto:** `1000`
 
-Los argumentos que excedan el límite no serán incluidos.
-Con el procesamiento de cuerpo JSON, no hay nada que hacer cuando se excede el límite.
+La query string (ARGS_GET), la ruta (ARGS_PATH) y los cuerpos de solicitud urlencoded o JSON
+(ARGS_POST) se cuentan por separado; los cuerpos de respuesta JSON (RESPONSE_ARGS)
+usan el mismo límite. Los argumentos que superan el límite se descartan y ARGUMENTS_LIMIT_REACHED
+se establece en 1, de modo que una regla pueda rechazar la solicitud (véanse las reglas 200004 y 200005 en
+coraza.conf-recommended). El valor debe ser mayor que 0.
+
 **Ejemplo:**
 ```seclang
 SecArgumentsLimit 1000
@@ -85,7 +89,7 @@ SecAuditLog logs/audit/audit.log
 SecAuditLogParts ABCFHZ
 SecAuditLogType concurrent
 SecAuditLogStorageDir logs/audit
-SecAuditLogRelevantStatus ^(?:5|4(?!04))
+SecAuditLogRelevantStatus ^(?:5|4(?:0[0-35-9]|[1-9][0-9]))
 ```
 
 ## SecAuditLog
@@ -141,6 +145,10 @@ SecAuditLogFileMode 00640
 
 **Por defecto:** `Native`
 
+**Ejemplo:**
+```seclang
+SecAuditLogFormat JSON
+```
 
 ## SecAuditLogParts
 
@@ -174,7 +182,7 @@ de respuesta intermedio, en cuyo caso el cuerpo de respuesta real contendrá el 
 se utilice la codificación `multipart/form-data`. En este caso, registrará un cuerpo ficticio `application/x-www-form-urlencoded`
 que contiene la información sobre los parámetros pero no sobre los archivos. Esto es útil si
 no desea tener archivos (a menudo grandes) almacenados en sus registros de auditoría; aún no implementado.
-- J: Esta parte contiene información sobre los archivos subidos usando la codificación `multipart/form-data`; aún no implementado.
+- J: Esta parte contiene información sobre los archivos subidos usando la codificación `multipart/form-data`. Disponible desde Coraza v3.7.0.
 - K: Esta parte contiene una lista completa de cada regla que coincidió (una por línea) en el orden en que
 coincidieron. Las reglas están completamente cualificadas y por tanto mostrarán las acciones heredadas y los operadores por defecto.
 - Z: Límite final, indica el fin de la entrada (obligatorio).
@@ -189,7 +197,7 @@ El propósito principal de esta directiva es permitirle configurar el registro d
 para las transacciones que tengan un código de estado que coincida con la expresión regular proporcionada.
 
 **Ejemplo:**
-```
+```seclang
 SecAuditLogRelevantStatus "^(?:5|40[1235])"
 ```
 Este ejemplo registraría todos los códigos de estado de nivel 5xx y 4xx,
@@ -238,6 +246,20 @@ Los valores posibles son:
 SecAuditLogType Serial
 ```
 
+## SecCollectionTimeout
+
+**Descripción:** Establecería el tiempo, en segundos, durante el que se conservan los registros de las colecciones persistentes.
+
+**Sintaxis:** `SecCollectionTimeout [SECONDS]`
+
+**Nota:** Coraza acepta esta directiva por compatibilidad con las configuraciones de ModSecurity, pero
+no tiene ningún efecto.
+
+**Ejemplo:**
+```seclang
+SecCollectionTimeout 600
+```
+
 ## SecComponentSignature
 
 **Descripción:** Añade la firma de un componente a la firma de Coraza.
@@ -251,6 +273,73 @@ Añade la firma de un componente a la firma de Coraza.
 SecComponentSignature "OWASP_CRS/4.18.0"
 ```
 
+## SecConnEngine
+
+**Descripción:** Habilitaría el seguimiento por conexión.
+
+**Sintaxis:** `SecConnEngine On|Off|DetectOnly`
+
+**Nota:** Coraza acepta esta directiva por compatibilidad con las configuraciones de ModSecurity, pero
+no tiene ningún efecto.
+
+**Ejemplo:**
+```seclang
+SecConnEngine Off
+```
+
+## SecConnReadStateLimit
+
+**Descripción:** Limitaría el número de conexiones en estado de lectura por dirección IP.
+
+**Sintaxis:** `SecConnReadStateLimit [NUMBER]`
+
+**Nota:** Coraza acepta esta directiva por compatibilidad con las configuraciones de ModSecurity, pero
+no tiene ningún efecto.
+
+**Ejemplo:**
+```seclang
+SecConnReadStateLimit 50
+```
+
+## SecConnWriteStateLimit
+
+**Descripción:** Limitaría el número de conexiones en estado de escritura por dirección IP.
+
+**Sintaxis:** `SecConnWriteStateLimit [NUMBER]`
+
+**Nota:** Coraza acepta esta directiva por compatibilidad con las configuraciones de ModSecurity, pero
+no tiene ningún efecto.
+
+**Ejemplo:**
+```seclang
+SecConnWriteStateLimit 50
+```
+
+## SecDataDir
+
+**Descripción:** Establece el directorio donde se almacenan los datos de las colecciones persistentes.
+
+**Sintaxis:** `SecDataDir /path/to/dir`
+
+**Ejemplo:**
+```seclang
+SecDataDir /tmp/coraza/data
+```
+
+## SecDataset
+
+**Descripción:** Define un dataset con nombre, declarado en línea, al que pueden hacer referencia operadores como @pmFromDataset e @ipMatchFromDataset. Los registros se indican en un bloque delimitado por acentos graves (backticks), uno por línea.
+
+**Sintaxis:** `` SecDataset NAME `\n...\n` ``
+
+**Ejemplo:**
+```seclang
+SecDataset test `
+123
+456
+`
+```
+
 ## SecDebugLog
 
 **Descripción:** Ruta al archivo de registro de depuración de Coraza.
@@ -259,6 +348,11 @@ SecComponentSignature "OWASP_CRS/4.18.0"
 
 Los registros se escribirán en este archivo. Asegúrese de que el usuario del proceso tenga acceso de escritura al
 directorio.
+
+**Ejemplo:**
+```seclang
+SecDebugLog /var/log/coraza/debug.log
+```
 
 ## SecDebugLogLevel
 
@@ -282,6 +376,11 @@ Los valores posibles para el nivel de registro de depuración son:
 
 Los niveles fuera del rango 0-9 se establecerán por defecto en el nivel 3 (Información)
 
+**Ejemplo:**
+```seclang
+SecDebugLogLevel 3
+```
+
 ## SecDefaultAction
 
 **Descripción:** Define la lista de acciones por defecto, que será heredada por las reglas en el mismo contexto de configuración.
@@ -302,6 +401,120 @@ la conexión.
 
 Importante: Cada directiva [`SecDefaultAction`](#secdefaultaction) debe especificar una acción disruptiva y una fase
 de procesamiento y no puede contener acciones de metadatos.
+
+**Ejemplo:**
+```seclang
+SecDefaultAction "phase:2,log,auditlog,pass"
+```
+
+## SecGsbLookupDb
+
+**Descripción:** Establecería la ruta a la base de datos de Google Safe Browsing que utiliza @gsbLookup.
+
+**Sintaxis:** `SecGsbLookupDb /path/to/db`
+
+**Nota:** Coraza acepta esta directiva por compatibilidad con las configuraciones de ModSecurity, pero
+no tiene ningún efecto.
+
+**Ejemplo:**
+```seclang
+SecGsbLookupDb /path/to/GsbMalware.dat
+```
+
+## SecHTTPBlKey
+
+**Descripción:** Establecería la clave de API que utiliza el operador @rbl para las consultas a Project Honey Pot.
+
+**Sintaxis:** `SecHttpBlKey "KEY"`
+
+**Nota:** Coraza acepta esta directiva por compatibilidad con las configuraciones de ModSecurity, pero
+no tiene ningún efecto.
+
+**Ejemplo:**
+```seclang
+SecHttpBlKey "my_api_key"
+```
+
+## SecHashEngine
+
+**Descripción:** Habilitaría el motor de hashing de responses, que se utiliza para firmar enlaces y campos de formulario.
+
+**Sintaxis:** `SecHashEngine On|Off`
+
+**Nota:** Coraza acepta esta directiva por compatibilidad con las configuraciones de ModSecurity, pero
+no tiene ningún efecto.
+
+**Ejemplo:**
+```seclang
+SecHashEngine On
+```
+
+## SecHashKey
+
+**Descripción:** Establecería la clave que utiliza el motor de hashing de responses.
+
+**Sintaxis:** `SecHashKey [KEY] [KeyOnly|SessionID|RemoteIP]`
+
+**Nota:** Coraza acepta esta directiva por compatibilidad con las configuraciones de ModSecurity, pero
+no tiene ningún efecto.
+
+**Ejemplo:**
+```seclang
+SecHashKey "my_secret_key" KeyOnly
+```
+
+## SecHashMethodPm
+
+**Descripción:** Seleccionaría, por coincidencia de frases, qué elementos de la response firma el motor de hashing.
+
+**Sintaxis:** `SecHashMethodPm TYPE PHRASES`
+
+**Nota:** Coraza acepta esta directiva por compatibilidad con las configuraciones de ModSecurity, pero
+no tiene ningún efecto.
+
+**Ejemplo:**
+```seclang
+SecHashMethodPm HashHref "example.com"
+```
+
+## SecHashMethodRx
+
+**Descripción:** Seleccionaría, mediante una expresión regular, qué elementos de la response firma el motor de hashing.
+
+**Sintaxis:** `SecHashMethodRx TYPE REGEX`
+
+**Nota:** Coraza acepta esta directiva por compatibilidad con las configuraciones de ModSecurity, pero
+no tiene ningún efecto.
+
+**Ejemplo:**
+```seclang
+SecHashMethodRx HashHref "^/admin"
+```
+
+## SecHashParam
+
+**Descripción:** Establecería el nombre del parámetro que transporta el hash añadido por el motor de hashing de responses.
+
+**Sintaxis:** `SecHashParam "NAME"`
+
+**Nota:** Coraza acepta esta directiva por compatibilidad con las configuraciones de ModSecurity, pero
+no tiene ningún efecto.
+
+**Ejemplo:**
+```seclang
+SecHashParam "hmac"
+```
+
+## SecIgnoreRuleCompilationErrors
+
+**Descripción:** Continúa la carga de un conjunto de reglas cuando una regla no compila, en lugar de abortar. Al habilitarla se registra una advertencia: una regla defectuosa que no se carga no protege nada, por lo que es una ayuda para la migración y no una opción con la que operar.
+
+**Sintaxis:** `SecIgnoreRuleCompilationErrors On|Off`
+
+**Ejemplo:**
+```seclang
+SecIgnoreRuleCompilationErrors Off
+```
 
 ## SecMarker
 
@@ -326,7 +539,7 @@ Core Rule Set:
 		setvar:tx.protocol_violation_score=+%{tx.notice_anomaly_score},\
 		setvar:tx.%{rule.id}-PROTOCOL_VIOLATION/MISSING_HEADER-%{matched_var_name}=%{matched_var}"
 	SecRule REQUEST_HEADERS:Host "^$" \
-		"id:'960008',phase:2,rev:'2.1.1',t:none,block,msg:'Request Missing a Host Header',\
+		"id:'960009',phase:2,rev:'2.1.1',t:none,block,msg:'Request Missing a Host Header',\
 		tag:'PROTOCOL_VIOLATION/MISSING_HEADER_HOST',tag:'WASCTC/WASC-21',\
 		tag:'OWASP_TOP_10/A7',tag:'PCI/6.5.10',severity:'5',\
 		setvar:'tx.msg=%{rule.msg}',setvar:tx.anomaly_score=+%{tx.notice_anomaly_score},\
@@ -335,6 +548,60 @@ Core Rule Set:
 
 	SecMarker END_HOST_CHECK
 
+```
+
+## SecPcreMatchLimit
+
+**Descripción:** Establecería el límite de coincidencias de PCRE.
+
+**Sintaxis:** `SecPcreMatchLimit [NUMBER]`
+
+**Nota:** Coraza acepta esta directiva por compatibilidad con las configuraciones de ModSecurity, pero
+no tiene ningún efecto. Coraza evalúa las expresiones regulares con RE2, que se ejecuta en tiempo lineal y no tiene
+ningún límite de backtracking que configurar.
+
+**Ejemplo:**
+```seclang
+SecPcreMatchLimit 1500
+```
+
+## SecPcreMatchLimitRecursion
+
+**Descripción:** Establecería el límite de recursión de coincidencias de PCRE.
+
+**Sintaxis:** `SecPcreMatchLimitRecursion [NUMBER]`
+
+**Nota:** Coraza acepta esta directiva por compatibilidad con las configuraciones de ModSecurity, pero
+no tiene ningún efecto. Coraza evalúa las expresiones regulares con RE2, que no utiliza recursión al evaluarlas.
+
+**Ejemplo:**
+```seclang
+SecPcreMatchLimitRecursion 1500
+```
+
+## SecRemoteRules
+
+**Descripción:** Carga reglas desde una URL remota.
+
+**Sintaxis:** `SecRemoteRules [KEY] URL`
+
+**Nota:** Coraza rechaza esta directiva: la obtención de reglas a través de la red no está implementada, por lo que
+una configuración que la utilice falla al cargarse con un error en lugar de ignorarse.
+
+**Ejemplo:**
+```seclang
+SecRemoteRules https://example.com/rules.conf
+```
+
+## SecRemoteRulesFailAction
+
+**Descripción:** Controla lo que ocurre cuando no se pueden obtener las reglas de una fuente remota: Abort hace fallar la carga de la configuración y Warn continúa.
+
+**Sintaxis:** `SecRemoteRulesFailAction Abort|Warn`
+
+**Ejemplo:**
+```seclang
+SecRemoteRulesFailAction Abort
 ```
 
 ## SecRequestBodyAccess
@@ -351,6 +618,11 @@ un bloqueo fiable. Los valores posibles son:
 - On: almacenar en búfer los cuerpos de las solicitudes
 - Off: no almacenar en búfer los cuerpos de las solicitudes
 
+**Ejemplo:**
+```seclang
+SecRequestBodyAccess On
+```
+
 ## SecRequestBodyInMemoryLimit
 
 **Descripción:** Configura el tamaño máximo del cuerpo de la solicitud que Coraza almacenará en memoria.
@@ -361,6 +633,26 @@ un bloqueo fiable. Los valores posibles son:
 
 Cuando se procesa una solicitud `multipart/form-data`, una vez que se alcanza el límite de memoria,
 el cuerpo de la solicitud comenzará a transmitirse a un archivo temporal en disco.
+
+**Ejemplo:**
+```seclang
+SecRequestBodyInMemoryLimit 131072
+```
+
+## SecRequestBodyJsonDepthLimit
+
+**Descripción:** Configura la profundidad máxima de recursión JSON que acepta Coraza.
+
+**Sintaxis:** `SecRequestBodyJsonDepthLimit [LIMIT]`
+
+**Por defecto:** `1024`
+
+Todo lo que supere el límite genera un REQBODY_ERROR en el body processor de JSON.
+
+**Ejemplo:**
+```seclang
+SecRequestBodyJsonDepthLimit 1024
+```
 
 ## SecRequestBodyLimit
 
@@ -375,6 +667,11 @@ Depende de [`SecRequestBodyLimitAction`](#secrequestbodylimitaction)
 - ProcessPartial: Se procesarán los primeros N bytes del cuerpo de la solicitud.
 Existe un límite estricto de 1 GiB.
 
+**Ejemplo:**
+```seclang
+SecRequestBodyLimit 134217728
+```
+
 ## SecRequestBodyLimitAction
 
 **Descripción:** Controla lo que sucede cuando se alcanza el límite del cuerpo de la solicitud, configurado con SecRequestBodyLimit.
@@ -385,6 +682,14 @@ Existe un límite estricto de 1 GiB.
 
 Por defecto, Coraza rechazará un cuerpo de solicitud que sea más largo de lo especificado para
 evitar problemas de memoria insuficiente al almacenar en búfer el cuerpo de la solicitud antes de la inspección.
+
+**Nota:** Cuando SecRuleEngine está establecido en DetectionOnly, esta directiva se establece en
+ProcessPartial para minimizar las interrupciones durante el despliegue inicial de Coraza.
+
+**Ejemplo:**
+```seclang
+SecRequestBodyLimitAction Reject
+```
 
 ## SecRequestBodyNoFilesLimit
 
@@ -397,7 +702,13 @@ evitar problemas de memoria insuficiente al almacenar en búfer el cuerpo de la 
 En general, el valor por defecto no es lo suficientemente bajo. Para la mayoría de las aplicaciones, debería
 poder reducirlo a 128 KB o menos. Cualquier cosa que supere el límite será rechazada
 con el código de estado 413 (Request Entity Too Large). Existe un límite estricto de 1 GiB.
+
 **Nota:** aún no implementado
+
+**Ejemplo:**
+```seclang
+SecRequestBodyNoFilesLimit 131072
+```
 
 ## SecResponseBodyAccess
 
@@ -413,6 +724,27 @@ el bloqueo de respuestas. Los valores posibles son:
 configurada con [`SecResponseBodyMimeType`](#secresponsebodymimetype)).
 - Off: no almacenar en búfer los cuerpos de las respuestas.
 
+**Ejemplo:**
+```seclang
+SecResponseBodyAccess On
+```
+
+## SecResponseBodyJsonDepthLimit
+
+**Descripción:** Configura la profundidad máxima de recursión JSON que acepta Coraza en los cuerpos de respuesta.
+
+**Sintaxis:** `SecResponseBodyJsonDepthLimit [LIMIT]`
+
+**Por defecto:** `1024`
+
+Todo lo que supere el límite genera un RES_BODY_ERROR en el body processor de JSON.
+Requiere `SecResponseBodyAccess On` para tener efecto.
+
+**Ejemplo:**
+```seclang
+SecResponseBodyJsonDepthLimit 1024
+```
+
 ## SecResponseBodyLimit
 
 **Descripción:** Configura el tamaño máximo del cuerpo de la respuesta que se aceptará para el almacenamiento en búfer.
@@ -426,6 +758,11 @@ Depende de [`SecResponseBodyLimitAction`](#secresponsebodylimitaction)
 - ProcessPartial: Se procesarán los primeros N bytes del cuerpo de la respuesta.
 Esta configuración no afectará a las respuestas con tipos MIME que no estén seleccionados para
 el almacenamiento en búfer. Existe un límite estricto de 1 GiB.
+
+**Ejemplo:**
+```seclang
+SecResponseBodyLimit 524288
+```
 
 ## SecResponseBodyLimitAction
 
@@ -447,6 +784,14 @@ casos, sin embargo, no es posible prevenir la filtración de todos modos. El ata
 comprimir, ofuscar o incluso cifrar los datos antes de enviarlos de vuelta, y por tanto
 eludir cualquier dispositivo de monitorización.
 
+**Nota:** Cuando SecRuleEngine está establecido en DetectionOnly, esta directiva se establece en
+ProcessPartial para minimizar las interrupciones durante el despliegue inicial de Coraza.
+
+**Ejemplo:**
+```seclang
+SecResponseBodyLimitAction ProcessPartial
+```
+
 ## SecResponseBodyMimeType
 
 **Descripción:** Configura qué tipos MIME se considerarán para el almacenamiento en búfer del cuerpo de la respuesta.
@@ -467,6 +812,10 @@ SecResponseBodyMimeType text/plain text/html text/xml
 
 **Sintaxis:** `SecResponseBodyMimeTypesClear`
 
+**Ejemplo:**
+```seclang
+SecResponseBodyMimeTypesClear
+```
 
 ## SecRule
 
@@ -500,12 +849,31 @@ Los valores posibles son:
 - DetectionOnly: procesar reglas pero nunca ejecutar acciones disruptivas
 (block, deny, drop, allow, proxy y redirect)
 
+**Ejemplo:**
+```seclang
+SecRuleEngine DetectionOnly
+```
+
 ## SecRuleRemoveByID
 
 **Descripción:** Elimina las reglas coincidentes del contexto de configuración actual.
 
-**Sintaxis:** `SecRuleRemoveById ...[ID OR RANGE]`
+**Sintaxis:** `SecRuleRemoveById ID|RANGE [ID|RANGE ...]`
 
+Elimina permanentemente de la configuración del WAF, al analizarla, las reglas indicadas por ID o por rango inclusivo.
+La eliminación se aplica a todas las transacciones. Para un control más granular al deshabilitar una regla, véase la acción
+`ctl:ruleRemoveById`, que actúa en tiempo de ejecución y por transacción.
+
+**Nota:** Esta directiva opera sobre las reglas ya cargadas en el punto en que se analiza,
+por lo que debe aparecer DESPUÉS de cualquier directiva Include que cargue las reglas que se van a eliminar.
+Colocarla antes del Include no tiene efecto porque esas reglas todavía no existen en
+la configuración.
+
+**Ejemplo:**
+```seclang
+SecRule REQUEST_URI "@rx attack" "id:1000,phase:1,log,deny"
+SecRuleRemoveById 1000
+```
 
 ## SecRuleRemoveByMsg
 
@@ -513,13 +881,20 @@ Los valores posibles son:
 
 **Sintaxis:** `SecRuleRemoveByMsg MESSAGE`
 
-Normalmente, usaría [`SecRuleRemoveById`](#secruleremovebyid) para eliminar reglas, pero ocasionalmente
-puede ser más fácil deshabilitar una o más reglas con [`SecRuleRemoveByMsg`](#secruleremovebymsg). La coincidencia es
-por igualdad de cadena sensible a mayúsculas.
+Elimina permanentemente de la configuración del WAF, al analizarla, todas las reglas con el mensaje indicado.
+La eliminación se aplica a todas las transacciones. Para un control más granular al deshabilitar reglas, véase la acción
+`ctl:ruleRemoveByMsg`, que actúa en tiempo de ejecución y por transacción.
+
+La coincidencia es por igualdad de cadena sensible a mayúsculas.
+
+**Nota:** Esta directiva opera sobre las reglas ya cargadas en el punto en que se analiza,
+por lo que debe aparecer DESPUÉS de cualquier directiva que cargue las reglas que se van a eliminar.
+Colocarla antes no tiene efecto porque esas reglas todavía no existen en la configuración.
 
 **Ejemplo:**
 ```seclang
-SecRuleRemoveByMsg "Directory Listing"
+SecRule REQUEST_URI "@rx attack" "id:1000,phase:1,log,deny,msg:'My Custom Rule Msg'"
+SecRuleRemoveByMsg "My Custom Rule Msg"
 ```
 
 ## SecRuleRemoveByTag
@@ -528,13 +903,20 @@ SecRuleRemoveByMsg "Directory Listing"
 
 **Sintaxis:** `SecRuleRemoveByTag [TAG]`
 
-Normalmente, usaría [`SecRuleRemoveById`](#secruleremovebyid) para eliminar reglas, pero ocasionalmente
-puede ser más fácil deshabilitar un grupo completo de reglas con [`SecRuleRemoveByTag`](#secruleremovebytag). La coincidencia es
-por igualdad de cadena sensible a mayúsculas.
+Elimina permanentemente de la configuración del WAF, al analizarla, todas las reglas que llevan la etiqueta indicada.
+La eliminación se aplica a todas las transacciones. Para un control más granular al deshabilitar reglas, véase la acción
+`ctl:ruleRemoveByTag`, que actúa en tiempo de ejecución y por transacción.
+
+La coincidencia es por igualdad de cadena sensible a mayúsculas.
+
+**Nota:** Esta directiva opera sobre las reglas ya cargadas en el punto en que se analiza,
+por lo que debe aparecer DESPUÉS de cualquier directiva que cargue las reglas que se van a eliminar.
+Colocarla antes no tiene efecto porque esas reglas todavía no existen en la configuración.
 
 **Ejemplo:**
 ```seclang
-SecRuleRemoveByTag attack-dos
+SecRule REQUEST_URI "@rx attack" "id:1000,phase:1,log,deny,tag:my-tag"
+SecRuleRemoveByTag my-tag
 ```
 
 **Nota:** OWASP CRS tiene una lista de etiquetas compatibles https://coreruleset.org/docs/rules/metadata/
@@ -553,6 +935,7 @@ El siguiente ejemplo muestra cómo se utiliza [`SecRuleUpdateActionById`](#secru
 ```seclang
 SecRuleUpdateActionById 12345 "deny,status:403"
 ```
+El ID de la regla puede ser un ID individual o rangos de IDs. Los destinos se separan con el carácter de tubería.
 
 ## SecRuleUpdateTargetByID
 
@@ -562,6 +945,11 @@ SecRuleUpdateActionById 12345 "deny,status:403"
 
 Esta directiva añadirá variables a la regla especificada con los destinos proporcionados en el segundo parámetro.
 El ID de la regla puede ser un ID individual o rangos de IDs. Los destinos se separan con el carácter de tubería.
+
+**Ejemplo:**
+```seclang
+SecRuleUpdateTargetById 7 "!REQUEST_HEADERS:/xyz/"
+```
 
 ## SecRuleUpdateTargetByTag
 
@@ -574,5 +962,139 @@ con los destinos proporcionados en el segundo parámetro. Puede ser útil para a
 La coincidencia es por igualdad de cadena sensible a mayúsculas.
 Esta directiva añadirá variables a la regla especificada con los destinos proporcionados en el segundo parámetro.
 El ID de la regla puede ser un ID individual o rangos de IDs. Los destinos se separan con el carácter de tubería.
-**Nota:** OWASP CRS tiene una lista de etiquetas compatibles https://coreruleset.org/docs/rules/metadata/
+
+**Nota:** OWASP CRS proporciona una lista de [etiquetas compatibles](https://coreruleset.org/docs/3-about-rules/metadata/#tags-about-rule-classification).
+
+**Ejemplo:**
+```seclang
+SecRuleUpdateTargetByTag "attack-sqli" "!ARGS:query"
+```
+
+## SecRxPreFilter
+
+**Descripción:** Habilita o deshabilita el prefiltrado para el operador @rx.
+
+**Sintaxis:** `SecRxPreFilter On|Off`
+
+**Por defecto:** `Off`
+
+Cuando está habilitado, Coraza analiza cada patrón de expresión regular al cargar las reglas para extraer las
+subcadenas literales obligatorias y calcular la longitud mínima de coincidencia. Al procesar cada request, estas
+comprobaciones rápidas se ejecutan antes que la expresión regular completa, lo que permite al motor omitirla por
+completo cuando una entrada claramente no puede coincidir.
+
+**Advertencia:** Esta es una funcionalidad experimental.
+
+**Ejemplo:**
+```seclang
+SecRxPreFilter On
+```
+
+## SecSensorID
+
+**Descripción:** Establece un identificador para esta instancia de Coraza, útil cuando varios sensores escriben en un registro compartido.
+
+**Sintaxis:** `SecSensorID "ID"`
+
+**Ejemplo:**
+```seclang
+SecSensorID "sensor-01"
+```
+
+## SecServerSignature
+
+**Descripción:** Establece la firma de servidor que comunica Coraza. Si el valor va entre comillas, estas se eliminan.
+
+**Sintaxis:** `SecServerSignature "SIGNATURE"`
+
+**Ejemplo:**
+```seclang
+SecServerSignature "Apache/2.2.15"
+```
+
+## SecUploadDir
+
+**Descripción:** Configura el directorio donde se almacenan los ficheros subidos.
+
+**Sintaxis:** `SecUploadDir /path/to/dir`
+
+**Por defecto:** `""`
+
+Esta directiva es obligatoria cuando se habilita SecUploadKeepFiles.
+
+**Ejemplo:**
+```seclang
+SecUploadDir /tmp/coraza/uploads
+```
+
+## SecUploadFileLimit
+
+**Descripción:** Establece el número máximo de ficheros subidos que se gestionan por request. El valor se analiza, pero todavía no se aplica; véase corazawaf/coraza#1686 para la discusión al respecto.
+
+**Sintaxis:** `SecUploadFileLimit [NUMBER]`
+
+**Ejemplo:**
+```seclang
+SecUploadFileLimit 10
+```
+
+## SecUploadFileMode
+
+**Descripción:** Establece el modo de fichero que se aplica a los ficheros almacenados por SecUploadDir. El valor se interpreta como octal.
+
+**Sintaxis:** `SecUploadFileMode OCTAL_MODE`
+
+**Ejemplo:**
+```seclang
+SecUploadFileMode 0600
+```
+
+## SecUploadKeepFiles
+
+**Descripción:** Configura si los ficheros interceptados se conservan una vez procesada la transacción.
+
+**Sintaxis:** `SecUploadKeepFiles On|RelevantOnly|Off`
+
+**Por defecto:** `Off`
+
+La directiva [`SecUploadKeepFiles`](#secuploadkeepfiles) se utiliza para configurar si los ficheros interceptados se
+conservan en disco una vez procesada la transacción.
+Esta directiva requiere que se haya definido el directorio de almacenamiento (mediante [`SecUploadDir`](#secuploaddir)).
+
+Los valores posibles son:
+  - On: conservar todos los ficheros subidos.
+  - Off: no conservar los ficheros subidos.
+  - RelevantOnly: conservar solo los ficheros subidos que hayan coincidido con al menos una regla que se
+    registraría (excluyendo las reglas con la acción `nolog`).
+
+**Ejemplo:**
+```seclang
+SecUploadKeepFiles RelevantOnly
+```
+
+## SecWebAppID
+
+**Descripción:** Establece un identificador para la aplicación web protegida. El valor queda disponible para las reglas y los registros de auditoría.
+
+**Sintaxis:** `SecWebAppID "NAME"`
+
+**Ejemplo:**
+```seclang
+SecWebAppID "my_application"
+```
+
+## Unsupported
+
+**Descripción:** Manejador compartido para las directivas de ModSecurity que Coraza analiza y descarta, de modo que las configuraciones existentes sigan cargándose.
+
+**Sintaxis:** `SecTmpDir /path/to/dir`
+
+**Nota:** Este manejador respalda `SecArgumentSeparator`, `SecCookieFormat`,
+`SecRuleUpdateTargetByMsg`, `SecRuleScript`, `SecRulePerfTime`, `SecUnicodeMap` y
+`SecTmpDir`. Todas se aceptan y se ignoran.
+
+**Ejemplo:**
+```seclang
+SecTmpDir /tmp
+```
 

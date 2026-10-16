@@ -3,7 +3,7 @@ title: "Variables"
 description: "Referencia de todas las variables SecLang disponibles en Coraza WAF, incluyendo variables de solicitud, respuesta, servidor y colecciones de reglas."
 lead: "Variables disponibles en el lenguaje SecLang de Coraza."
 date: 2020-10-06T08:48:57+00:00
-lastmod: 2020-10-06T08:48:57+00:00
+lastmod: "2026-10-15T17:34:21+02:00"
 draft: false
 images: []
 weight: 100
@@ -259,13 +259,42 @@ SecRule ARGS pattern "chain,deny,id:28"
   SecRule MATCHED_VARS_NAMES "@eq ARGS:param"
 ```
 
+## MULTIPART_DUPLICATE_PART_HEADER
+
+Se establece en 1 cuando una parte multipart repite un header de parte (por ejemplo, dos headers Content-Disposition) o repite un parámetro dentro de su header Content-Disposition (por ejemplo, dos parámetros "filename"). Cada backend interpreta una parte así de forma distinta, por lo que el propio duplicado es la señal. Esta variable también contribuye a MULTIPART_STRICT_ERROR.
+
+```seclang
+SecRule MULTIPART_STRICT_ERROR "@eq 1" "id:201,phase:2,deny,t:none,chain"
+  SecRule MULTIPART_DUPLICATE_PART_HEADER "@eq 1"
+```
+
 ## MULTIPART_FILENAME
 
-Esta variable contiene los datos multipart del campo FILENAME.
+Contiene el nombre de fichero enviado en una parte multipart de subida de ficheros, indexado por el nombre de campo de la parte. Cuando una parte incluye un "filename*" de RFC 5987 (ya decodificado de su codificación porcentual) y un "filename" simple con valores distintos, se añaden ambos, porque los backends no coinciden en cuál de los dos prevalece.
+
+```seclang
+SecRule MULTIPART_FILENAME:upfile "@rx \.(?:php|jsp|exe)$" "id:198"
+```
+
+## MULTIPART_FILENAME_CHARSET
+
+Contiene el charset de RFC 5987 declarado en el parámetro "filename*" del header Content-Disposition de una parte multipart, indexado por el nombre de campo de la parte. No existe cuando la parte no tiene parámetro "filename*". El charset se expone tal cual, sin validarlo contra la gramática de RFC 5987 ni contra el registro de charsets de IANA, y puede estar vacío. Para imponer una lista de valores permitidos hay que usar un @rx anclado, ya que !@within nunca coincide con un valor vacío.
+
+```seclang
+SecRule MULTIPART_FILENAME_CHARSET "!@rx ^(?:utf-8|iso-8859-1|us-ascii)$" "id:199,t:lowercase"
+```
+
+## MULTIPART_FILENAME_LANGUAGE
+
+Contiene la etiqueta de idioma de RFC 5987 declarada en el parámetro "filename*" del header Content-Disposition de una parte multipart, indexada por el nombre de campo de la parte. Está vacía cuando la parte no tiene parámetro "filename*" o cuando se omitió el segmento de idioma, que es opcional.
+
+```seclang
+SecRule MULTIPART_FILENAME_LANGUAGE:upfile "@rx ." "id:200"
+```
 
 ## MULTIPART_NAME
 
-Esta variable contiene los datos multipart del campo NAME.
+Contiene el nombre de campo de cada parte multipart, indexado por ese mismo nombre.
 
 ## OUTBOUND_DATA_ERROR
 
@@ -798,6 +827,8 @@ Esta variable contiene el identificador único de la transacción.
 ## URLENCODED_ERROR
 
 Esta variable se crea cuando se encuentra una codificación de URL inválida durante el análisis de una cadena de consulta (en cada solicitud) o durante el análisis de un cuerpo de solicitud application/x-www-form-urlencoded (solo en las solicitudes que utilizan el procesador del cuerpo de la solicitud URLENCODED).
+
+**Nota:** Coraza NO implementa actualmente esta variable. El decodificador de query string y de body de Coraza (internal/url) es deliberadamente no estricto: reproduce lo que aceptan los backends en lugar de rechazar la codificación porcentual mal formada, por lo que nunca se detecta una codificación inválida a partir de la cual establecerla. Antes se establecía con una condición completamente distinta, un fallo estructural al analizar la URI, del que ahora informa URI_PARSE_ERROR. CRS tampoco la utiliza: coreruleset/coreruleset#482.
 
 ## USERID
 

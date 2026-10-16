@@ -22,6 +22,15 @@ func TestParseOperator(t *testing.T) {
 				Example:     "\n```seclang\nSecRule REQUEST_LINE \"@contains .php\" \"id:150\"\n```",
 			},
 		},
+		"operator with seclang fence": {
+			name: "contains",
+			doc:  "Description: Returns true if the parameter string is found anywhere in the input.\n\nExample:\n```seclang\nSecRule REQUEST_LINE \"@contains .php\" \"id:150\"\n```",
+			expected: Operator{
+				Name:        "contains",
+				Description: "Returns true if the parameter string is found anywhere in the input.",
+				Example:     "\n```seclang\nSecRule REQUEST_LINE \"@contains .php\" \"id:150\"\n```",
+			},
+		},
 		"operator with note": {
 			name: "detectSQLi",
 			doc:  "Description: Returns true if SQL injection payload is found.\n\nExample:\n```\nSecRule REQUEST_URI \"@detectSQLi\" \"id:152\"\n```\n\nNote: This operator supports the \"capture\" action.",

@@ -3,7 +3,7 @@ title: "Actions"
 description: "Complete reference for all SecLang actions in Coraza WAF, used to define rule responses such as blocking, allowing, logging, and redirecting."
 lead: "The action of a rule defines how to handle HTTP requests that have matched one or more rule conditions."
 date: 2020-10-06T08:48:57+00:00
-lastmod: "2026-05-22T18:03:48+02:00"
+lastmod: "2026-10-15T17:34:20+02:00"
 draft: false
 images: []
 weight: 100
@@ -73,6 +73,26 @@ When using the `allow` action for allowlisting, it's recommended to add
 `ctl:ruleEngine=On` to ensure the rule executes even in `DetectionOnly` mode.
 
 For the complete list of available actions, see [docs/seclang/actions](https://coraza.io/docs/seclang/actions/).
+
+## accuracy
+
+**Description**: Specifies the relative accuracy level of the rule related to the number of false positives and false negatives.
+The value is a string based on a numeric scale (1-9 where 9 is extensively tested and 1 is a brand new experimental rule).
+
+**Action Group**: Metadata
+
+
+
+
+**Example**:
+
+
+```seclang
+	SecRule REQUEST_FILENAME|ARGS_NAMES|ARGS|XML:/* "\bgetparentfolder\b" \
+		"phase:2,ver:'CRS/2.2.4',accuracy:'9',maturity:'9',capture,t:none,t:htmlEntityDecode,t:compressWhiteSpace,t:lowercase,ctl:auditLogParts=+E,block,msg:'Cross-site Scripting (XSS) Attack',id:'958016',tag:'WEB_ATTACK/XSS',severity:'2'"
+```
+
+
 
 ## allow
 
@@ -257,7 +277,8 @@ Here are some notes about the options:
     (e.g. `/foo\/` is treated as the literal string `/foo\/`, not a regex). An empty pattern (`//`) is rejected.
     Pattern matching is always case-insensitive because variable names are lowercased before comparison.
     Users do not need to use the `!` character before the target list.
- 2. Option `ruleRemoveById` is triggered at run time and should be specified before the rule in which it is disabling.
+ 2. Options `ruleRemoveById`, `ruleRemoveByMsg`, and `ruleRemoveByTag` are per-transaction run-time removals
+    and should be specified before the rule they are disabling.
  3. Option `requestBodyProcessor` allows you to configure the request body processor.
     By default, Coraza will use the `URLENCODED` and `MULTIPART` processors to process an `application/x-www-form-urlencoded` and a `multipart/form-data` body respectively.
     Other processors also supported: `JSON` and `XML`, but they are never used implicitly.

@@ -67,7 +67,7 @@ El Proyecto Coraza mantiene implementaciones y plugins para los siguientes servi
 
 ## Requisitos previos
 
-* Compilador Golang v1.18+
+* Versión reciente de Go (ver [go.mod](https://github.com/corazawaf/coraza/blob/main/go.mod)) o compilador TinyGo.
 * Distribucion Linux (Debian o Centos recomendado) o Mac. Windows aun no esta soportado.
 
 

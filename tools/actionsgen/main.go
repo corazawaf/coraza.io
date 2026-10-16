@@ -152,16 +152,24 @@ func getActionFromFile(file string, page Page) Page {
 	return page
 }
 
-// addSecLang replaces plain opening code fences with ```seclang
+// addSecLang replaces plain opening code fences with ```seclang, leaving
+// closing fences and fences that already declare a language untouched.
 func addSecLang(s string) string {
 	lines := strings.Split(s, "\n")
 	inCode := false
 	for i, line := range lines {
-		if strings.TrimSpace(line) == "```" {
-			if !inCode {
+		trimmed := strings.TrimSpace(line)
+		if !strings.HasPrefix(trimmed, "```") {
+			continue
+		}
+		switch {
+		case !inCode:
+			if trimmed == "```" {
 				lines[i] = "```seclang"
 			}
-			inCode = !inCode
+			inCode = true
+		case trimmed == "```":
+			inCode = false
 		}
 	}
 	return strings.Join(lines, "\n")
