@@ -3,7 +3,7 @@ title: "Directivas"
 Description: "Referencia completa de las directivas SecLang de Coraza WAF para configurar el motor, cargar reglas y controlar la inspección de solicitudes."
 lead: "La siguiente sección describe todas las directivas de Coraza."
 date: 2020-10-06T08:48:57+00:00
-lastmod: "2026-10-15T17:34:19+02:00"
+lastmod: "2026-10-21T23:16:50+03:00"
 draft: false
 images: []
 weight: 10
@@ -693,17 +693,23 @@ SecRequestBodyLimitAction Reject
 
 ## SecRequestBodyNoFilesLimit
 
-**Descripción:** Configura el tamaño máximo del cuerpo de la solicitud que Coraza aceptará para el almacenamiento en búfer, excluyendo el tamaño de los archivos transportados en la solicitud. Esta directiva es útil para reducir la susceptibilidad a ataques DoS cuando alguien envía cuerpos de solicitud de tamaños muy grandes. Las aplicaciones web que requieren la subida de archivos deben configurar [`SecRequestBodyLimit`](#secrequestbodylimit) con un valor alto, pero como los archivos grandes se transmiten al disco, las subidas de archivos no aumentarán el consumo de memoria. Sin embargo, aún es posible que alguien aproveche un límite alto del cuerpo de la solicitud y envíe solicitudes sin archivos con cuerpos de gran tamaño. Esta directiva elimina esa brecha.
+**Descripción:** Configura el tamaño máximo de los datos del body que no pertenecen a ficheros y que Coraza aceptará para su procesamiento. Esta directiva reduce la exposición a ataques DoS mediante bodies de request muy grandes. Las aplicaciones web que admiten subidas de ficheros deben configurar [`SecRequestBodyLimit`](#secrequestbodylimit) con un valor alto. La directiva independiente [`SecRequestBodyInMemoryLimit`](#secrequestbodyinmemorylimit) permite volcar a disco las subidas almacenadas en búfer, pero no limita los datos que un procesador de body puede materializar. Esta directiva limita los datos que no pertenecen a ficheros con independencia del límite total de subida. Valor predeterminado de Coraza: sin definir (no se aplica un límite independiente para datos que no pertenecen a ficheros hasta que se configura).
 
 **Sintaxis:** `SecRequestBodyNoFilesLimit 131072`
 
-**Por defecto:** `1048576 (1 MB)`
-
-En general, el valor por defecto no es lo suficientemente bajo. Para la mayoría de las aplicaciones, debería
-poder reducirlo a 128 KB o menos. Cualquier cosa que supere el límite será rechazada
-con el código de estado 413 (Request Entity Too Large). Existe un límite estricto de 1 GiB.
-
-**Nota:** aún no implementado
+Debe configurarse por debajo de SecRequestBodyLimit cuando se acepten subidas grandes.
+Con el procesador multipart integrado, se contabilizan los headers de cada parte y
+los campos ordinarios del formulario; no se contabilizan los delimitadores multipart
+ni el contenido de los ficheros subidos. Los procesadores multipart personalizados se
+tratan como los demás bodies de request, por lo que cada byte almacenado en búfer cuenta
+para este límite.
+Si SecRequestBodyNoFilesLimit es igual o superior a SecRequestBodyLimit, el límite
+independiente para datos que no pertenecen a ficheros queda desactivado. Cuando se supera
+el límite activo, se aplica SecRequestBodyLimitAction (Reject devuelve 413; ProcessPartial
+evalúa el prefijo limitado de un body que no sea multipart o las partes multipart completas
+anteriores a la parte que supera el límite). Ambas acciones establecen INBOUND_DATA_ERROR
+y REQBODY_ERROR. Por tanto, con ProcessPartial, una regla de fase 2 sobre REQBODY_ERROR
+(la regla 200002 de coraza.conf-recommended) continúa denegando el request.
 
 **Ejemplo:**
 ```seclang
