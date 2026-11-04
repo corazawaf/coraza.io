@@ -225,4 +225,63 @@ describe('Deploy Anywhere Section', () => {
     expect(newFilename).toBe('Caddyfile');
     await page.close();
   });
+
+  test('Traefik tabs show the Proxy plugin and Hub middleware configs', async () => {
+    const page = await newPage();
+    await page.goto(BASE_URL, { waitUntil: 'networkidle0' });
+
+    const cases = [
+      { tab: 'Traefik Proxy', filename: 'traefik.yaml', snippet: 'github.com/jcchavezs/coraza-http-wasm-traefik' },
+      { tab: 'Traefik Hub', filename: 'waf.yaml', snippet: 'crsEnabled: true' },
+    ];
+
+    for (const { tab, filename, snippet } of cases) {
+      const tabHandle = await page.evaluateHandle((text) => {
+        return Array.from(document.querySelectorAll('.connector-tab')).find(
+          (el) => el.textContent.includes(text)
+        );
+      }, tab);
+      await tabHandle.click();
+      await new Promise((r) => setTimeout(r, 200));
+
+      const state = await page.evaluate(() => ({
+        filename: document.getElementById('cp-filename')?.textContent,
+        code: document.getElementById('cp-code')?.textContent,
+        active: document.querySelector('.connector-tab.active')?.textContent,
+      }));
+      expect(state.filename).toBe(filename);
+      expect(state.code).toContain(snippet);
+      expect(state.active).toContain(tab);
+    }
+    await page.close();
+  });
+});
+
+describe('Connectors Page', () => {
+  test('Traefik Hub card links to its docs, Traefik Proxy card to its source', async () => {
+    const page = await newPage();
+    await page.goto(`${BASE_URL}/connectors/`, { waitUntil: 'networkidle0' });
+
+    const cards = await page.evaluate(() => {
+      const find = (title) => Array.from(document.querySelectorAll('.card')).find(
+        (c) => c.querySelector('h2')?.textContent.trim() === title
+      );
+      return ['Traefik Proxy', 'Traefik Hub'].map((title) => {
+        const footerLink = find(title)?.querySelector('.border-top a');
+        return { title, href: footerLink?.href, label: footerLink?.textContent.trim() };
+      });
+    });
+
+    expect(cards[0]).toEqual({
+      title: 'Traefik Proxy',
+      href: 'https://github.com/jcchavezs/coraza-http-wasm-traefik',
+      label: 'Source',
+    });
+    expect(cards[1]).toEqual({
+      title: 'Traefik Hub',
+      href: 'https://doc.traefik.io/traefik-hub/api-gateway/secure/middleware/waf-guide',
+      label: 'Docs',
+    });
+    await page.close();
+  });
 });

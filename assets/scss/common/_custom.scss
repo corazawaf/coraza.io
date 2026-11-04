@@ -153,6 +153,18 @@ body {
 .home-deploy {
   background: $gray-100;
 
+  // Two columns between md and xl, where one column is too narrow for the titles
+  .connector-tabs {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    align-content: start;
+    gap: 0.5rem;
+
+    @media (min-width: 768px) and (max-width: 1199.98px) {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
   .connector-tab {
     display: flex;
     align-items: center;

@@ -114,8 +114,8 @@
       <p class="text-body-secondary" style="max-width: 560px;">{{ i18n "home_deploy_desc" }}</p>
     </div>
     <div class="row g-4 align-items-stretch" style="min-height: 420px;">
-      <div class="col-lg-4">
-        <div class="d-flex flex-column gap-2 h-100">
+      <div class="col-xl-4">
+        <div class="connector-tabs h-100">
           <button class="connector-tab active" onclick="selectConnector('envoy-core', this)" type="button">
             <div class="connector-logo">
               <img src="/images/connectors/envoy.svg" alt="" width="24" height="24" loading="lazy">
@@ -161,9 +161,27 @@
               <div class="small text-body-secondary">Load Balancing</div>
             </div>
           </button>
+          <button class="connector-tab" onclick="selectConnector('traefik-proxy', this)" type="button">
+            <div class="connector-logo">
+              <img src="/images/connectors/traefik.svg" alt="" width="24" height="24" loading="lazy">
+            </div>
+            <div class="text-start">
+              <div class="fw-semibold">Traefik Proxy</div>
+              <div class="small text-body-secondary">Cloud-Native Proxy</div>
+            </div>
+          </button>
+          <button class="connector-tab" onclick="selectConnector('traefik-hub', this)" type="button">
+            <div class="connector-logo">
+              <img src="/images/connectors/traefik-hub.svg" alt="" width="24" height="24" loading="lazy">
+            </div>
+            <div class="text-start">
+              <div class="fw-semibold">Traefik Hub</div>
+              <div class="small text-body-secondary">Enterprise API Gateway</div>
+            </div>
+          </button>
         </div>
       </div>
-      <div class="col-lg-8">
+      <div class="col-xl-8">
         <div class="code-panel h-100 d-flex flex-column">
           <div class="code-panel-header d-flex align-items-center justify-content-between">
             <div class="d-flex align-items-center gap-3">
@@ -210,6 +228,16 @@
       file: 'haproxy.cfg',
       lang: 'haproxy',
       code: '# HAProxy Coraza SPOA\nfrontend http-in\n    bind *:80\n    filter spoe engine coraza config /etc/haproxy/coraza.cfg\n    http-request deny if { var(txn.coraza.action) -m str deny }\n    http-request deny if { var(txn.coraza.action) -m str drop }\n    default_backend servers\n\nbackend servers\n    server app1 127.0.0.1:8080 check'
+    },
+    'traefik-proxy': {
+      file: 'traefik.yaml',
+      lang: 'yaml',
+      code: '# Traefik Coraza http-wasm plugin\n# Static configuration\nexperimental:\n  plugins:\n    coraza:\n      moduleName: github.com/jcchavezs/coraza-http-wasm-traefik\n      version: v0.3.0\n\n# Dynamic configuration\nhttp:\n  middlewares:\n    waf:\n      plugin:\n        coraza:\n          directives:\n            - Include @coraza.conf-recommended\n            - Include @crs-setup.conf.example\n            - Include @owasp_crs/*.conf\n            - SecRuleEngine On'
+    },
+    'traefik-hub': {
+      file: 'waf.yaml',
+      lang: 'yaml',
+      code: '# Traefik Hub native Coraza middleware\napiVersion: traefik.io/v1alpha1\nkind: Middleware\nmetadata:\n  name: waf\nspec:\n  plugin:\n    coraza:\n      crsEnabled: true\n      directives:\n        - Include @coraza.conf-recommended\n        - Include @crs-setup.conf.example\n        - Include @owasp_crs/*.conf\n        - SecRuleEngine On'
     }
   };
 

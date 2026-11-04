@@ -61,7 +61,7 @@
   license: "Apache-2.0"
   logo: "/images/connectors/haproxy.svg"
 
-- title: "Traefik"
+- title: "Traefik Proxy"
   lead: "Deploy Coraza WAF with Traefik using http-wasm middleware."
   author: "jcchavezs"
   repo: "https://github.com/jcchavezs/coraza-http-wasm-traefik"
@@ -69,6 +69,14 @@
   compatibility: ["v3.x"]
   license: "Apache-2.0"
   logo: "/images/connectors/traefik.svg"
+
+- title: "Traefik Hub"
+  lead: "Deploy Coraza WAF compiled natively into Traefik Hub."
+  author: "Traefik Labs"
+  docs: "https://doc.traefik.io/traefik-hub/api-gateway/secure/middleware/waf-guide"
+  official: false
+  compatibility: []
+  logo: "/images/connectors/traefik-hub.svg"
 
 - title: "libcoraza (C Library)"
   lead: "Use Coraza WAF from C/C++ applications via the libcoraza shared library."
