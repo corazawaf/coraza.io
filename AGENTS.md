@@ -119,7 +119,7 @@ Add a new entry to the appropriate YAML file with these fields:
   lead: "One-line description."
   author: "Author or Organization"
   repo: "https://github.com/org/repo"
-  docs: "https://example.com/docs" # only when there is no public repo; the card links here as "Docs"
+  # docs: "https://example.com/docs" # instead of repo, only when there is no public repo; the card links here as "Docs"
   official: false       # true only if maintained by the Coraza project
   compatibility: ["v3.x"]
   license: "Apache-2.0" # SPDX identifier; omit if unknown

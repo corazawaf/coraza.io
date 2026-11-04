@@ -267,21 +267,21 @@ describe('Connectors Page', () => {
         (c) => c.querySelector('h2')?.textContent.trim() === title
       );
       return ['Traefik Proxy', 'Traefik Hub'].map((title) => {
-        const footerLink = find(title)?.querySelector('.border-top a');
-        return { title, href: footerLink?.href, label: footerLink?.textContent.trim() };
+        const card = find(title);
+        const footerLink = card?.querySelector('.border-top a');
+        return {
+          title,
+          titleHref: card?.querySelector('h2 a')?.href,
+          href: footerLink?.href,
+          label: footerLink?.textContent.trim(),
+        };
       });
     });
 
-    expect(cards[0]).toEqual({
-      title: 'Traefik Proxy',
-      href: 'https://github.com/jcchavezs/coraza-http-wasm-traefik',
-      label: 'Source',
-    });
-    expect(cards[1]).toEqual({
-      title: 'Traefik Hub',
-      href: 'https://doc.traefik.io/traefik-hub/api-gateway/secure/middleware/waf-guide',
-      label: 'Docs',
-    });
+    const proxyRepo = 'https://github.com/jcchavezs/coraza-http-wasm-traefik';
+    const hubDocs = 'https://doc.traefik.io/traefik-hub/api-gateway/secure/middleware/waf-guide';
+    expect(cards[0]).toEqual({ title: 'Traefik Proxy', titleHref: proxyRepo, href: proxyRepo, label: 'Source' });
+    expect(cards[1]).toEqual({ title: 'Traefik Hub', titleHref: hubDocs, href: hubDocs, label: 'Docs' });
     await page.close();
   });
 });

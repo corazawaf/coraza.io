@@ -232,7 +232,7 @@
     'traefik-proxy': {
       file: 'traefik.yaml',
       lang: 'yaml',
-      code: '# Traefik Coraza http-wasm plugin\n# Static configuration\nexperimental:\n  plugins:\n    coraza:\n      moduleName: github.com/jcchavezs/coraza-http-wasm-traefik\n      version: v0.3.0\n\n# Dynamic configuration\nhttp:\n  middlewares:\n    waf:\n      plugin:\n        coraza:\n          directives:\n            - Include @coraza.conf-recommended\n            - Include @crs-setup.conf.example\n            - Include @owasp_crs/*.conf\n            - SecRuleEngine On'
+      code: '# Traefik Coraza http-wasm plugin\n# Static configuration: traefik.yaml\nexperimental:\n  plugins:\n    coraza:\n      moduleName: github.com/jcchavezs/coraza-http-wasm-traefik\n      version: v0.3.0\nproviders:\n  file:\n    filename: dynamic.yaml\n\n# Dynamic configuration: dynamic.yaml\nhttp:\n  middlewares:\n    waf:\n      plugin:\n        coraza:\n          directives:\n            - Include @coraza.conf-recommended\n            - Include @crs-setup.conf.example\n            - Include @owasp_crs/*.conf\n            - SecRuleEngine On'
     },
     'traefik-hub': {
       file: 'waf.yaml',
