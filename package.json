@@ -17,7 +17,7 @@
     "thulite": "^2.6.5"
   },
   "devDependencies": {
-    "@fullhuman/postcss-purgecss": "8.0.0",
+    "@fullhuman/postcss-purgecss": "9.1.0",
     "autoprefixer": "10.5.2",
     "jest": "30.4.2",
     "postcss-cli": "11.0.1",
